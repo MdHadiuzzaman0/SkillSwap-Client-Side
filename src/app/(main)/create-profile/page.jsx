@@ -11,7 +11,7 @@ export default function CreateProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const [loading, setLoading] = useState(true);
   
-  const email = session?.user?.email;
+  const Email = session?.user?.email;
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
@@ -40,6 +40,7 @@ export default function CreateProfilePage() {
       profileData.skills = [];
     }
 
+    profileData.email = Email;
     profileData.isBlocked = false;
     profileData.createdAt = new Date(); 
     const res = await handleFormSubmit(profileData);

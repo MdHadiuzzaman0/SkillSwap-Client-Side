@@ -1,7 +1,6 @@
 //get userInfo
 export async function getUserInfo(email) {
   if (!email) return null;
-
   try {
     const response = await fetch(`http://localhost:8000/user/${email}`, {
       method: "GET",
@@ -18,20 +17,13 @@ export async function getUserInfo(email) {
 }
 
 //get all tasks
-export const getTaskInfo = async (email) => {
-  try {
-    const res = await fetch(`http://localhost:3000/explore-tasks/${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store"
-    });
+export const getAllTasks = async () => {
+    const res = await fetch('http://localhost:8000/browse-tasks')
+    return res.json()
+}
 
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-    return [];
-  }
-};
+//get task by id
+export const getTaskById = async (id) => {
+    const res = await fetch(`http://localhost:8000/browse-tasks/${id}`)
+    return res.json()
+}
