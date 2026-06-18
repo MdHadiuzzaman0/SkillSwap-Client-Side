@@ -1,3 +1,37 @@
 @import "tailwindcss";
 @plugin "daisyui";
 @import "@heroui/styles"; 
+
+@layer base {
+  :root {
+    --color-black: #0A0908;       /* Primary text, headings */
+    --color-navy: #22333B;        /* Brand color — buttons, navbar, links */
+    --color-cream: #EAE0D5;       /* Page background */
+    --color-tan: #C6AC8F;         /* Accents — tags, badges, hover */
+    --color-brown: #5E503F;       /* Footer, muted text, borders */
+  }
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-black);
+  font-family: Arial, Helvetica, sans-serif; /* আপনার সিলেক্টেড ফন্ট এখানে বসাতে পারেন */
+}
+
+/* স্মুথ স্ক্রলিং এবং বেসিক রিসেট */
+html {
+  scroll-behavior: smooth;
+}
+
+/* কাস্টম সিএসএস ক্লাস (প্রয়োজন হলে ব্যবহারের জন্য) */
+.bg-cream { background-color: var(--color-cream); }
+.bg-navy { background-color: var(--color-navy); }
+.bg-tan { background-color: var(--color-tan); }
+.bg-brown { background-color: var(--color-brown); }
+
+.text-black { color: var(--color-black); }
+.text-navy { color: var(--color-navy); }
+.text-brown { color: var(--color-brown); }
+.text-tan { color: var(--color-tan); }
+
+.border-brown { border-color: var(--color-brown); }
