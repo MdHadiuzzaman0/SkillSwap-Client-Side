@@ -28,7 +28,7 @@ export default function CreateProfileOfClient({ email }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Role Input (Read Only) */}
-        <TextField isReadOnly name="role" defaultValue="Client">
+        <TextField isReadOnly name="role" defaultValue="client">
           <Label>Your Role</Label>
           <Input className="bg-gray-50 text-gray-500 cursor-not-allowed" />
         </TextField>

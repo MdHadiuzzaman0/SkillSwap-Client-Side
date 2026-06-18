@@ -1,50 +1,59 @@
 "use client";
+import { useEffect, useState } from "react"; 
 import CreateProfileOfClient from "@/components/CreateProfileOfClient"; 
 import CreateProfileOfFreelancer from "@/components/CreateProfileOfFreelancer"; 
-import { handleFormSubmit } from "@/lib/action";
+import { handleFormSubmit } from "@/lib/action"; 
+import { getUserInfo } from "@/lib/data"; 
 import { toast } from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
 export default function CreateProfilePage() {
-  const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
+  const [loading, setLoading] = useState(true);
   
   const email = session?.user?.email;
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
+  useEffect(() => {
+    async function checkProfile() {
+      if (!isPending && email) {
+        const userData = await getUserInfo(email); 
+        if (userData && userData.role) {
+          window.location.href = `/dashboard/${userData.role.toLowerCase()}`;
+          return;
+        }
+        setLoading(false);
+      }
+    }
+    checkProfile();
+  }, [email, isPending]);
+
   const handleProfileSubmit = async (e) => {
-  e.preventDefault();
-  
-  const formData = new FormData(e.target);
-  const profileData = Object.fromEntries(formData.entries());
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const profileData = Object.fromEntries(formData.entries())
 
-  // // 1. Inject the correct role directly into profileData
-  // profileData.role = targetRole;
+    if (profileData.role.toLowercase() === "freelancer" && typeof profileData.skills === "string") {
+      profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
+    } else {
+      profileData.skills = [];
+    }
 
-  // 2. Process skills data based on user role right here
-  if (profileData.role === "freelancer" && typeof profileData.skills === "string") {
-    // Convert comma-separated string into a clean array
-    profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
-  } else {
-    // Clients or empty states don't need skills array elements
-    profileData.skills = [];
-  }
-
-  // 3. Attach metadata requirements directly before sending to the database
-  profileData.isBlocked = false;
-  profileData.createdAt = new Date(); // To keep tracking of user onboarding
-  const res = await handleFormSubmit(profileData);
-    
+    profileData.isBlocked = false;
+    profileData.createdAt = new Date(); 
+    const res = await handleFormSubmit(profileData);
     if (res.success) {
       toast.success("Profile updated successfully! 🎉");
-      // Redirect straight to their specific dashboard path
       window.location.href = `/dashboard/${targetRole}`;
     } else {
       toast.error(`Failed to save: ${res.error}`);
     }
   };
+
+  if (isPending || loading) {
+    return <div className="text-center mt-20 text-xs">Checking profile status...</div>;
+  }
 
   return (
     <div className="max-w-4xl min-h-screen mx-auto p-6 bg-white rounded-2xl shadow-sm border mt-10 text-xs font-body">
@@ -53,22 +62,18 @@ export default function CreateProfilePage() {
       </h2>
 
       <form onSubmit={handleProfileSubmit} className="space-y-6">
-
-        {/* DIRECT RENDERING: No dropdown step needed */}
         {targetRole === "freelancer" ? (
           <CreateProfileOfFreelancer email={email} />
         ) : (
           <CreateProfileOfClient email={email} />
         )}
 
-        {/* SUBMIT BUTTON */}
         <button 
           type="submit" 
           className="w-full bg-workable-dark-green text-black py-2.5 rounded-xl font-bold font-heading uppercase tracking-wide hover:bg-workable-primary transition-all duration-300 shadow-md active:scale-[0.99] cursor-pointer"
         >
           Save 
         </button>
-
       </form>
     </div>
   );

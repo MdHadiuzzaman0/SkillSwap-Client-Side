@@ -120,6 +120,7 @@ export default function SignupPage() {
                             {/* Role Selection Checkboxes */}
                             <div className="space-y-1.5">
                                 <label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] block">Select System Role</label>
+                                <input type="hidden" name="role" value={selectedRole} />
                                 <div className="grid grid-cols-2 gap-4">
                                     <div 
                                         onClick={() => setSelectedRole("client")}
