@@ -16,3 +16,22 @@ export async function getUserInfo(email) {
     return null;
   }
 }
+
+//get all tasks
+export const getTaskInfo = async (email) => {
+  try {
+    const res = await fetch(`http://localhost:3000/explore-tasks/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store"
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return [];
+  }
+};

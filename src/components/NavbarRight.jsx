@@ -10,7 +10,7 @@ const NavbarRight = ({ session, userInfo }) => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
-    console.log(session, userInfo)
+    //console.log(session, userInfo)
 
     const sessionUser = session?.user;
     let displayName = "Guest";

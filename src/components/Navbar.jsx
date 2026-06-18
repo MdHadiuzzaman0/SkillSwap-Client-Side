@@ -12,7 +12,7 @@ export default async function Navbar() {
   });
   const user = session?.user;
   const userInfo = await getUserInfo(user?.email);
-  console.log(userInfo, session)
+  // console.log(userInfo, session)
 
   return (
     <div className="navbar px-6 fixed lg:sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-[#E5E4EA]/60 font-body">
