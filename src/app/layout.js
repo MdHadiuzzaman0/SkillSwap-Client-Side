@@ -2,6 +2,7 @@ import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
 import ConditionalPageShow from "@/components/ConditionalPageShow";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 // Heading Font
@@ -31,8 +32,8 @@ export default function RootLayout({ children }) {
       className={`${headingFont.variable} ${bodyFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-black font-body">
-        {/* <Navbar />
-        <SubNavbar /> */}
+        <Navbar />
+        {/* <SubNavbar /> */}
         <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </main>

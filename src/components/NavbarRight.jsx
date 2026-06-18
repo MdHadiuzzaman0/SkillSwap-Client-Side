@@ -10,6 +10,7 @@ const NavbarRight = ({ session, userInfo }) => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    console.log(session, userInfo)
 
     const sessionUser = session?.user;
     let displayName = "Guest";
@@ -19,11 +20,11 @@ const NavbarRight = ({ session, userInfo }) => {
     if (userInfo) {
         displayName = `${userInfo.firstName || ""} ${userInfo.lastName || ""}`.trim();
         displayImage = userInfo.image;
-        displayRole = userInfo.role; 
+        displayRole = userInfo.role.toLowerCase(); 
     } else {
-        displayName = sessionUser?.name || "Guest";
+        displayName = sessionUser?.name;
         displayImage = sessionUser?.image;
-        displayRole = ""; 
+        displayRole = "client"; 
     }
 
     useEffect(() => {
@@ -61,7 +62,7 @@ const NavbarRight = ({ session, userInfo }) => {
     ];
     
     // Exact ternary dynamic conditional logic as you requested
-    const menuItems = !displayRole ? defaultItems : displayRole === "freelancer" ? freelancerItems : clientItems;
+    const menuItems = displayName === "Guest" ? defaultItems : displayRole === "freelancer" ? freelancerItems : clientItems;
 
     return (
         <div className="flex items-center gap-4">
@@ -86,7 +87,7 @@ const NavbarRight = ({ session, userInfo }) => {
             )}
 
             {/* ── LOGGED IN STATE ── */}
-            {session && (
+            {(session || userInfo) && (
                 <div className="relative" ref={dropdownRef}>
 
                     {/* Trigger Pill */}

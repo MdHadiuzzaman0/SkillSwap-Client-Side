@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client"
 
 export default function HomePage() {
  const { data: session } = authClient.useSession();
@@ -54,7 +55,7 @@ export default function HomePage() {
                 Post a Job
               </button>
             </Link>
-          )}
+          ))}
 
           {/* Button 3: Learn More (Visible to Everyone) */}
           <Link href="#how-it-works" className="w-full sm:w-auto">
