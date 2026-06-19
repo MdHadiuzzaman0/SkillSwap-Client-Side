@@ -50,8 +50,8 @@ const NavbarRight = ({ session, userInfo }) => {
     ];
 
     const freelancerItems = [
-        { id: "dashboard", label: "Freelancer Dashboard", href: "/dashboard/freelancer" },
-        { id: "my_bids", label: "My Bids", href: "/dashboard/freelancer/my-bids" },
+        { id: "dashboard", label: "Dashboard", href: "/dashboard/freelancer" },
+        { id: "my_bids", label: "My proposals", href: "/dashboard/freelancer/my-proposals" },
         { id: "profile", label: "Profile", href: "/dashboard/freelancer/profile" },
     ];
 

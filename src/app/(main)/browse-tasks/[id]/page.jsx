@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getTaskById } from "@/lib/data"; 
 import { FiClock, FiDollarSign, FiCalendar, FiBookmark, FiSend, FiShield, FiArrowLeft,FiUser,FiMail,FiBriefcase } from "react-icons/fi";
+import ProposalSubmitButton from "@/components/ProposalSubmitButton";
 
 // Helper function for dynamic time calculation
 const formatTimeAgo = (dateString) => {
@@ -20,13 +21,11 @@ const formatTimeAgo = (dateString) => {
 const TaskDetailsPage = async ({ params: paramsPromise }) => {
   const params = await paramsPromise;
   const taskId = params.id;
-  
   const session = await auth.api.getSession({
     headers: await headers()
   });
   const currentUserEmail = session?.user?.email;
-
-  const task = await getTaskById(taskId);
+  const taskData = await getTaskById(taskId);
 
   if (!task) {
     return (
@@ -40,14 +39,14 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
     );
   }
 
-  const { title, category, description, budget, deadline, status, clientEmail, clientName, clientImage, createdAt } = task;
+  const { title, category, description, budget, deadline, status, clientEmail, clientName, clientImage, createdAt } = taskData;
 
   return (
     <div className="bg-cream min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-[var(--font-body)]">
       <div className="max-w-5xl mx-auto">
         
         {/* Back Button Link */}
-        <Link href="/explore-tasks" className="inline-flex items-center gap-2 text-sm font-medium text-brown hover:text-navy mb-6 transition-colors group">
+        <Link href="/browse-tasks" className="inline-flex items-center gap-2 text-sm font-medium text-brown hover:text-navy mb-6 transition-colors group">
           <FiArrowLeft className="transition-transform group-hover:-translate-x-1" /> Back to Tasks
         </Link>
 
@@ -114,9 +113,7 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
 
               {/* Interactive Application Buttons */}
               <div className="pt-2 space-y-2">
-                <button className="w-full py-3 bg-navy text-cream font-semibold rounded-xl text-xs tracking-wide shadow-sm hover:bg-brown active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2 group">
-                  <FiSend className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /> Submit Proposal
-                </button>
+                <ProposalSubmitButton taskData={taskData} currentUserEmail={currentUserEmail}/>
                 <button className="w-full py-3 bg-white text-navy border border-navy/20 font-semibold rounded-xl text-xs tracking-wide hover:bg-cream/30 active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2">
                   <FiBookmark /> Bookmark Contract
                 </button>

@@ -11,7 +11,7 @@ export default function CreateProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const [loading, setLoading] = useState(true);
   
-  const Email = session?.user?.email;
+  const email = session?.user?.email;
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
@@ -34,13 +34,13 @@ export default function CreateProfilePage() {
     const formData = new FormData(e.target);
     const profileData = Object.fromEntries(formData.entries())
 
-    if (profileData.role.toLowercase() === "freelancer" && typeof profileData.skills === "string") {
+    if (profileData.role === "freelancer" && typeof profileData.skills === "string") {
       profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
     } else {
       profileData.skills = [];
     }
 
-    profileData.email = Email;
+    profileData.email = email;
     profileData.isBlocked = false;
     profileData.createdAt = new Date(); 
     const res = await handleFormSubmit(profileData);

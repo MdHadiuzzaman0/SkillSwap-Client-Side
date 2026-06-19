@@ -7,8 +7,6 @@ import { FiBriefcase, FiFolder, FiDollarSign, FiUser } from "react-icons/fi";
 
 const FreelancerLayout = ({ children }) => {
   const pathname = usePathname();
-
-  // আপনার ইমেজ (image_9d3e69.png) অনুযায়ী ৪টি সাব-রাউট মেনু
   const menuItems = [
     {
       name: "My Proposals",
@@ -47,7 +45,6 @@ const FreelancerLayout = ({ children }) => {
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
           {menuItems.map((item) => {
-            // চেক করা হচ্ছে কারেন্ট ইউআরএল এই পাথের সাথে মিলছে কিনা (রিলোড প্রুফ)
             const isActive = pathname === item.path;
 
             return (
@@ -56,7 +53,7 @@ const FreelancerLayout = ({ children }) => {
                 href={item.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide uppercase transition-all duration-200 ${
                   isActive
-                    ? "bg-navy text-cream shadow-sm"
+                    ? "bg-gray-300 text-black shadow-sm"
                     : "text-brown hover:bg-cream/50 hover:text-black"
                 }`}
               >

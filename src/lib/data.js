@@ -27,3 +27,22 @@ export const getTaskById = async (id) => {
     const res = await fetch(`http://localhost:8000/browse-tasks/${id}`)
     return res.json()
 }
+
+//get proposal data
+export const fetchMyProposals = async (freelancerEmail) => {
+  try {
+    const res = await fetch(`http://localhost:3000/proposals/${freelancerEmail}`);
+
+    if (!res.ok) {
+      throw new Error("Failed to load freelancer proposals");
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Fetch error inside data.js:", error);
+    return [];
+  }
+};
+
+//get proposal data for specific 
