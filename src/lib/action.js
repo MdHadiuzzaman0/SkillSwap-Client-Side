@@ -68,3 +68,22 @@ export const updateProfileData = async (email, profilePayload) => {
     return { success: false, message: error.message };
   }
 };
+
+//update proposal task
+export const updateProposalTask = async (proposalId, payload) => {
+  try {
+    const res = await fetch(`http://localhost:8000/proposals/update/${proposalId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    
+    if (!res.ok) throw new Error("Failed to update");
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
+};

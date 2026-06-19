@@ -28,7 +28,7 @@ export const getTaskById = async (id) => {
     return res.json()
 }
 
-//get proposal data
+//get proposal data for specific freelancer
 export const fetchMyProposals = async (freelancerEmail) => {
   try {
     const res = await fetch(`http://localhost:3000/proposals/${freelancerEmail}`);
