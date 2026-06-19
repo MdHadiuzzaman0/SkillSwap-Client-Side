@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { FiSend, FiDollarSign, FiClock, FiFileText } from "react-icons/fi";
-import { Button, Input, Label, Modal, Surface, TextField } from "@heroui/react";
+import { Button, Input, Label, Modal, Surface, TextField, useOverlayState } from "@heroui/react";
 import { submitProposalAction } from "@/lib/action";
 import toast from "react-hot-toast";
 
-export function ProposalSubmit({ taskData, currentUserEmail }) {
+export function ProposalSubmitButton({ taskData, currentUserEmail }) {
   const modal = useOverlayState();
   const [loading, setLoading] = useState(false);
   const { _id: taskId, title, category, clientEmail } = taskData || {};

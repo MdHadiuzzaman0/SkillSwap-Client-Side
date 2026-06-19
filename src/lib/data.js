@@ -31,7 +31,7 @@ export const getTaskById = async (id) => {
 //get proposal data for specific freelancer
 export const fetchMyProposals = async (freelancerEmail) => {
   try {
-    const res = await fetch(`http://localhost:3000/proposals/${freelancerEmail}`);
+    const res = await fetch(`http://localhost:8000/proposals/${freelancerEmail}`);
 
     if (!res.ok) {
       throw new Error("Failed to load freelancer proposals");
@@ -44,5 +44,4 @@ export const fetchMyProposals = async (freelancerEmail) => {
     return [];
   }
 };
-
-//get proposal data for specific 
+ 

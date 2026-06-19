@@ -1,26 +1,29 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import { fetchProfileData, updateProfileData } from "./data";
+import { fetchProfileData } from "@/lib/data";
+import { updateProfileData } from "@/lib/action";
 import { useSession } from "@/lib/auth-client";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import { getUserInfo } from "@/lib/data";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const FreelancerProfilePage = () => {
+  const router = useRouter()
   const { data: session, isPending } = useSession();
   const freelancerEmail = session?.user?.email;
 
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  
+
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     image: "",
     skills: "",
     bio: "",
-    hourly_rate: 0,
+    hourlyRate: "",
   });
 
   // Load existing user info from database on mount
@@ -32,11 +35,12 @@ const FreelancerProfilePage = () => {
       const data = await getUserInfo(freelancerEmail);
       if (data) {
         setFormData({
-          name: data.name || "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
           image: data.image || "",
           skills: data.skills ? data.skills.join(", ") : "",
           bio: data.bio || "",
-          hourly_rate: data.hourly_rate || 0,
+          hourlyRate: data.hourlyRate || "",
         });
       }
       setLoading(false);
@@ -49,7 +53,7 @@ const FreelancerProfilePage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "hourly_rate" ? Number(value) : value,
+      [name]: name === "hourlyRate" ? Number(value) : value,
     }));
   };
 
@@ -72,7 +76,12 @@ const FreelancerProfilePage = () => {
 
     if (result.success) {
       toast.success("Profile updated successfully!");
-      setIsEditing(false); // 🎯 Switch back to read-only view mode after saving successfully
+      setIsEditing(false);
+      setFormData({
+        ...formData,
+        skills: skillsArray.join(", "),
+      });
+      router.refresh();
     } else {
       toast.error("Failed to update profile.");
     }
@@ -89,20 +98,20 @@ const FreelancerProfilePage = () => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl border border-brown/10 space-y-6 shadow-sm">
-      
+
       {/* Header section with Dynamic Edit / Cancel Button */}
       <div className="flex items-center justify-between border-b border-brown/5 pb-4">
         <div>
           <h1 className="text-xl font-bold text-black font-[var(--font-heading)]">Profile Settings</h1>
           <p className="text-[11px] text-brown font-light mt-0.5">Manage your public information shown to clients.</p>
         </div>
-        
+
         {/* Toggle Mode Button */}
         {!isEditing ? (
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            className="flex items-center gap-1.5 bg-cream hover:bg-gray-200 text-black px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide transition-colors"
+            className="flex items-center gap-1.5 bg-cream hover:bg-gray-200 text-black px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide transition-colors cursor-pointer"
           >
             <FiEdit2 /> Edit Profile
           </button>
@@ -110,7 +119,7 @@ const FreelancerProfilePage = () => {
           <button
             type="button"
             onClick={() => setIsEditing(false)}
-            className="flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide transition-colors"
+            className="flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wide cursor-pointer transition-colors"
           >
             <FiX /> Cancel
           </button>
@@ -120,16 +129,29 @@ const FreelancerProfilePage = () => {
       <form onSubmit={handleSubmit} className="space-y-4 text-xs">
         {/* Full Name Field */}
         <div>
-          <label className="block font-semibold text-brown mb-1.5">Full Name</label>
+          <label className="block font-semibold text-brown mb-1.5">First Name</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="firstName"
+            value={formData.firstName}
             onChange={handleChange}
             disabled={!isEditing} // 🎯 Field is disabled if isEditing is false
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${
-              isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-semibold text-brown mb-1.5">Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            disabled={!isEditing} // 🎯 Field is disabled if isEditing is false
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
             required
           />
         </div>
@@ -143,9 +165,8 @@ const FreelancerProfilePage = () => {
             value={formData.image}
             onChange={handleChange}
             disabled={!isEditing}
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${
-              isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
           />
         </div>
 
@@ -159,9 +180,8 @@ const FreelancerProfilePage = () => {
             onChange={handleChange}
             disabled={!isEditing}
             placeholder="e.g. React.js, Next.js, Tailwind CSS"
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${
-              isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
           />
         </div>
 
@@ -170,13 +190,12 @@ const FreelancerProfilePage = () => {
           <label className="block font-semibold text-brown mb-1.5">Hourly Rate (USD / hr)</label>
           <input
             type="number"
-            name="hourly_rate"
-            value={formData.hourly_rate}
+            name="hourlyRate"
+            value={formData.hourlyRate}
             onChange={handleChange}
             disabled={!isEditing}
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${
-              isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
             required
           />
         </div>
@@ -190,9 +209,8 @@ const FreelancerProfilePage = () => {
             onChange={handleChange}
             disabled={!isEditing}
             rows="4"
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${
-              isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
+              }`}
           ></textarea>
         </div>
 

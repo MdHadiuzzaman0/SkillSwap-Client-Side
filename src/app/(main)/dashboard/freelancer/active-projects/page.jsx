@@ -102,7 +102,7 @@ const ActiveProjectsPage = async () => {
 
               {/* অ্যাকশন কন্ডিশনাল বাটন / টেক্সট */}
               <div className="pt-2 border-t border-brown/5 text-right">
-                {project.status === "In Progress" ? (
+                {project.status === "in-progress" ? (
                   <SubmitTaskButton proposalId={project._id} />
                 ) : (
                   <span className="inline-block text-emerald-600 font-bold italic text-xs py-1.5">

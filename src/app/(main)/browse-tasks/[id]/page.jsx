@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getTaskById } from "@/lib/data"; 
 import { FiClock, FiDollarSign, FiCalendar, FiBookmark, FiSend, FiShield, FiArrowLeft,FiUser,FiMail,FiBriefcase } from "react-icons/fi";
-import ProposalSubmitButton from "@/components/ProposalSubmitButton";
+import {ProposalSubmitButton } from "@/components/ProposalSubmitButton";
 
 // Helper function for dynamic time calculation
 const formatTimeAgo = (dateString) => {
@@ -27,7 +27,7 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
   const currentUserEmail = session?.user?.email;
   const taskData = await getTaskById(taskId);
 
-  if (!task) {
+  if (!taskData) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center bg-cream font-[var(--font-body)]">
         <h2 className="font-[var(--font-heading)] text-3xl font-bold text-black mb-2">Task Not Found</h2>

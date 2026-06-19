@@ -34,11 +34,12 @@ export const submitProposalAction = async (proposalPayload) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(proposalPayload),
     });
+    const data = await res.json();
 
     if (res.ok) {
       return { success: true };
     } else {
-      return { success: false, message: "Backend server returned an error." };
+      return { success: false, message: data.message};
     }
   } catch (error) {
     console.error("Error in action.js submitting proposal:", error);
@@ -49,7 +50,7 @@ export const submitProposalAction = async (proposalPayload) => {
 //update profile data
 export const updateProfileData = async (email, profilePayload) => {
   try {
-    const res = await fetch(`http://localhost:3000/users/${email}`, {
+    const res = await fetch(`http://localhost:8000/users/${email}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -69,10 +70,10 @@ export const updateProfileData = async (email, profilePayload) => {
   }
 };
 
-//update proposal task
+//update proposal task, task submit
 export const updateProposalTask = async (proposalId, payload) => {
   try {
-    const res = await fetch(`http://localhost:8000/proposals/update/${proposalId}`, {
+    const res = await fetch(`http://localhost:8000/proposals-update/${proposalId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

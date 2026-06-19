@@ -24,7 +24,7 @@ const FreelancerLayout = ({ children }) => {
       icon: <FiDollarSign className="text-lg" />,
     },
     {
-      name: "Edit Profile",
+      name: "Profile",
       path: "/dashboard/freelancer/profile",
       icon: <FiUser className="text-lg" />,
     },
