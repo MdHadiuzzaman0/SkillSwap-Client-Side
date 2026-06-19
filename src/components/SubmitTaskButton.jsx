@@ -1,9 +1,9 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button, Input, Label, Modal, Surface, TextField } from "@heroui/react";
 import { updateProposalTask } from "@/lib/action"; // আপনার অ্যাকশন ফাইলের পাথ অনুযায়ী দেবেন
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export function SubmitTaskButton({ proposalId }) {
   const [deliverableUrl, setDeliverableUrl] = useState("");
@@ -12,11 +12,9 @@ export function SubmitTaskButton({ proposalId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!deliverableUrl) return alert("Please provide a deliverable work link!");
+    if (!deliverableUrl) return toast.error("Please provide a deliverable work link!");
 
     setLoading(true);
-
-    // স্ট্যাটাস "Completed" স্ট্যাটিক হিসেবে পাঠানো হচ্ছে
     const payload = {
       status: "completed",
       deliverable_url: deliverableUrl,
@@ -26,11 +24,11 @@ export function SubmitTaskButton({ proposalId }) {
     setLoading(false);
 
     if (result.success) {
-      alert("Task submitted and marked as Completed successfully!");
+      toast.success("Task submitted and marked as Completed successfully!");
       setDeliverableUrl(""); // ইনপুট ক্লিয়ার
       router.refresh(); // সার্ভার কম্পোনেন্টের ডাটা রিফ্রেশ করার জন্য
     } else {
-      alert("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

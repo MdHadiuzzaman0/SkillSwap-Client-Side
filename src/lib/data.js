@@ -4,7 +4,8 @@ export async function getUserInfo(email) {
   try {
     const response = await fetch(`http://localhost:8000/user/${email}`, {
       method: "GET",
-      cache: "no-store", 
+      cache: "no-store",
+      next: { revalidate: 0 }  
     });
 
     if (!response.ok) return null;
@@ -44,7 +45,6 @@ export const fetchMyProposals = async (freelancerEmail) => {
     return [];
   }
 };
- 
 
 //get completed task from proposalCollection
 export const fetchMyEarnings = async (email) => {

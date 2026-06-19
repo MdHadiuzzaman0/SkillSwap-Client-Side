@@ -13,11 +13,7 @@ const ActiveProjectsPage = async () => {
   if (!freelancerEmail) {
     return <div className="p-6 text-center text-xs text-red-500">Unauthorized. Please log in.</div>;
   }
-
-  // ডাটা ফেচ করা হচ্ছে সরাসরি সার্ভারে
   const data = await fetchMyProposals(freelancerEmail);
-
-  // pending ছাড়া বাকি সব (In Progress, Completed) ফিল্টার করা হলো
   const activeProjects = data.filter(
     (proposal) => proposal.status && proposal.status.toLowerCase() !== "pending"
   );

@@ -1,11 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSession } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { fetchMyEarnings } from "@/lib/data"; 
-import { FiDollarSign, FiCalendar, FiUser, FiCheckCircle, FiTrendingUp } from "react-icons/fi";
+import { FiDollarSign, FiInfo, FiCalendar, FiUser, FiCheckCircle, FiTrendingUp } from "react-icons/fi";
 
 const MyEarningsPage = () => {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = authClient.useSession();
   const freelancerEmail = session?.user?.email;
 
   const [loading, setLoading] = useState(true);

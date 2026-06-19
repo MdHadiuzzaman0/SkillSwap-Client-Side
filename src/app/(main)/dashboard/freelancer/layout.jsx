@@ -34,7 +34,7 @@ const FreelancerLayout = ({ children }) => {
     <div className="flex min-h-screen bg-cream text-black font-[var(--font-body)]">
       
       {/* ⬅️ LEFT SIDE: Always Persistent Sidebar */}
-      <aside className="w-64 bg-white border-r border-brown/10 flex flex-col fixed h-full z-10">
+      <aside className="w-64 bg-white border-r border-brown/10 flex flex-col fixed h-[600px]z-10">
         {/* Sidebar Header */}
         <div className="p-6 border-b border-brown/10">
           <h2 className="text-lg font-bold font-[var(--font-heading)] text-navy tracking-wide">

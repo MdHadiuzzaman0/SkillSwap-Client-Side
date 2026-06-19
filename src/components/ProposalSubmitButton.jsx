@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 export function ProposalSubmitButton({ taskData, currentUserEmail }) {
   const modal = useOverlayState();
   const [loading, setLoading] = useState(false);
-  const { _id: taskId, title, category, clientEmail } = taskData || {};
+  const { _id: taskId, title, category, clientEmail, budget } = taskData || {};
   const freelancerEmail = currentUserEmail || "freelanceruser3@gmail.com";
 
   const handleSubmit = async (e) => {
@@ -73,38 +73,38 @@ export function ProposalSubmitButton({ taskData, currentUserEmail }) {
               <Surface variant="default">
                 <form id="proposal-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
 
-                  <TextField className="w-full opacity-80" name="job_title" variant="secondary" isReadOnly>
+                  <TextField className="w-full opacity-80" name="job_title" variant="secondary" readOnly>
                     <Label className="text-xs font-semibold text-brown uppercase">Job Title</Label>
                     <Input
                       value={title || ""}
-                      isReadOnly
+                      readOnly
                       className="bg-cream/20 text-brown/80 font-medium cursor-not-allowed selection:bg-transparent"
                     />
                   </TextField>
 
-                  <TextField className="w-full opacity-80" name="category" variant="secondary" isReadOnly>
+                  <TextField className="w-full opacity-80" name="category" variant="secondary" readOnly>
                     <Label className="text-xs font-semibold text-brown uppercase">Category</Label>
                     <Input
                       value={category || ""}
-                      isReadOnly
+                      readOnly
                       className="bg-cream/20 text-brown/80 font-medium cursor-not-allowed selection:bg-transparent"
                     />
                   </TextField>
 
-                  <TextField className="w-full opacity-80" name="client_email" type="email" variant="secondary" isReadOnly>
+                  <TextField className="w-full opacity-80" name="client_email" type="email" variant="secondary" readOnly>
                     <Label className="text-xs font-semibold text-brown uppercase">Client Email</Label>
                     <Input
                       value={clientEmail || ""}
-                      isReadOnly
+                      readOnly
                       className="bg-cream/20 text-brown/80 font-medium cursor-not-allowed selection:bg-transparent"
                     />
                   </TextField>
 
-                  <TextField className="w-full opacity-80" name="freelancer_email" type="email" variant="secondary" isReadOnly>
+                  <TextField className="w-full opacity-80" name="freelancer_email" type="email" variant="secondary" readOnly>
                     <Label className="text-xs font-semibold text-brown uppercase">Your Email (Freelancer)</Label>
                     <Input
                       value={freelancerEmail || ""}
-                      isReadOnly
+                      readOnly
                       className="bg-cream/20 text-brown/80 font-medium cursor-not-allowed selection:bg-transparent"
                     />
                   </TextField>
@@ -112,27 +112,27 @@ export function ProposalSubmitButton({ taskData, currentUserEmail }) {
                   {/* ====== ১. Proposed Budget (Manual Input) ====== */}
                   <TextField className="w-full" name="proposed_budget" type="number" variant="secondary" required>
                     <Label className="text-xs font-semibold text-brown uppercase">Proposed Budget (USD)</Label>
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center w-full border-1 border-gray-300">
                       <FiDollarSign className="absolute left-3 text-brown/60 z-10" />
-                      <Input className="pl-8 text-black" placeholder="Enter your bid amount" min="1" />
+                      <Input className="pl-8 text-black w-full" placeholder="Enter your bid amount" min="1" max={budget}/>
                     </div>
                   </TextField>
 
                   {/* ====== ২. Estimated Days (Manual Input) ====== */}
                   <TextField className="w-full" name="estimated_days" type="number" variant="secondary" required>
                     <Label className="text-xs font-semibold text-brown uppercase">Estimated Days</Label>
-                    <div className="relative flex items-center">
+                    <div className="relative flex items-center w-full border-1 border-gray-300">
                       <FiClock className="absolute left-3 text-brown/60 z-10" />
-                      <Input className="pl-8 text-black" placeholder="e.g. 5" min="1" />
+                      <Input className="pl-8 text-black w-full" placeholder="e.g. 5" min="1" />
                     </div>
                   </TextField>
 
                   {/* ====== ৩. Cover Note (Manual Input) ====== */}
                   <TextField className="w-full" name="cover_note" variant="secondary" required>
                     <Label className="text-xs font-semibold text-brown uppercase">Cover Note / Message</Label>
-                    <div className="relative flex items-start">
+                    <div className="relative flex items-start w-full border-1 border-gray-300">
                       <FiFileText className="absolute left-3 top-3.5 text-brown/60 z-10" />
-                      <Input className="pl-8 text-black pt-2 min-h-[80px]" placeholder="Why are you a good fit for this job?" />
+                      <Input className="pl-8 text-black pt-2 min-h-[80px] w-full" placeholder="Why are you a good fit for this job?" />
                     </div>
                   </TextField>
 
