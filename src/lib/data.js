@@ -45,3 +45,18 @@ export const fetchMyProposals = async (freelancerEmail) => {
   }
 };
  
+
+//get completed task from proposalCollection
+export const fetchMyEarnings = async (email) => {
+  try {
+    const res = await fetch(`http://localhost:8000/earnings/${email}`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) throw new Error("Failed to load earnings history");
+    return await res.json();
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

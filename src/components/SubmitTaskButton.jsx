@@ -18,7 +18,7 @@ export function SubmitTaskButton({ proposalId }) {
 
     // স্ট্যাটাস "Completed" স্ট্যাটিক হিসেবে পাঠানো হচ্ছে
     const payload = {
-      status: "Completed",
+      status: "completed",
       deliverable_url: deliverableUrl,
     };
 
