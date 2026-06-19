@@ -88,3 +88,25 @@ export const updateProposalTask = async (proposalId, payload) => {
     return { success: false };
   }
 };
+
+//insert posted data info
+export const createTaskAction = async (taskPayload) => {
+  try {
+    const res = await fetch("http://localhost:8000/post-task", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskPayload),
+    });
+    
+    const data = await res.json();
+
+    if (res.ok) {
+      return { success: true, message: data.message || "Task created!" };
+    } else {
+      return { success: false, message: data.message || "Failed to create task." };
+    }
+  } catch (error) {
+    console.error("Error in action.js creating task:", error);
+    return { success: false, message: "Server connection failed." };
+  }
+};

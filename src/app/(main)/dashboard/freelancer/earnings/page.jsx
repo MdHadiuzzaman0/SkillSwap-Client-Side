@@ -71,7 +71,7 @@ useEffect(() => {
       <div className="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-xl text-amber-900 text-xs font-medium flex items-start gap-2">
         <FiInfo className="mt-0.5 flex-shrink-0 text-amber-600" />
         <div>
-          <span className="font-bold">Note:</span> Currently counting earnings from completed tasks only[cite: 1]. In-progress tasks will be automatically added here once their deliverables are submitted and marked as completed[cite: 1].
+          <span className="font-bold">Note:</span> Currently counting earnings from completed tasks only. In-progress tasks will be automatically added here once their deliverables are submitted and marked as completed.
         </div>
       </div>
       

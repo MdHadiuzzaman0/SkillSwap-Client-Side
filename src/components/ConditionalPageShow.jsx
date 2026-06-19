@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import HowItWorks from "@/components/HowItWorks";
 import ReviewSection from "@/components/ReviewSection";
+import Footer from "@/components/Footer";
 // import WhyChooseUs from "@/components/WhyChooseUs";
 // import CallToAction from "@/components/CallToAction";
 // import FAQ from "@/components/FAQ";
@@ -16,6 +17,7 @@ const ConditionalPageShow = () => {
            {/* <WhyChooseUs />
            <CallToAction />
            <FAQ /> */}
+           <Footer />
         </>
     );
 };

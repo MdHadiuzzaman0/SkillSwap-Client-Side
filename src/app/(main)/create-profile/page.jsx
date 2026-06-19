@@ -36,12 +36,12 @@ export default function CreateProfilePage() {
 
     if (profileData.role === "freelancer" && typeof profileData.skills === "string") {
       profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
+      profileData.isBlocked = false;
     } else {
       profileData.skills = [];
     }
 
     profileData.email = email;
-    profileData.isBlocked = false;
     profileData.createdAt = new Date(); 
     const res = await handleFormSubmit(profileData);
     if (res.success) {
