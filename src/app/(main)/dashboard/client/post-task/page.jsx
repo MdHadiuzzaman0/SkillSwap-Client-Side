@@ -5,13 +5,15 @@ import { authClient } from "@/lib/auth-client";
 import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react"; 
 import toast from "react-hot-toast";
 import { createTaskAction } from "@/lib/action";
+import { useRouter } from "next/navigation";
 
 const PostTaskPage = () => {
     const { data: session } = authClient.useSession();
     const [loading, setLoading] = useState(false);
+    const router = useRouter()
 
     // ক্যাটাগরি অপশনস
-    const categories = ['Web Development', 'UI/UX Design', 'Content Writing', 'Mobile Development, Graphic Design', 'Digital Marketing', 'Video Editing'];
+    const categories = ['Web Development', 'UI/UX Design', 'Content Writing', 'Mobile Development', 'Graphic Design', 'Digital Marketing', 'Video Editing'];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,6 +37,7 @@ const PostTaskPage = () => {
             if (result?.success) {
                 toast.success("Task posted successfully!");
                 e.target.reset();
+                router.push('/dashboard/client/my-tasks')
             } else {
                 toast.error(result?.message || "Failed to post task.");
             }
@@ -77,22 +80,27 @@ const PostTaskPage = () => {
                     </TextField>
 
                     {/* ২. Category Selector */}
-                    <div className="flex flex-col gap-1 w-full">
-                        <Label className="text-xs font-bold text-brown uppercase tracking-wide">Category</Label>
-                        <div className="relative flex items-center w-full border border-gray-300 rounded-xl mt-1 bg-white px-3 py-2.5 focus-within:border-navy">
-                            <FiTag className="text-brown/60 mr-2" />
-                            <select
-                                name="category"
-                                required
-                                className="w-full text-black bg-transparent focus:outline-none text-sm cursor-pointer"
-                            >
-                                <option value="" disabled selected>Select a Category</option>
-                                {categories.map((cat) => (
-                                    <option key={cat} value={cat}>{cat}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
+                    {/* ২. Category Selector */}
+<div className="flex flex-col gap-1 w-full">
+  <Label className="text-xs font-bold text-brown uppercase tracking-wide">Category</Label>
+  <div className="relative flex items-center w-full border border-gray-300 rounded-xl mt-1 bg-white px-3 py-2.5 focus-within:border-navy">
+    <FiTag className="text-brown/60 mr-2" />
+    
+    {/* 🎯 এখানে defaultValue="" যোগ করা হয়েছে */}
+    <select 
+      name="category" 
+      required 
+      defaultValue="" 
+      className="w-full text-black bg-transparent focus:outline-none text-sm cursor-pointer"
+    >
+      {/* 🎯 এখান থেকে selected প্রপটি ফেলে দেওয়া হয়েছে */}
+      <option value="" disabled>Select a Category</option>
+      {categories.map((cat) => (
+        <option key={cat} value={cat}>{cat}</option>
+      ))}
+    </select>
+  </div>
+</div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                         {/* ৩. Budget (USD) */}

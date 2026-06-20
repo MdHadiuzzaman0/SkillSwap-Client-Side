@@ -60,3 +60,32 @@ export const fetchMyEarnings = async (email) => {
     return [];
   }
 };
+
+//CLIENT SECTION  
+//get data of posted task - post task
+export const getMyTasksAction = async (email) => {
+  try {
+    const res = await fetch(`http://localhost:8000/my-tasks/${email}`, {
+      cache: "no-store"
+    });
+    const data = await res.json();
+    return data.success ? data.tasks : [];
+  } catch (error) {
+    console.error("Error fetching my tasks:", error);
+    return [];
+  }
+};
+
+//get proposed data through client email - post task
+export const getClientProposalsAction = async (clientEmail) => {
+  try {
+    const res = await fetch(`http://localhost:8000/client-proposals/${clientEmail}`, {
+      cache: "no-store"
+    });
+    const data = await res.json();
+    return data.success ? data.submissions : [];
+  } catch (error) {
+    console.error("Error fetching client proposals:", error);
+    return [];
+  }
+};

@@ -110,3 +110,40 @@ export const createTaskAction = async (taskPayload) => {
     return { success: false, message: "Server connection failed." };
   }
 };
+
+//update posted task data
+export const updateTaskAction = async (taskId, updatedData) => {
+  try {
+    const res = await fetch(`http://localhost:8000/task-update/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error inside updateTaskAction:", error);
+    return { success: false, message: "Network error, failed to update task" };
+  }
+};
+
+//delete posted data
+export const deleteTaskAction = async (taskId) => {
+  try {
+    const response = await fetch(`http://localhost:5000/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    return data; 
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return { success: false, message: "Failed to connect to server" };
+  }
+};
