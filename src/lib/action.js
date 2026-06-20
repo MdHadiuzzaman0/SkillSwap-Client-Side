@@ -147,3 +147,18 @@ export const deleteTaskAction = async (taskId) => {
     return { success: false, message: "Failed to connect to server" };
   }
 };
+
+//update status for accept/ignore botton
+export const updateProposalStatusAction = async (proposalId, status) => {
+  try {
+    const res = await fetch(`http://localhost:8000/proposal-status/${proposalId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }), 
+    });
+    return await res.json();
+  } catch (error) {
+    console.error("Error inside updateProposalStatusAction:", error);
+    return { success: false, message: "Network error" };
+  }
+};
