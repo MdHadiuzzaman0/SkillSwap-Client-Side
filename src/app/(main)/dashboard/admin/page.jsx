@@ -3,22 +3,18 @@ import React from 'react';
 import { getAllUsers, getAllPayments, getAllProposalsForAdmin, getAllTasks } from '@/lib/data';
 
 export default async function AdminStatisticsPage() {
-  // ১. জাস্ট সবগুলো ফাংশন কল করে ডাটা তুলে আনা
   const users = await getAllUsers();
   const tasks = await getAllTasks();
   const payments = await getAllPayments();
   const proposals = await getAllProposalsForAdmin();
 
-  // ২. রিকোয়ারমেন্ট অনুযায়ী ক্যালকুলেশন ও ফিল্টারিং করা
   const totalUsersCount = Array.isArray(users) ? users.length : 0;
   const totalTasksCount = Array.isArray(tasks) ? tasks.length : 0;
 
-  // পেমেন্টের amount গুলো যোগ করে Total Revenue বের করা
   const totalRevenue = Array.isArray(payments) 
     ? payments.reduce((sum, pay) => sum + Number(pay.amount || 0), 0) 
     : 0;
 
-  // প্রপোজাল কালেকশন থেকে শুধু 'in-progress' গুলো ফিল্টার করে Active Tasks বের করা
   const activeTasksCount = Array.isArray(proposals)
     ? proposals.filter(proposal => proposal.status === "in-progress").length
     : 0;
