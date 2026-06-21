@@ -1,5 +1,8 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
+
 //insert create profile data
 export async function handleFormSubmit(profileData) {
   try {
@@ -160,5 +163,30 @@ export const updateProposalStatusAction = async (proposalId, status) => {
   } catch (error) {
     console.error("Error inside updateProposalStatusAction:", error);
     return { success: false, message: "Network error" };
+  }
+};
+
+//update status after payment
+export const changeSatusAfterPayment = async (infoField) => {
+  try {
+    const res = await fetch("http://localhost:8000/api/payments/confirm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(infoField),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      // ড্যাশবোর্ডের ডাটা সাথে সাথে লাইভ রিফ্রেশ করার জন্য ক্যাশ রিসেট
+      revalidatePath("/dashboard/client");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error inside changeSatusAfterPayment action:", error);
+    return { success: false, message: "Action execution failed" };
   }
 };

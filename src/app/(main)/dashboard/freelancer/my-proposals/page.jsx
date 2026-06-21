@@ -7,7 +7,7 @@ import { authClient } from "@/lib/auth-client";
 const MyProposalsPage = () => {
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { data: session } = authClient.useSession(); 
+  const { data: session } = authClient.useSession();
   const freelancerEmail = session?.user?.email;
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const MyProposalsPage = () => {
       const pendingProposals = data.filter(
         (proposal) => !proposal.status || proposal.status.toLowerCase() === "pending"
       );
-      
+
       setProposals(pendingProposals);
       setLoading(false);
     };
@@ -68,10 +68,10 @@ const MyProposalsPage = () => {
                   <tr key={proposal._id} className="hover:bg-cream/20 transition-colors">
                     {/* ১. Task Title */}
                     <td className="p-4 pl-6 font-medium max-w-xs truncate">{proposal.job_title}</td>
-                    
+
                     {/* ২. Budget Bid */}
                     <td className="p-4 font-semibold text-navy">${proposal.proposed_budget}</td>
-                    
+
                     {/* ৩. Date Sent */}
                     <td className="p-4 text-brown font-light">
                       <div className="flex items-center gap-1.5">
@@ -79,11 +79,16 @@ const MyProposalsPage = () => {
                         {proposal.submitted_at ? new Date(proposal.submitted_at).toLocaleDateString() : "N/A"}
                       </div>
                     </td>
-                    
+
                     {/* ৪. Status Text - শুধুই pending দেখাবে */}
                     <td className="p-4 pr-6 text-center">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800">
-                        {proposal.status || "pending"}
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${proposal.status === "rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-amber-100 text-amber-800"
+                          }`}
+                      >
+                        {proposal.status || "n/a"}
                       </span>
                     </td>
                   </tr>

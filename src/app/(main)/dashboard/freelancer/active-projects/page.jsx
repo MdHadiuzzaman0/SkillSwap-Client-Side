@@ -15,8 +15,11 @@ const ActiveProjectsPage = async () => {
   }
   const data = await fetchMyProposals(freelancerEmail);
   const activeProjects = data.filter(
-    (proposal) => proposal.status && proposal.status.toLowerCase() !== "pending"
-  );
+  (proposal) =>
+    proposal.status &&
+    proposal.status.toLowerCase() !== "pending" &&
+    proposal.status.toLowerCase() !== "rejected"
+);
 
   return (
     <div className="space-y-6 text-black p-4">

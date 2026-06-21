@@ -1,11 +1,123 @@
-import React from 'react';
+import { redirect } from 'next/navigation'
+import { stripe } from '../../lib/stripe'
+import Link from 'next/link'
+import { FiCheckCircle, FiArrowRight, FiMail, FiLayers, FiDollarSign } from 'react-icons/fi'
+// 🎯 আপনার অ্যাকশন ফাইল থেকে ফাংশনটি ইম্পোর্ট করুন
+import { changeSatusAfterPayment } from '@/lib/action' 
 
-const page = () => {
+export default async function Success({ searchParams }) {
+  // ১. ইউআরএল থেকে সেশন আইডি এবং স্ট্রিংফাই করা প্রপোজাল ডাটা রিসিভ করা
+  const { session_id, proposalData } = await searchParams
+
+  if (!session_id)
+    throw new Error('Please provide a valid session_id (`cs_test_...`)')
+
+  // ২. স্ট্রাইপ থেকে পেমেন্ট সেশন রিট্রিভ করা
+  const {
+    status,
+    customer_details: { email: customerEmail }
+  } = await stripe.checkout.sessions.retrieve(session_id, {
+    expand: ['line_items', 'payment_intent']
+  })
+
+  if (status === 'open') {
+    return redirect('/')
+  }
+
+  // 🎯 ৩. পেমেন্ট কমপ্লিট হলেই আপনার লজিক অনুযায়ী কাজ শুরু হবে
+  if (status === 'complete') {
+    let proposal = {}
+    
+    // ইউআরএল থেকে আসা প্রপোজাল স্ট্রিংকে পার্স করে অবজেক্টে রূপান্তর
+    if (proposalData) {
+      try {
+        proposal = JSON.parse(decodeURIComponent(proposalData))
+      } catch (e) {
+        console.error("Failed to parse proposal data", e)
+      }
+    }
+
+    // আপনার রিয়েল মঙ্গোডিবি স্কিমা অবজেক্ট অনুযায়ী আইডিগুলো নেওয়া হলো
+    const infoField = {
+      taskId: proposal.task_id,      // প্রপোজাল অবজেক্টের 'task_id'
+      proposalId: proposal._id,      // প্রপোজালের মেইন অবজেক্ট আইডি '_id'
+      sessionId: session_id
+    }
+
+    // 🎯 আপনার বলে দেওয়া সেই ম্যাজিক লাইন—সার্ভার অ্যাকশন কল করে স্ট্যাটাস চেঞ্জ
+    const data = await changeSatusAfterPayment(infoField)
+
+    // ৪. আকর্ষণীয় এবং প্রিমিয়াম কার্ড টাইপ সাকসেস UI
     return (
-        <div>
-            success
-        </div>
-    );
-};
+      <section id="success" className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6 font-sans">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 max-w-md w-full text-center space-y-6 relative overflow-hidden">
+          
+          {/* টপ কালার ডেকোরেশন বার */}
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-green-500" />
+          
+          {/* সাকসেস আইকন */}
+          <div className="mx-auto w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center text-green-500 shadow-inner">
+            <FiCheckCircle className="w-10 h-10" />
+          </div>
 
-export default page;
+          {/* হেডিং */}
+          <div className="space-y-1">
+            <h1 className="text-2xl font-black text-black tracking-tight">Payment Successful!</h1>
+            <p className="text-xs text-gray-500">Your task is now successfully updated to In-Progress</p>
+          </div>
+
+          {/* মেইন ইনফো কার্ড */}
+          <div className="bg-gray-50 rounded-2xl p-4 text-left space-y-3.5 border border-gray-200/50">
+            <div className="flex items-start gap-3">
+              <FiLayers className="w-4 h-4 text-navy mt-0.5" />
+              <div>
+                <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Project Title</p>
+                <p className="text-xs font-semibold text-gray-800 line-clamp-1">{proposal.job_title || "Freelance Task"}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 border-t border-gray-200/60 pt-3">
+              <div className="flex items-start gap-2.5">
+                <FiDollarSign className="w-4 h-4 text-emerald-600 mt-0.5" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Amount Paid</p>
+                  <p className="text-sm font-bold text-black">${proposal.proposed_budget || 0}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <FiMail className="w-4 h-4 text-orange-500 mt-0.5" />
+                <div>
+                  <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Freelancer Email</p>
+                  <p className="text-xs font-semibold text-gray-700 truncate max-w-[120px]">{proposal.freelancer_email}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* নোটিফিকেশন মেসেজ */}
+          <p className="text-xs text-gray-500 px-2 leading-relaxed">
+            We appreciate your business! A confirmation receipt has been sent to{' '}
+            <strong className="text-black font-semibold">{customerEmail}</strong>.
+          </p>
+
+          {/* ড্যাশবোর্ড ব্যাক লিংক বাটন */}
+          <div className="pt-2">
+            <Link 
+              href="/dashboard/client" 
+              className="w-full bg-black hover:bg-zinc-900 text-white font-semibold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md group"
+            >
+              Go to Dashboard
+              <FiArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+
+          {/* ব্যাকএন্ড সিঙ্ক চেক স্ট্যাটাস */}
+          <div className="text-[10px] font-medium text-gray-400">
+            {data?.success ? "✓ Database status synchronized" : "⚠ Updating backend records..."}
+          </div>
+
+        </div>
+      </section>
+    )
+  }
+}

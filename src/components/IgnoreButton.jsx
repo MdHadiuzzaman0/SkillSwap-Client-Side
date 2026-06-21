@@ -1,12 +1,10 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button } from "@heroui/react";
 import { FiXCircle } from "react-icons/fi";
 import { updateProposalStatusAction } from "@/lib/action";
 import toast from "react-hot-toast";
 
-// 🎯 এখানে সরাসরি setProposals রিসিভ করছি
 export default function IgnoreButton({ proposalId, setProposals }) {
   const [isPending, setIsPending] = useState(false);
 
@@ -19,8 +17,6 @@ export default function IgnoreButton({ proposalId, setProposals }) {
 
       if (result?.success) {
         toast.success("Proposal ignored successfully!");
-        
-        // 🎯 প্যারেন্ট থেকে আসা স্টেট চেঞ্জার দিয়ে এখানেই কাজ শেষ করে দিলাম!
         setProposals((prev) => prev.filter((item) => item._id !== proposalId));
       } else {
         toast.error(result?.message || "Failed to ignore proposal.");
