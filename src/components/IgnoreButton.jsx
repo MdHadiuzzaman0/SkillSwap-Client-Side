@@ -9,7 +9,6 @@ export default function IgnoreButton({ proposalId, setProposals }) {
   const [isPending, setIsPending] = useState(false);
 
   const handleIgnore = async () => {
-    if (!confirm("Are you sure you want to ignore this proposal?")) return;
 
     try {
       setIsPending(true);

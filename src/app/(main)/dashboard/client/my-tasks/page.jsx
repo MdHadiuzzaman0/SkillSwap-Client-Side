@@ -1,9 +1,10 @@
-import { Table, Button, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@heroui/react";
+import { Table } from "@heroui/react";
 import { FiEdit2, FiTrash2, FiCalendar, FiDollarSign } from "react-icons/fi";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { getMyTasksAction, getClientProposalsAction } from "@/lib/data";
-import EditButton from "@/lib/EditButton";
+import EditButton from "@/components/EditButton";
+import {DeleteButton} from "@/components/DeleteButton";
 
 export default async function MyTasksPage() {
   const session = await auth.api.getSession({
@@ -15,8 +16,9 @@ export default async function MyTasksPage() {
     return <div className="p-4 text-red-500 font-medium">Please log in to view your tasks.</div>;
   }
 
-  const fetchedTasks = await getMyTasksAction(email);
+  const fetchedTasks = await getMyTasksAction(clientEmail);
   const fetchedProposals = await getClientProposalsAction(clientEmail);
+  console.log(fetchedTasks.length, fetchedProposals.length);
   const renderStatusBadge = (status) => {
     const styles = {
       open: "bg-green-100 text-green-700 border-green-200",
@@ -40,78 +42,75 @@ export default async function MyTasksPage() {
 
       {/* HeroUI Table Anatomy */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <Table aria-label="Client Tasks Table">
-          <TableHeader>
-            <TableColumn className="bg-gray-50 text-gray-600 font-bold">TASK TITLE</TableColumn>
-            <TableColumn className="bg-gray-50 text-gray-600 font-bold">BUDGET</TableColumn>
-            <TableColumn className="bg-gray-50 text-gray-600 font-bold">DEADLINE</TableColumn>
-            <TableColumn className="bg-gray-50 text-gray-600 font-bold">STATUS</TableColumn>
-            <TableColumn className="bg-gray-50 text-gray-600 font-bold text-center">ACTIONS</TableColumn>
-          </TableHeader>
+  <Table variant="secondary">
+    <Table.ScrollContainer>
+      <Table.Content aria-label="Client Tasks Table" className="min-w-[700px]">
+        
+        <Table.Header>
+          <Table.Column isRowHeader className="bg-gray-50 text-gray-600 font-bold">TASK TITLE</Table.Column>
+          <Table.Column className="bg-gray-50 text-gray-600 font-bold">BUDGET</Table.Column>
+          <Table.Column className="bg-gray-50 text-gray-600 font-bold">DEADLINE</Table.Column>
+          <Table.Column className="bg-gray-50 text-gray-600 font-bold">STATUS</Table.Column>
+          <Table.Column className="bg-gray-50 text-gray-600 font-bold text-center">ACTIONS</Table.Column>
+        </Table.Header>
 
-          <TableBody emptyContent={fetchedTasks.length === 0 ? "No tasks posted yet." : null}>
-            {fetchedTasks.map((task) => {
-              const hasProposal = fetchedProposals.some((proposal) => proposal.task_id === task._id.toString());
+        <Table.Body>
+          {fetchedTasks.length === 0 ? (
+            <Table.Row>
+              <Table.Cell colSpan={5} className="text-center text-gray-400 py-8">
+                No tasks posted yet.
+              </Table.Cell>
+            </Table.Row>
+          ) : (
+            fetchedTasks.map((task) => {
+              const hasProposal = fetchedProposals.some(
+                (proposal) => proposal.task_id === task._id.toString()
+              );
               const isEditDisabled = task.status.toLowerCase() !== "open";
               const isDeleteDisabled = task.status.toLowerCase() !== "open" || hasProposal;
 
               return (
-                <TableRow key={task._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-
-                  {/* ১. টাস্ক টাইটেল */}
-                  <TableCell className="font-medium text-sm max-w-xs truncate">
+                <Table.Row key={task._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                  
+                  <Table.Cell className="font-medium text-sm max-w-xs truncate">
                     {task.title}
-                  </TableCell>
+                  </Table.Cell>
 
-                  {/* ২. বাজেট */}
-                  <TableCell className="text-sm font-semibold text-navy">
+                  <Table.Cell className="text-sm font-semibold text-navy">
                     <span className="inline-flex items-center gap-0.5">
                       <FiDollarSign className="w-3.5 h-3.5" />
                       {task.budget}
                     </span>
-                  </TableCell>
+                  </Table.Cell>
 
-                  {/* ৩. ডেডলাইন */}
-                  <TableCell className="text-xs text-gray-500">
+                  <Table.Cell className="text-xs text-gray-500">
                     <span className="inline-flex items-center gap-1.5">
                       <FiCalendar className="text-gray-400" />
                       {new Date(task.deadline).toLocaleDateString()}
                     </span>
-                  </TableCell>
+                  </Table.Cell>
 
-                  {/* ৪. লাইভ স্ট্যাটাস */}
-                  <TableCell>
+                  <Table.Cell>
                     {renderStatusBadge(task.status)}
-                  </TableCell>
+                  </Table.Cell>
 
-                  {/* ৫. অ্যাকশন বাটনসমূহ (এখানে বাটনগুলো স্ট্যাটিক রাখা হয়েছে) */}
-                  <TableCell className="text-center">
+                  <Table.Cell className="text-center">
                     <div className="flex items-center justify-center gap-2">
-
-                      {/* এডিট বাটন */}
-                      <EditButton task={task} />
-
-                      {/* ডিলিট বাটন */}
-                      <Button
-                        isIconOnly
-                        size="sm"
-                        variant="light"
-                        disabled={isDeleteDisabled}
-                        className={`rounded-lg ${!isDeleteDisabled ? "text-red-600 hover:bg-red-50" : "text-gray-300 cursor-not-allowed"}`}
-                        title={isDeleteDisabled ? "Cannot delete if task has proposals or is not Open" : "Delete Task"}
-                      >
-                        <FiTrash2 className="w-4 h-4" />
-                      </Button>
-
+                      <EditButton task={task}  />
+                      <DeleteButton task={task} />
                     </div>
-                  </TableCell>
+                  </Table.Cell>
 
-                </TableRow>
+                </Table.Row>
               );
-            })}
-          </TableBody>
-        </Table>
-      </div>
+            })
+          )}
+        </Table.Body>
+
+      </Table.Content>
+    </Table.ScrollContainer>
+  </Table>
+</div>
     </div>
   );
 }

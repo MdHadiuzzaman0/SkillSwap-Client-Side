@@ -4,9 +4,10 @@ import { Button, Input, Label, Modal, TextField } from "@heroui/react";
 import { FiDollarSign, FiCalendar, FiTag, FiFileText, FiEdit2 } from "react-icons/fi";
 import { updateTaskAction } from "@/lib/action";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function EditButton({ task }) {
-
+    const router = useRouter()
     const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState({
         title: task?.title || "",
@@ -39,6 +40,7 @@ export default function EditButton({ task }) {
 
         if (result?.success) {
             toast.success(result.message || "Task updated successfully!");
+            router.refresh()
         } else {
             toast.error(result?.message || "Failed to update task.");
         }
@@ -144,9 +146,6 @@ export default function EditButton({ task }) {
                                     />
                                 </TextField>
 
-                            </form>
-                        </Modal.Body>
-
                         {/* মোডাল ফুটার অ্যাকশন বাটন */}
                         <Modal.Footer className="p-6 border-t border-gray-100 bg-gray-50/50 flex justify-end gap-3">
                             <Button
@@ -157,12 +156,15 @@ export default function EditButton({ task }) {
                                 Cancel
                             </Button>
                             <Button
-                                onPress={handleSubmit}
+                                type="submit"
                                 className="bg-navy text-white font-semibold px-6 py-2 rounded-xl hover:opacity-90 transition-all text-sm"
                             >
                                 Save Changes
                             </Button>
                         </Modal.Footer>
+                            </form>
+                        </Modal.Body>
+
 
                     </Modal.Dialog>
                 </Modal.Container>

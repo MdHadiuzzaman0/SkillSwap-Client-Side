@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { stripe } from '../../lib/stripe'
+import { stripe } from '@/lib/stripe'
 import Link from 'next/link'
 import { FiCheckCircle, FiArrowRight, FiMail, FiLayers, FiDollarSign } from 'react-icons/fi'
 import { changeSatusAfterPayment } from '@/lib/action' 

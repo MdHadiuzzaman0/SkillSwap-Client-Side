@@ -178,12 +178,6 @@ export const changeSatusAfterPayment = async (infoField) => {
     });
 
     const data = await res.json();
-
-    if (data.success) {
-      // ড্যাশবোর্ডের ডাটা সাথে সাথে লাইভ রিফ্রেশ করার জন্য ক্যাশ রিসেট
-      revalidatePath("/dashboard/client");
-    }
-
     return data;
   } catch (error) {
     console.error("Error inside changeSatusAfterPayment action:", error);

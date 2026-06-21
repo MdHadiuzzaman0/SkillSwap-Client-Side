@@ -10,12 +10,9 @@ export default async function ManageProposalsPage() {
     headers: await headers() 
 }); 
   const clientEmail = session?.user?.email || "";
-
-  let proposals = [];
-  if (clientEmail) {
-    const result = await getClientProposalsAction(clientEmail);
-      proposals = result.submissions || result.proposals || [];
-    }
+  
+    const proposals = await getClientProposalsAction(clientEmail);
+    //console.log(clientEmail, proposals);
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

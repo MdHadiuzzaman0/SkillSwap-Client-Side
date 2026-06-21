@@ -46,7 +46,7 @@ export default function CreateProfilePage() {
     const res = await handleFormSubmit(profileData);
     if (res.success) {
       toast.success("Profile updated successfully! 🎉");
-      window.location.href = `/dashboard/${targetRole}`;
+      window.location.href = `/dashboard/${targetRole}/intro`;
     } else {
       toast.error(`Failed to save: ${res.error}`);
     }

@@ -1,9 +1,8 @@
 import React from 'react';
 import { FiEye, FiTrash2, FiBriefcase, FiAlertCircle } from 'react-icons/fi';
 import { getAllTasks, getAllProposalsForAdmin } from '@/lib/data';
-import { deleteTaskAction } from '@/lib/action';
-import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import {DeleteButton} from '@/components/DeleteButton'; 
 
 export default async function AdminTasksPage() {
   const tasks = await getAllTasks();
@@ -23,17 +22,6 @@ export default async function AdminTasksPage() {
       displayStatus: finalStatus
     };
   }) : [];
-
-  const handleDelete = async (formData) => {
-    "use server";
-    const taskId = formData.get("taskId");
-    if (!taskId) return;
-    
-    const res = await deleteTaskAction(taskId);
-    if (res?.success) {
-      revalidatePath("/dashboard/admin/tasks");
-    }
-  };
 
   const getStatusBadge = (status) => {
     const base = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-sm border";
@@ -121,32 +109,15 @@ export default async function AdminTasksPage() {
                     {/* 🛠️ ৬. অ্যাকশন বাটন কলাম (View এবং Delete পাশাপাশি gap-3 দিয়ে) */}
                     <td className="py-4 px-6 text-center">
                       <div className="flex items-center justify-center gap-3">
-                        
-                        {/* স্ট্যাটিক ভিউ বাটন (চোখের আইকন) */}
                                 <Link
-                                    href={`/dashboard/admin/tasks/${task._id}`}
+                                    href={`/browse-tasks/${task._id}`}
                                     className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200"
                                     title="View Details"
                                 >
                                     <FiEye className="w-4 h-4" />
                                 </Link>
 
-                        {/* ডাইনামিক ডিলিট ফর্ম ও বাটন (ট্র্যাশ আইকন) */}
-                        <form action={handleDelete} className="inline-block">
-                          <input type="hidden" name="taskId" value={task._id?.toString() || ""} />
-                          <button 
-                            type="submit"
-                            title="Delete Task"
-                            className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-                            onClick={(e) => {
-                              if(!confirm("Do you really want to delete this task?")) {
-                                e.preventDefault();
-                              }
-                            }}
-                          >
-                            <FiTrash2 className="w-4 h-4" />
-                          </button>
-                        </form>
+                                <DeleteButton task={task} />
 
                       </div>
                     </td>

@@ -77,13 +77,13 @@ export const getMyTasksAction = async (email) => {
 };
 
 //get proposed data through client email - post task
-export const getClientProposalsAction = async (clientEmail) => {
+export const getClientProposalsAction = async (email) => {
   try {
-    const res = await fetch(`http://localhost:8000/client-proposals/${clientEmail}`, {
+    const res = await fetch(`http://localhost:8000/client-proposals/${email}`, {
       cache: "no-store"
     });
     const data = await res.json();
-    return data.success ? data.submissions : [];
+    return data.submissions;
   } catch (error) {
     console.error("Error fetching client proposals:", error);
     return [];

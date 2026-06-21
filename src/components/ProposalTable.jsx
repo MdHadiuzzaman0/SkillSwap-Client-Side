@@ -43,7 +43,7 @@ export default function ProposalTable({ initialProposals }) {
               <Table.Content aria-label={`Proposals for task ${jobTitle}`} className="text-black">
 
                 <Table.Header className="bg-gray-50/50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  <Table.Column className="p-4 pl-6">Freelancer</Table.Column>
+                  <Table.Column isRowHeader className="p-4 pl-6">Freelancer</Table.Column>
                   <Table.Column className="p-4">Bid Amount</Table.Column>
                   <Table.Column className="p-4">Duration</Table.Column>
                   <Table.Column className="p-4">Cover Note</Table.Column>
