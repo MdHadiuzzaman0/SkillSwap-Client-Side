@@ -14,14 +14,12 @@ export default async function ClientDashboardPage() {
   let totalSpent = 0;
 
   if (clientEmail) {
-    // ২. সব টাস্ক ফেচ করে ক্লায়েন্টের ইমেইল ও 'open' স্ট্যাটাস দিয়ে ফিল্টার করা
+
     const allTasks = await getAllTasks();
     if (Array.isArray(allTasks)) {
-      // ক্লায়েন্টের নিজস্ব সব টাস্ক
       const clientTasks = allTasks.filter((task) => (task.clientEmail === clientEmail || task.client_email === clientEmail));
       totalTasksCount = clientTasks.length;
 
-      // ক্লায়েন্টের নিজস্ব টাস্ক যেগুলোর স্ট্যাটাস 'open'
       const openTasks = clientTasks.filter((task) => task.status === "open");
       openTasksCount = openTasks.length;
     }
