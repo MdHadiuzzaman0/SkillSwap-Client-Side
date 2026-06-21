@@ -91,7 +91,7 @@ export const getClientProposalsAction = async (clientEmail) => {
 };
 
 //admin
-// ১. সব ইউজার ফেচ করার ফাংশন
+// get all  user data
 export const getAllUsers = async () => {
   try {
     const res = await fetch("http://localhost:8000/admin/all-users", { cache: "no-store" });
@@ -103,7 +103,7 @@ export const getAllUsers = async () => {
   }
 };
 
-// ২. সব পেমেন্ট ফেচ করার ফাংশন
+// get all payment data
 export const getAllPayments = async () => {
   try {
     const res = await fetch("http://localhost:8000/admin/payments", { cache: "no-store" });
@@ -115,7 +115,7 @@ export const getAllPayments = async () => {
   }
 };
 
-// ৩. সব প্রপোজাল ফেচ করার ফাংশন (Active Tasks এর জন্য)
+// get all proposal data - in-progress
 export const getAllProposalsForAdmin = async () => {
   try {
     const res = await fetch("http://localhost:8000/admin/all-proposals", { cache: "no-store" });

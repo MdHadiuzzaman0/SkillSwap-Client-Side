@@ -1,5 +1,7 @@
 import React from 'react';
-// আপনার তৈরি করা এবং আগের রেডিমেড ফাংশনগুলো ইম্পোর্ট করুন
+// চমৎকার কিছু আইকন ইম্পোর্ট করা হলো
+import { FiUsers, FiBriefcase, FiDollarSign, FiActivity } from 'react-icons/fi';
+// আপনার ডেটা ফেচিং ফাংশনগুলো
 import { getAllUsers, getAllPayments, getAllProposalsForAdmin, getAllTasks } from '@/lib/data';
 
 export default async function AdminStatisticsPage() {
@@ -19,37 +21,63 @@ export default async function AdminStatisticsPage() {
     ? proposals.filter(proposal => proposal.status === "in-progress").length
     : 0;
 
+  // কার্ডের ডাটাগুলোকে লুপ ঘোরানোর সুবিধার্থে একটি অ্যারেতে সাজানো হলো
+  const statCards = [
+    {
+      title: "Total Users",
+      value: totalUsersCount,
+      icon: <FiUsers className="w-6 h-6 text-zinc-700" />,
+      iconBg: "bg-zinc-100",
+      textColor: "text-zinc-900"
+    },
+    {
+      title: "Total Tasks",
+      value: totalTasksCount,
+      icon: <FiBriefcase className="w-6 h-6 text-blue-600" />,
+      iconBg: "bg-blue-50",
+      textColor: "text-blue-600"
+    },
+    {
+      title: "Total Revenue (USD)",
+      value: `$${totalRevenue}`,
+      icon: <FiDollarSign className="w-6 h-6 text-emerald-600" />,
+      iconBg: "bg-green-50",
+      textColor: "text-emerald-600"
+    },
+    {
+      title: "Active Tasks",
+      value: activeTasksCount,
+      icon: <FiActivity className="w-6 h-6 text-amber-500" />,
+      iconBg: "bg-amber-50",
+      textColor: "text-amber-500"
+    }
+  ];
+
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-black bg-gray-50 min-h-screen">
-      <h2 className="text-xl font-black mb-6">Overview Statistics</h2>
+      <div className="mb-6">
+        <h2 className="text-xl font-black font-[var(--font-heading)] text-navy tracking-tight">Overview Statistics</h2>
+        <p className="text-xs text-gray-500 mt-1">Real-time platform health and performance indicators</p>
+      </div>
 
-      {/* 📊 ৪টি প্রধান স্ট্যাটস কার্ড লেআউট */}
+      {/* 📊 ইন্টারঅ্যাক্টিভ ৪টি প্রধান স্ট্যাটস কার্ড লেআউট */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        
-        {/* কার্ড ১: Total Users */}
-        <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Users</p>
-          <h3 className="text-3xl font-black mt-2 text-zinc-900">{totalUsersCount}</h3>
-        </div>
-
-        {/* কার্ড ২: Total Tasks */}
-        <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Tasks</p>
-          <h3 className="text-3xl font-black mt-2 text-blue-600">{totalTasksCount}</h3>
-        </div>
-
-        {/* কার্ড ৩: Total Revenue (USD) */}
-        <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Revenue (USD)</p>
-          <h3 className="text-3xl font-black mt-2 text-emerald-600">${totalRevenue}</h3>
-        </div>
-
-        {/* কার্ড ৪: Active Tasks */}
-        <div className="p-6 bg-white border border-gray-200 rounded-2xl shadow-sm">
-          <p className="text-xs font-bold text-gray-400 tracking-wider">Active Tasks</p>
-          <h3 className="text-3xl font-black mt-2 text-amber-500">{activeTasksCount}</h3>
-        </div>
-
+        {statCards.map((card, idx) => (
+          <div 
+            key={idx} 
+            className="p-6 bg-white border border-gray-200/60 rounded-2xl shadow-sm flex items-center justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-300/80 group cursor-pointer"
+          >
+            <div className="space-y-2">
+              <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">{card.title}</p>
+              <h3 className={`text-3xl font-black ${card.textColor} tracking-tight`}>{card.value}</h3>
+            </div>
+            
+            {/* আইকন রেন্ডারিং এবং হালকা জুম অ্যানিমেশন হোভারে */}
+            <div className={`p-4 ${card.iconBg} rounded-2xl transition-transform duration-300 group-hover:scale-110 flex items-center justify-center`}>
+              {card.icon}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
