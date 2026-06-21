@@ -136,7 +136,7 @@ export const updateTaskAction = async (taskId, updatedData) => {
 //delete posted data
 export const deleteTaskAction = async (taskId) => {
   try {
-    const response = await fetch(`http://localhost:5000/tasks/${taskId}`, {
+    const response = await fetch(`http://localhost:8000/tasks/${taskId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

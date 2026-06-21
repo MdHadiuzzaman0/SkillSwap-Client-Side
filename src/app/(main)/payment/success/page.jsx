@@ -2,15 +2,17 @@ import { redirect } from 'next/navigation'
 import { stripe } from '../../lib/stripe'
 import Link from 'next/link'
 import { FiCheckCircle, FiArrowRight, FiMail, FiLayers, FiDollarSign } from 'react-icons/fi'
-// 🎯 আপনার অ্যাকশন ফাইল থেকে ফাংশনটি ইম্পোর্ট করুন
 import { changeSatusAfterPayment } from '@/lib/action' 
+import { getClientProposalsAction } from '@/lib/data' 
+import { auth } from '@/lib/auth'
+import { headers } from "next/headers"
 
 export default async function Success({ searchParams }) {
-  // ১. ইউআরএল থেকে সেশন আইডি এবং স্ট্রিংফাই করা প্রপোজাল ডাটা রিসিভ করা
-  const { session_id, proposalData } = await searchParams
+  // 🎯 ১. ইউআরএল থেকে সেশন আইডি এবং প্রপোজাল আইডি রিসিভ করা
+  const { session_id, proposalId } = await searchParams
 
-  if (!session_id)
-    throw new Error('Please provide a valid session_id (`cs_test_...`)')
+  if (!session_id || !proposalId)
+    throw new Error('Please provide a valid session_id and proposalId')
 
   // ২. স্ট্রাইপ থেকে পেমেন্ট সেশন রিট্রিভ করা
   const {
@@ -24,30 +26,42 @@ export default async function Success({ searchParams }) {
     return redirect('/')
   }
 
-  // 🎯 ৩. পেমেন্ট কমপ্লিট হলেই আপনার লজিক অনুযায়ী কাজ শুরু হবে
+  // 🎯 ৩. পেমেন্ট কমপ্লিট হলেই কাজ শুরু হবে
   if (status === 'complete') {
-    let proposal = {}
     
-    // ইউআরএল থেকে আসা প্রপোজাল স্ট্রিংকে পার্স করে অবজেক্টে রূপান্তর
-    if (proposalData) {
-      try {
-        proposal = JSON.parse(decodeURIComponent(proposalData))
-      } catch (e) {
-        console.error("Failed to parse proposal data", e)
+    // 🎯 ৪. সেশন থেকে ক্লায়েন্ট ইমেইল বের করে তার সব প্রপোজাল তুলে আনা
+    const session = await auth.api.getSession({
+    headers: await headers() // you need to pass the headers object.
+})
+    const clientEmail = session?.user?.email || ""
+    
+    let currentProposal = null
+
+    if (clientEmail) {
+      const allProposals = await getClientProposalsAction(clientEmail)
+      
+      // ৫. তুলে আনা লিস্ট থেকে ইউআরএল-এর proposalId ম্যাচ করে নির্দিষ্ট প্রপোজাল অবজেক্টটি খুঁজে বের করা
+      if (Array.isArray(allProposals)) {
+        currentProposal = allProposals.find(
+          (p) => (p._id?.toString() === proposalId || p._id?.$oid === proposalId)
+        )
       }
     }
 
-    // আপনার রিয়েল মঙ্গোডিবি স্কিমা অবজেক্ট অনুযায়ী আইডিগুলো নেওয়া হলো
+    // যদি কোনো কারণে প্রপোজাল ডাটা না পাওয়া যায়, ক্র্যাশ এড়াতে সেফটি অবজেক্ট
+    const proposalInfo = currentProposal || {}
+
+    // 🎯 ৬. আপনার এক্সপ্রেস ব্যাকএন্ডের জন্য infoField গোছানো (taskId ও proposalId সহ)
     const infoField = {
-      taskId: proposal.task_id,      // প্রপোজাল অবজেক্টের 'task_id'
-      proposalId: proposal._id,      // প্রপোজালের মেইন অবজেক্ট আইডি '_id'
+      taskId: proposalInfo.task_id,      // ডাটাবেজ থেকে পাওয়া task_id
+      proposalId: proposalId,            // ইউআরএল থেকে আসা আসল আইডি
       sessionId: session_id
     }
 
-    // 🎯 আপনার বলে দেওয়া সেই ম্যাজিক লাইন—সার্ভার অ্যাকশন কল করে স্ট্যাটাস চেঞ্জ
+    // সার্ভার অ্যাকশন কল করে ডাটাবেজ স্ট্যাটাস "in-progress" ও "closed" করা
     const data = await changeSatusAfterPayment(infoField)
 
-    // ৪. আকর্ষণীয় এবং প্রিমিয়াম কার্ড টাইপ সাকসেস UI
+    // 🎨 ৭. আকর্ষণীয় এবং প্রিমিয়াম কার্ড টাইপ সাকসেস UI
     return (
       <section id="success" className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6 font-sans">
         <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 max-w-md w-full text-center space-y-6 relative overflow-hidden">
@@ -66,13 +80,13 @@ export default async function Success({ searchParams }) {
             <p className="text-xs text-gray-500">Your task is now successfully updated to In-Progress</p>
           </div>
 
-          {/* মেইন ইনফো কার্ড */}
+          {/* মেইন ইনফো কার্ড (যা সরাসরি ডাটাবেজ থেকে ম্যাচ করে আনা হয়েছে) */}
           <div className="bg-gray-50 rounded-2xl p-4 text-left space-y-3.5 border border-gray-200/50">
             <div className="flex items-start gap-3">
               <FiLayers className="w-4 h-4 text-navy mt-0.5" />
               <div>
                 <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Project Title</p>
-                <p className="text-xs font-semibold text-gray-800 line-clamp-1">{proposal.job_title || "Freelance Task"}</p>
+                <p className="text-xs font-semibold text-gray-800 line-clamp-1">{proposalInfo.job_title || "Freelance Task"}</p>
               </div>
             </div>
 
@@ -81,14 +95,14 @@ export default async function Success({ searchParams }) {
                 <FiDollarSign className="w-4 h-4 text-emerald-600 mt-0.5" />
                 <div>
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Amount Paid</p>
-                  <p className="text-sm font-bold text-black">${proposal.proposed_budget || 0}</p>
+                  <p className="text-sm font-bold text-black">${proposalInfo.proposed_budget || 0}</p>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
                 <FiMail className="w-4 h-4 text-orange-500 mt-0.5" />
                 <div>
                   <p className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Freelancer Email</p>
-                  <p className="text-xs font-semibold text-gray-700 truncate max-w-[120px]">{proposal.freelancer_email}</p>
+                  <p className="text-xs font-semibold text-gray-700 truncate max-w-[120px]">{proposalInfo.freelancer_email || "N/A"}</p>
                 </div>
               </div>
             </div>
@@ -113,7 +127,7 @@ export default async function Success({ searchParams }) {
 
           {/* ব্যাকএন্ড সিঙ্ক চেক স্ট্যাটাস */}
           <div className="text-[10px] font-medium text-gray-400">
-            {data?.success ? "✓ Database status synchronized" : "⚠ Updating backend records..."}
+            {data?.success ? "✓ Database status synchronized" : "⚠ Syncing backend records..."}
           </div>
 
         </div>

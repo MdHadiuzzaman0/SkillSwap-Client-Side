@@ -3,22 +3,19 @@ import { FiBriefcase } from "react-icons/fi";
 import { getClientProposalsAction } from "@/lib/data"; 
 import ProposalTable from "@/components/ProposalTable";
 import { auth } from "@/lib/auth"; 
-import toast from "react-hot-toast";
+import { headers } from "next/headers"
 
 export default async function ManageProposalsPage() {
-  const session = await auth(); 
+  const session = await auth.api.getSession({
+    headers: await headers() 
+}); 
   const clientEmail = session?.user?.email || "";
 
   let proposals = [];
   if (clientEmail) {
     const result = await getClientProposalsAction(clientEmail);
-    if (result?.success) {
       proposals = result.submissions || result.proposals || [];
     }
-    else{
-        toast.error("Failed to fetch proposals. Please try again later.");
-    }
-  }
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">

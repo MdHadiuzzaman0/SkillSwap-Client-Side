@@ -1,13 +1,14 @@
 import React from "react";
-import { getAllTasks, getClientProposalsAction } from "@/lib/data"; // আপনার ফাংশনগুলোর পাথ
-import { auth } from "@/lib/auth";
+import { getAllTasks, getClientProposalsAction } from "@/lib/data"; 
+import { auth } from "@/lib/auth"; 
+import { headers } from "next/headers"
 
 export default async function ClientDashboardPage() {
-  // ১. সেশন থেকে লগইন করা ক্লায়েন্টের ইমেইল বের করা
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers() 
+  });
   const clientEmail = session?.user?.email || "";
 
-  // ডিফল্ট ভ্যালু সেট করা
   let totalTasksCount = 0;
   let openTasksCount = 0;
   let inProgressTasksCount = 0;

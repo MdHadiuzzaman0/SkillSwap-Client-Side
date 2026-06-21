@@ -7,7 +7,7 @@ import IgnoreButton from "@/components//IgnoreButton";
 export default function ProposalTable({ initialProposals }) {
   // সার্ভার থেকে আসা র ডাটা স্টেটে রাখা হলো
   const [proposals, setProposals] = useState(initialProposals);
-  const activeProposals = proposals.filter((p) => p.status !== "Rejected");
+  const activeProposals = proposals.filter((p) => p.status !== "rejected");
   const groupedProposals = activeProposals.reduce((groups, proposal) => {
     const title = proposal.job_title || "Unknown Task";
     if (!groups[title]) {
@@ -40,7 +40,7 @@ export default function ProposalTable({ initialProposals }) {
           {/* ওই নির্দিষ্ট টাস্কের নিজস্ব প্রপোজাল টেবিল */}
           <Table className="w-full text-left bg-white border border-brown/10 rounded-2xl shadow-sm overflow-hidden">
             <Table.ScrollContainer>
-              <Table.Content aria-label={`Proposals for task ${taskId}`} className="text-black">
+              <Table.Content aria-label={`Proposals for task ${jobTitle}`} className="text-black">
 
                 <Table.Header className="bg-gray-50/50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
                   <Table.Column className="p-4 pl-6">Freelancer</Table.Column>
@@ -104,7 +104,7 @@ export default function ProposalTable({ initialProposals }) {
                           <IgnoreButton proposalId={proposal._id} setProposals={setProposals}
                           />
 
-                          <form action={`/api/checkout_sessions?proposalData=${encodeURIComponent(JSON.stringify(proposal))}`}
+                          <form action={`/api/checkout_sessions?proposalId=${proposal._id}`}
                             method="POST" className="inline-block" >
                             <button type="submit" className="bg-navy hover:bg-opacity-95 text-white px-4 py-2 rounded-xl text-xs font-semibold cursor-pointer transition-all shadow-sm">
                               Accept & Pay

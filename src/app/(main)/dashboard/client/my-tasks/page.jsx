@@ -11,7 +11,7 @@ export default async function MyTasksPage() {
   });
   const clientEmail = session?.user?.email;
 
-  if (!email) {
+  if (!clientEmail) {
     return <div className="p-4 text-red-500 font-medium">Please log in to view your tasks.</div>;
   }
 
