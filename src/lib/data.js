@@ -89,3 +89,40 @@ export const getClientProposalsAction = async (clientEmail) => {
     return [];
   }
 };
+
+//admin
+// ১. সব ইউজার ফেচ করার ফাংশন
+export const getAllUsers = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/admin/all-users", { cache: "no-store" });
+    const data = await res.json();
+    return data.success ? data.users : [];
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return [];
+  }
+};
+
+// ২. সব পেমেন্ট ফেচ করার ফাংশন
+export const getAllPayments = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/admin/payments", { cache: "no-store" });
+    const data = await res.json();
+    return data.success ? data.payments : [];
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    return [];
+  }
+};
+
+// ৩. সব প্রপোজাল ফেচ করার ফাংশন (Active Tasks এর জন্য)
+export const getAllProposalsForAdmin = async () => {
+  try {
+    const res = await fetch("http://localhost:8000/admin/all-proposals", { cache: "no-store" });
+    const data = await res.json();
+    return data.success ? data.proposals : [];
+  } catch (error) {
+    console.error("Error fetching all proposals:", error);
+    return [];
+  }
+};
