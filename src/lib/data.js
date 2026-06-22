@@ -144,10 +144,10 @@ export const getAllProposalsForAdmin = async () => {
 
 //finishing
 //grt all freelancer with proposals
-export async function getFreelancerPageData() {
+export async function getAllData() {
   try {
-    const res = await fetch("http://localhost:8000/api/freelancers-with-proposals", {
-      cache: "no-store" // রিয়েল-টাইম ডাটার জন্য ক্যাশ বন্ধ রাখা হলো
+    const res = await fetch("http://localhost:8000/api/allData", {
+      next:{revalidate: 20} // রিয়েল-টাইম ডাটার জন্য ক্যাশ বন্ধ রাখা হলো
     });
     
     const result = await res.json();
@@ -155,7 +155,8 @@ export async function getFreelancerPageData() {
     if (result.success) {
       return {
         users: result.users || [],
-        proposals: result.proposals || []
+        proposals: result.proposals || [],
+        tasks: result.tasks || [],
       };
     }
     

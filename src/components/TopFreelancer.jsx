@@ -1,4 +1,5 @@
 import { getTopFreelancers } from "@/lib/data";
+import Image from "next/image";
 import { FiDollarSign, FiAward, FiUser } from "react-icons/fi";
 
 const TopFreelancersSection = async () => {
@@ -54,9 +55,9 @@ const TopFreelancersSection = async () => {
                   <div className="flex items-center gap-4 mb-6">
                     <div className="relative">
                       {freelancer.image ? (
-                        <img 
+                        <Image
                           src={freelancer.image} 
-                          alt={freelancer.name} 
+                          alt={freelancer.name} fill
                           className={`w-16 h-16 rounded-2xl object-cover border-2 ${rankStyles.border} p-0.5`}
                         />
                       ) : (

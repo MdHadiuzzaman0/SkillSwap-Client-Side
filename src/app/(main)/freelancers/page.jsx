@@ -1,19 +1,19 @@
-import { getFreelancerPageData } from "@/lib/data";
+import { getAllData } from "@/lib/data";
 import { FiDollarSign, FiBriefcase, FiCheckCircle, FiStar, FiUser } from "react-icons/fi";
 
 const BrowseFreelancersPage = async () => {
-  const { users, proposals } = await getFreelancerPageData();
+  const { users, proposals } = await getAllData();
 
   // 🎯 ২. ফ্রিল্যান্সারদের ফিল্টার করা এবং ইন-প্রগ্রেস ও কমপ্লিটেড কাজের ডাটা আলাদা করা
   const freelancers = users
     ?.filter((user) => user.role === "freelancer" && !user.isBlocked)
     ?.map((freelancer) => {
       // এই ফ্রিল্যান্সারের সব প্রপোজাল আলাদা করে নেওয়া
-      const myProposals = allProposals?.filter(
+      const myProposals = proposals?.filter(
         (proposal) => proposal.freelancer_email === freelancer.email
       ) || [];
 
-      // স্ট্যাটাস অনুযায়ী pconst { users, proposals } = await getFreelancerPageData();আলাদা ফিল্টারিং ও কাউন্টিং
+      // স্ট্যাটাস অনুযায়ী pconst { users, proposals } = await getAllData();আলাদা ফিল্টারিং ও কাউন্টিং
       const inProgressCount = myProposals.filter((p) => p.status === "in-progress").length;
       const completedCount = myProposals.filter((p) => p.status === "completed").length;
 
