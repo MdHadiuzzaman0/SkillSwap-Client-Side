@@ -19,6 +19,7 @@ const FilterDropdown = ({ categoryOptions }) => {
         const params = new URLSearchParams(searchParams.toString()); // কারেন্ট ইউআরএল নেওয়া[cite: 4]
 
         const isCurrentlyActive = searchParams.get(filterType) === value;
+        params.set('page', '1')
 
         if (value === "All" || isCurrentlyActive) {
             params.delete(filterType); // 'All' বা পুনরায় ক্লিকে ফিল্টার রিমুভ হবে[cite: 4]

@@ -1,10 +1,12 @@
-import TaskCard from "@/components/TaskCard"; 
+import TaskCard from "@/components/TaskCard";
 import { getUserInfo } from "@/lib/data";
 import { authClient } from "@/lib/auth-client"; // BetterAuth ক্লায়েন্ট
 import { headers } from "next/headers";
-import Filter from "@/components/Filter"; 
-import Search from "@/components/Search"; 
+import Filter from "@/components/Filter";
+import Search from "@/components/Search";
 import { getFilteredTasks } from "@/lib/action";
+import { FiInfo } from "react-icons/fi";
+import Link from "next/link";
 
 const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     // ১. ইউজার সেশন ডাটা
@@ -15,13 +17,22 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     const userInfo = await getUserInfo(email);
 
     // ২. searchParams await করা (Next.js 15+ রুল)
-    const searchParams = await searchParamsPromise;  
-    
+    const searchParams = await searchParamsPromise;
+
     const category = searchParams?.category || "";
     const search = searchParams?.search || "";
+    const currentPage = parseInt(searchParams?.page) || 1; 
 
-    // 🚀 ফিল্টারড টাস্ক গেট করা
-    const { tasks, count } = await getFilteredTasks({ category, search });
+    const { tasks, total } = await getFilteredTasks({ category, search, page: currentPage });
+
+    const limit = 9;
+    const totalPages = Math.ceil(total / limit); 
+
+    const getPageLink = (pageNumber) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("page", pageNumber.toString());
+        return `?${params.toString()}`;
+    };
 
     // 🎯 আপনার দেওয়া নতুন ক্যাтаগরি লিস্ট
     const categoryOptions = [
@@ -48,12 +59,19 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
                         Explore micro-tasks posted by clients ({count} tasks found).
                     </p>
                 </div>
-                
+
                 {/* সার্চ এবং ফিল্টার গ্রিড */}
+                <div className="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-xl text-amber-900 text-xs font-medium flex items-start gap-2 mb-6">
+                    <FiInfo className="mt-0.5 flex-shrink-0 text-amber-600 text-sm" />
+                    <div>
+                        <span className="font-bold">Note:</span> Search functionality strictly queries against the task <span className="font-bold underline">title</span>. <br/>
+                        The dropdown filters options using the specific task <span className="font-bold underline">category</span> field. 
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <Search />
                     <Filter
-                        categoryOptions={categoryOptions} 
+                        categoryOptions={categoryOptions}
                         typeOptions={[]} // টাইপ না লাগলে খালি থাকবে
                     />
                 </div>
@@ -62,9 +80,9 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
                 {tasks && tasks.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {tasks.map((task) => (
-                            <TaskCard 
-                                key={task._id || task.id} 
-                                task={task} 
+                            <TaskCard
+                                key={task._id || task.id}
+                                task={task}
                                 email={email}
                                 userInfo={userInfo}
                             />
@@ -77,6 +95,36 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
                         <p className="font-body text-workable-text-muted text-sm max-w-sm">Try resetting the filter or searching for something else!</p>
                     </div>
                 )}
+
+                {tasks.length > 0 && totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-4 mt-12">
+                        {/* Previous Button */}
+                        <Link
+                            href={getPageLink(currentPage - 1)}
+                            className={`px-4 py-2 border rounded-xl text-sm font-medium bg-white transition ${
+                                currentPage <= 1 ? "opacity-50 pointer-events-none text-gray-400" : "hover:bg-gray-50 text-gray-700"
+                            }`}
+                        >
+                            Previous
+                        </Link>
+
+                        {/* পেজ ইন্ডিকেটর */}
+                        <span className="text-sm font-semibold text-gray-700">
+                            Page {currentPage} of {totalPages}
+                        </span>
+
+                        {/* Next Button */}
+                        <Link
+                            href={getPageLink(currentPage + 1)}
+                            className={`px-4 py-2 border rounded-xl text-sm font-medium bg-white transition ${
+                                currentPage >= totalPages ? "opacity-50 pointer-events-none text-gray-400" : "hover:bg-gray-50 text-gray-700"
+                            }`}
+                        >
+                            Next
+                        </Link>
+                    </div>
+                )}
+
             </div>
         </div>
     );

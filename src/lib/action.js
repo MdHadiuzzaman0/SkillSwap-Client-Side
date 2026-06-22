@@ -1,9 +1,9 @@
 "use server";
 
 //get all, filter, search
-export async function getFilteredTasks({ category, search }) {
+export async function getFilteredTasks({ category, search, page = 1 }) {
   try {
-    let url = "http://localhost:8000/tasks"; 
+    let url = `http://localhost:8000/tasks?page=${page}&limit=9`; 
 
     if (category) {
       url += `?category=${encodeURIComponent(category)}`;
