@@ -18,10 +18,10 @@ export async function getUserInfo(email) {
 }
 
 //get all tasks
-export const getAllTasks = async () => {
-    const res = await fetch('http://localhost:8000/browse-tasks')
-    return res.json()
-}
+// export const getAllTasks = async () => {
+//     const res = await fetch('http://localhost:8000/browse-tasks')
+//     return res.json()
+// }
 
 //get task by id
 export const getTaskById = async (id) => {

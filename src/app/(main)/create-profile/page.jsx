@@ -15,12 +15,20 @@ export default function CreateProfilePage() {
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
+  const adminEmail="admin1@example.com";
+
   useEffect(() => {
     async function checkProfile() {
       if (!isPending && email) {
+      if (email.toLowerCase() === adminEmail.toLowerCase()) {
+          window.location.href = "/dashboard/admin/intro"; 
+          return;
+        }
+
         const userData = await getUserInfo(email); 
-        if (userData && userData.role) {
-          window.location.href = `/dashboard/${userData.role.toLowerCase()}`;
+        if (userData) {
+          const userRole = userData.role ? userData.role.toLowerCase() : "client";
+          window.location.href = `/dashboard/${userRole}/intro`;
           return;
         }
         setLoading(false);

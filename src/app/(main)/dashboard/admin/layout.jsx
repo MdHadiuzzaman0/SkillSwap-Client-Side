@@ -8,7 +8,7 @@ const AdminLayout = ({ children }) => {
   const menuItems = [
     {
       name: "Overview",
-      path: "/dashboard/admin",
+      path: "/dashboard/admin/intro",
       icon: <FiPieChart className="text-lg" />,
     },
     {

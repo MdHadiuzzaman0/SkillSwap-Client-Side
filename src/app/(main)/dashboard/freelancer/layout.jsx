@@ -9,6 +9,11 @@ const FreelancerLayout = ({ children }) => {
   const pathname = usePathname();
   const menuItems = [
     {
+      name: "Dashboard",
+      path: "/dashboard/freelancer/intro",
+      icon: <FiUser className="text-lg" />,
+    },
+    {
       name: "My Proposals",
       path: "/dashboard/freelancer/my-proposals",
       icon: <FiBriefcase className="text-lg" />,

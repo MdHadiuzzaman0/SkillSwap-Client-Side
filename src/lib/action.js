@@ -1,7 +1,30 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+//get all, filter, search
+export async function getFilteredTasks({ category, search }) {
+  try {
+    let url = "http://localhost:8000/tasks"; 
 
+    if (category) {
+      url += `?category=${encodeURIComponent(category)}`;
+    } 
+    if (search) {
+      const separator = url.includes("?") ? "&" : "?";
+      url += `${separator}search=${encodeURIComponent(search)}`;
+    }
+
+    const res = await fetch(url, { cache: "no-store" });
+    const result = await res.json();
+
+    return {
+        tasks: result.data || [],
+        count: result.count || 0
+    };
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    return { tasks: [], count: 0 };
+  }
+}
 
 //insert create profile data
 export async function handleFormSubmit(profileData) {

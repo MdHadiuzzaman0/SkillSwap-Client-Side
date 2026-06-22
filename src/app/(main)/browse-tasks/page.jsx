@@ -1,75 +1,85 @@
-import { auth } from "@/lib/auth";
+import TaskCard from "@/components/TaskCard"; 
+import { getUserInfo } from "@/lib/data";
+import { authClient } from "@/lib/auth-client"; // BetterAuth ক্লায়েন্ট
 import { headers } from "next/headers";
-import { getAllTasks } from "@/lib/data";
-import TaskCard from "@/components/TaskCard";
+import Filter from "@/components/Filter"; 
+import Search from "@/components/Search"; 
+import { getFilteredTasks } from "@/lib/action";
 
-const ExploreTasksPage = async () => {
-    const session = await auth.api.getSession({
+const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
+    // ১. ইউজার সেশন ডাটা
+    const session = await authClient.api.getSession({
         headers: await headers()
     });
     const email = session?.user?.email;
-    const tasks = await getAllTasks() || [];
+    const userInfo = await getUserInfo(email);
+
+    // ২. searchParams await করা (Next.js 15+ রুল)
+    const searchParams = await searchParamsPromise;  
+    
+    const category = searchParams?.category || "";
+    const search = searchParams?.search || "";
+
+    // 🚀 ফিল্টারড টাস্ক গেট করা
+    const { tasks, count } = await getFilteredTasks({ category, search });
+
+    // 🎯 আপনার দেওয়া নতুন ক্যাтаগরি লিস্ট
+    const categoryOptions = [
+        "Web Development",
+        "UI/UX Design",
+        "Content Writing",
+        "Mobile Development",
+        "Graphic Design",
+        "Digital Marketing",
+        "Video Editing"
+    ];
+
+    const activeFilterName = search || category || "All";
 
     return (
-        <div className="bg-cream min-h-screen pt-10 pb-20 px-4 sm:px-6 lg:px-8 font-[var(--font-body)]">
+        <div className="bg-workable-bg min-h-screen pt-12 pb-20 px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
 
-                {/* 1. Heading and Sub-heading Section */}
-                <div className="mb-8 text-left">
-                    <h1 className="font-[var(--font-heading)] text-3xl md:text-5xl font-bold text-black mb-2">
-                        Explore Tasks
+                <div className="mb-7 text-left">
+                    <h1 className="font-heading text-3xl md:text-4xl font-black text-workable-text-dark mb-3">
+                        Browse Open Tasks
                     </h1>
-                    <p className="text-brown text-sm md:text-base">
-                        Find and apply for micro-tasks that match your expertise.
+                    <p className="font-body text-workable-text-muted text-sm md:text-base">
+                        Explore micro-tasks posted by clients ({count} tasks found).
                     </p>
                 </div>
-
-                {/* 2. Static Search and Filter Bar (Not Functional) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                    {/* Static Search Input */}
-                    <div className="md:col-span-2">
-                        <input
-                            type="text"
-                            placeholder="Search tasks by title or keywords..."
-                            className="w-full px-4 py-3 bg-white border border-brown/20 rounded-xl text-black focus:outline-none focus:border-navy text-sm shadow-sm"
-                            disabled
-                        />
-                    </div>
-
-                    {/* Static Filter Dropdown */}
-                    <div>
-                        <select
-                            className="w-full px-4 py-3 bg-white border border-brown/20 rounded-xl text-brown focus:outline-none text-sm shadow-sm cursor-not-allowed"
-                            defaultValue=""
-                            disabled
-                        >
-                            <option value="" disabled>Filter by Category</option>
-                            <option value="web">Web Development</option>
-                            <option value="design">Graphics Design</option>
-                        </select>
-                    </div>
+                
+                {/* সার্চ এবং ফিল্টার গ্রিড */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <Search />
+                    <Filter
+                        categoryOptions={categoryOptions} 
+                        typeOptions={[]} // টাইপ না লাগলে খালি থাকবে
+                    />
                 </div>
 
-                {/* 3. 3-Column Dynamic Task Grid Section */}
-                {tasks.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* টাস্ক ডিসপ্লে গ্রিড */}
+                {tasks && tasks.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {tasks.map((task) => (
-                            <TaskCard key={task._id} task={task} />
+                            <TaskCard 
+                                key={task._id || task.id} 
+                                task={task} 
+                                email={email}
+                                userInfo={userInfo}
+                            />
                         ))}
                     </div>
                 ) : (
-                    /* No Data Found State */
-                    <div className="text-center py-12 bg-white rounded-xl border border-brown/20 max-w-md mx-auto p-6 shadow-sm">
-                        <p className="text-brown text-xl">No tasks found.</p>
-                        <p className="font-[var(--font-body)] text-brown text-md max-w-xs text-center leading-relaxed mb-6 transition-opacity duration-300 group-hover:opacity-90">
-                            It looks like there are currently no active micro-tasks matched with this profile email.
-                        </p>
+                    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-workable-text-muted/10 text-center px-4">
+                        <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mb-4 font-bold">🔍</div>
+                        <h3 className="font-heading text-xl font-bold text-workable-text-dark mb-2">No "{activeFilterName}" Tasks Found</h3>
+                        <p className="font-body text-workable-text-muted text-sm max-w-sm">Try resetting the filter or searching for something else!</p>
                     </div>
                 )}
-
             </div>
         </div>
     );
 };
 
-export default ExploreTasksPage;
+export default BrowseTasksPage;

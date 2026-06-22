@@ -11,12 +11,15 @@ const NavbarRight = ({ session, userInfo }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     //console.log(session, userInfo)
-
+    
     const sessionUser = session?.user;
     let displayName = "Guest";
     let displayImage = null;
-    let displayRole = ""; // Default is empty for Google / No-role users
+    let displayRole = "";
 
+    const adminEmail="admin1@example.com";
+    const userEmail = sessionUser?.email ? sessionUser.email.toLowerCase() : "";
+    
     if (userInfo) {
         displayName = `${userInfo.firstName || ""} ${userInfo.lastName || ""}`.trim();
         displayImage = userInfo.image;
@@ -24,7 +27,7 @@ const NavbarRight = ({ session, userInfo }) => {
     } else {
         displayName = sessionUser?.name;
         displayImage = sessionUser?.image;
-        displayRole = "client"; 
+        displayRole = userEmail === adminEmail.toLowerCase() ? "admin" : "client";
     }
 
     useEffect(() => {
@@ -50,19 +53,24 @@ const NavbarRight = ({ session, userInfo }) => {
     ];
 
     const freelancerItems = [
-        { id: "dashboard", label: "Dashboard", href: "/dashboard/freelancer" },
+        { id: "dashboard", label: "Dashboard", href: "/dashboard/freelancer/intro" },
         { id: "my_bids", label: "My proposals", href: "/dashboard/freelancer/my-proposals" },
         { id: "profile", label: "Profile", href: "/dashboard/freelancer/profile" },
     ];
 
     const clientItems = [
-        { id: "dashboard", label: "Client Dashboard", href: "/dashboard/client" },
+        { id: "dashboard", label: "Client Dashboard", href: "/dashboard/client/intro" },
         { id: "post_task", label: "Post a Task", href: "/dashboard/client/post-task" },
         { id: "my_tasks", label: "My Tasks", href: "/dashboard/client/my-tasks" },
     ];
-    
-    // Exact ternary dynamic conditional logic as you requested
-    const menuItems = displayName === "Guest" ? defaultItems : displayRole === "freelancer" ? freelancerItems : clientItems;
+
+    const adminItems = [
+        { id: "dashboard", label: "Admin Dashboard", href: "/dashboard/admin/intro" },
+        { id: "tasks", label: "Manage Tasks", href: "/dashboard/admin/tasks" },
+        { id: "transactions", label: "Manage Transactions", href: "/dashboard/admin/transactions" },
+    ];
+
+    const menuItems = displayName === "Guest" ? defaultItems : userEmail === adminEmail ? adminItems : displayRole === "freelancer" ? freelancerItems : clientItems;
 
     return (
         <div className="flex items-center gap-4">

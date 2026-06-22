@@ -2,11 +2,16 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FiPlusCircle, FiList, FiLayers } from "react-icons/fi";
+import { FiPlusCircle, FiList, FiLayers, FiUser, FiCircle } from "react-icons/fi";
 
 const ClientLayout = ({ children }) => {
   const pathname = usePathname();
   const menuItems = [
+    {
+      name: "Dashboard",
+      path: "/dashboard/client/intro",
+      icon: <FiCircle className="text-lg" />,
+    },
     {
       name: "Post Task",
       path: "/dashboard/client/post-task",
@@ -21,6 +26,11 @@ const ClientLayout = ({ children }) => {
       name: "Manage Proposals",
       path: "/dashboard/client/proposals",
       icon: <FiLayers className="text-lg" />,
+    },
+    {
+      name: "Profile",
+      path: "/dashboard/client/profile",
+      icon: <FiUser className="text-lg" />,
     },
   ];
 
@@ -43,11 +53,10 @@ const ClientLayout = ({ children }) => {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide uppercase transition-all duration-200 ${
-                  isActive
-                    ? "bg-gray-300 text-black shadow-sm"
-                    : "text-brown hover:bg-cream/50 hover:text-black"
-                }`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold tracking-wide uppercase transition-all duration-200 ${isActive
+                  ? "bg-gray-300 text-black shadow-sm"
+                  : "text-brown hover:bg-cream/50 hover:text-black"
+                  }`}
               >
                 {item.icon}
                 <span>{item.name}</span>

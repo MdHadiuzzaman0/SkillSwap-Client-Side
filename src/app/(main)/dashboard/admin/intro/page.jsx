@@ -9,6 +9,7 @@ export default async function AdminStatisticsPage() {
   const tasks = await getAllTasks();
   const payments = await getAllPayments();
   const proposals = await getAllProposalsForAdmin();
+  console.log(proposals.lenght)
 
   const totalUsersCount = Array.isArray(users) ? users.length : 0;
   const totalTasksCount = Array.isArray(tasks) ? tasks.length : 0;
@@ -18,7 +19,7 @@ export default async function AdminStatisticsPage() {
     : 0;
 
   const activeTasksCount = Array.isArray(proposals)
-    ? proposals.filter(proposal => proposal.status === "in-progress").length
+    ? proposals.filter(proposal => proposal.status !== "pending").length
     : 0;
 
   // কার্ডের ডাটাগুলোকে লুপ ঘোরানোর সুবিধার্থে একটি অ্যারেতে সাজানো হলো
