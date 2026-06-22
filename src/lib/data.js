@@ -29,6 +29,21 @@ export const getTaskById = async (id) => {
     return res.json()
 }
 
+//get top freelancer
+export async function getTopFreelancers() {
+  try {
+    const res = await fetch("http://localhost:8000/top-freelancers-home", {
+      next: { revalidate: 30 } 
+    });
+    const result = await res.json();
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching top freelancers:", error);
+    return [];
+  }
+}
+
+//freelancer
 //get proposal data for specific freelancer
 export const fetchMyProposals = async (freelancerEmail) => {
   try {
@@ -126,3 +141,27 @@ export const getAllProposalsForAdmin = async () => {
     return [];
   }
 };
+
+//finishing
+//grt all freelancer with proposals
+export async function getFreelancerPageData() {
+  try {
+    const res = await fetch("http://localhost:8000/api/freelancers-with-proposals", {
+      cache: "no-store" // রিয়েল-টাইম ডাটার জন্য ক্যাশ বন্ধ রাখা হলো
+    });
+    
+    const result = await res.json();
+    
+    if (result.success) {
+      return {
+        users: result.users || [],
+        proposals: result.proposals || []
+      };
+    }
+    
+    return { users: [], proposals: [] };
+  } catch (error) {
+    console.error("Error in getFreelancerPageData:", error);
+    return { users: [], proposals: [] };
+  }
+}

@@ -42,7 +42,7 @@ export default async function Navbar() {
         <ul className="flex items-center gap-3">
           <li><NavLink href="/">Home</NavLink></li>
           <li><NavLink href="/browse-tasks">Browse Tasks</NavLink></li>
-          <li><NavLink href="/browse-freelancers">Freelancers</NavLink></li>
+          <li><NavLink href="/freelancers">Freelancers</NavLink></li>
         </ul>  
       </div>
 
