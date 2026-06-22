@@ -207,3 +207,21 @@ export const changeSatusAfterPayment = async (infoField) => {
     return { success: false, message: "Action execution failed" };
   }
 };
+
+//update freelancer earnings
+export async function syncFreelancerEarnings(email, totalEarnings) {
+  try {
+    const res = await fetch("http://localhost:8000/update-earnings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, totalEarnings: Number(totalEarnings) }),
+    });
+    const result = await res.json();
+    return result;
+  } catch (error) {
+    console.error("Error syncing earnings to backend:", error);
+    return { success: false, message: "Sync failed" };
+  }
+}

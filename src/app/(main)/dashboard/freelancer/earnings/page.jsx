@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { authClient } from "@/lib/auth-client";
 import { fetchMyEarnings } from "@/lib/data"; 
+import { syncFreelancerEarnings } from "@/lib/action";
 import { FiDollarSign, FiInfo, FiCalendar, FiUser, FiCheckCircle, FiTrendingUp } from "react-icons/fi";
 
 const MyEarningsPage = () => {
@@ -26,6 +27,7 @@ useEffect(() => {
         0
       );
       setTotalEarnings(total);
+      await syncFreelancerEarnings(freelancerEmail, total)
     }
     
     setLoading(false);
