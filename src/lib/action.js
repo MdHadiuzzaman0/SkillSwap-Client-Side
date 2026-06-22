@@ -6,7 +6,7 @@ export async function getFilteredTasks({ category, search, page = 1 }) {
     let url = `http://localhost:8000/tasks?page=${page}&limit=9`; 
 
     if (category) {
-      url += `?category=${encodeURIComponent(category)}`;
+      url += `&category=${encodeURIComponent(category)}`;
     } 
     if (search) {
       const separator = url.includes("?") ? "&" : "?";
@@ -223,5 +223,24 @@ export async function syncFreelancerEarnings(email, totalEarnings) {
   } catch (error) {
     console.error("Error syncing earnings to backend:", error);
     return { success: false, message: "Sync failed" };
+  }
+}
+
+//isBlocked status update
+export async function toggleUserBlockStatus(userId, currentBlockStatus) {
+  try {
+    const res = await fetch(`http://localhost:8000/api/users/${userId}/block`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ isBlocked: !currentBlockStatus }), 
+    });
+    
+    const result = await res.json();
+    return result.success;
+  } catch (error) {
+    console.error("Error toggling block status:", error);
+    return false;
   }
 }

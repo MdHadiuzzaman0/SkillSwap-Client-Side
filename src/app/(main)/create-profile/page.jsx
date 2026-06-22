@@ -44,12 +44,12 @@ export default function CreateProfilePage() {
 
     if (profileData.role === "freelancer" && typeof profileData.skills === "string") {
       profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
-      profileData.isBlocked = false;
+      profileData.totalEarnings = 0;
     } 
-
+    
+    profileData.isBlocked = false;
     profileData.email = email;
     profileData.createdAt = new Date(); 
-    profileData.totalEarnings = 0;
     const res = await handleFormSubmit(profileData);
     if (res.success) {
       toast.success("Profile updated successfully! 🎉");

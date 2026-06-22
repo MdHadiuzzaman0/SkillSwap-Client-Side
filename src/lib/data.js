@@ -98,7 +98,7 @@ export const getClientProposalsAction = async (email) => {
       cache: "no-store"
     });
     const data = await res.json();
-    return data.submissions;
+    return data.submissions || [];
   } catch (error) {
     console.error("Error fetching client proposals:", error);
     return [];

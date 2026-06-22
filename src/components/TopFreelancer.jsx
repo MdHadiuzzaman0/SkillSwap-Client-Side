@@ -1,3 +1,4 @@
+
 import { getTopFreelancers } from "@/lib/data";
 import Image from "next/image";
 import { FiDollarSign, FiAward, FiUser } from "react-icons/fi";
@@ -57,8 +58,8 @@ const TopFreelancersSection = async () => {
                       {freelancer.image ? (
                         <Image
                           src={freelancer.image} 
-                          alt={freelancer.name} fill
-                          className={`w-16 h-16 rounded-2xl object-cover border-2 ${rankStyles.border} p-0.5`}
+                          alt={freelancer.name} 
+                          width={64} height={64} className={`rounded-2xl object-cover border-2 ${rankStyles.border} p-0.5`}
                         />
                       ) : (
                         <div className={`w-16 h-16 rounded-2xl ${rankStyles.lightBg} ${rankStyles.text} flex items-center justify-center border-2 ${rankStyles.border}`}>

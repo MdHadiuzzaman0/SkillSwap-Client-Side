@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     // ১. ইউজার সেশন ডাটা
-    const session = await authClient.api.getSession({
+    const session = await auth.api.getSession({
         headers: await headers()
     });
     const email = session?.user?.email;
@@ -23,7 +23,7 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     const search = searchParams?.search || "";
     const currentPage = parseInt(searchParams?.page) || 1; 
 
-    const { tasks, total } = await getFilteredTasks({ category, search, page: currentPage });
+    const { tasks, count } = await getFilteredTasks({ category, search, page: currentPage });
 
     const limit = 9;
     const totalPages = Math.ceil(total / limit); 

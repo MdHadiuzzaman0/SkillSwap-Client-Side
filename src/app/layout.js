@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import ConditionalPageShow from "@/components/ConditionalPageShow";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ConditionalPageShow from "@/components/ConditionalPageShow";
 
 // Heading Font
 const headingFont = Playfair_Display({
@@ -37,6 +38,9 @@ export default function RootLayout({ children }) {
         <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </main>
+        <ConditionalPageShow>
+          <TopFreelancer />
+          <LatestTask />
         <ConditionalPageShow />
         <Footer />
         <Toaster position="top-right" reverseOrder={false} />

@@ -1,5 +1,6 @@
 import { getAllData } from "@/lib/data";
 import { FiDollarSign, FiBriefcase, FiCheckCircle, FiStar, FiUser } from "react-icons/fi";
+import Image from "next/image";
 
 const BrowseFreelancersPage = async () => {
   const { users, proposals } = await getAllData();
@@ -49,10 +50,9 @@ const BrowseFreelancersPage = async () => {
                 {/* প্রোফাইল হেডার (ছবি ও নাম) */}
                 <div className="flex items-start gap-4 mb-4">
                   {freelancer.image ? (
-                    <img 
+                    <Image
                       src={freelancer.image} 
-                      alt={freelancer.name} 
-                      className="w-14 h-14 rounded-xl object-cover border border-gray-100"
+                      alt={freelancer.name} width={56} height={56} className="rounded-xl object-cover border border-gray-100"
                     />
                   ) : (
                     <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">

@@ -1,11 +1,11 @@
-import { getHomepageData } from "@/lib/data";
+import { getAllData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee"; 
 import { FiDollarSign, FiCalendar, FiUser } from "react-icons/fi"; 
 
 const LatestTasksMarqueeSection = async () => {
-  const { tasks, users } = await getHomepageData();
+  const { tasks, users } = await getAllData();
 
   // 🎯 ফিল্টারিং, সর্টিং এবং ক্লায়েন্টের ছবিসহ ডাটা ম্যাপ
   const featuredTasks = tasks
@@ -64,8 +64,7 @@ const LatestTasksMarqueeSection = async () => {
                   {task.clientImage ? (
                     <Image 
                       src={task.clientImage} 
-                      alt={task.clientName} fill
-                      className="w-8 h-8 rounded-full object-cover border border-gray-200 shrink-0"
+                      alt={task.clientName} width={32} height={32} className="rounded-full object-cover border border-gray-200 shrink-0"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 shrink-0 border border-gray-300">
