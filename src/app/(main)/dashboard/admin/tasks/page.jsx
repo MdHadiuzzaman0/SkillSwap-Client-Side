@@ -1,12 +1,16 @@
 import React from 'react';
 import { FiEye, FiTrash2, FiBriefcase, FiAlertCircle } from 'react-icons/fi';
-import { getAllTasks, getAllProposalsForAdmin } from '@/lib/data';
+import { getAllData } from '@/lib/data';
 import Link from 'next/link';
 import {DeleteButton} from '@/components/DeleteButton'; 
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export default async function AdminTasksPage() {
-  const tasks = await getAllTasks();
-  const proposals = await getAllProposalsForAdmin();
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+  const { tasks, proposals } = await getAllData(token);
   const combinedTasks = Array.isArray(tasks) ? tasks.map(task => {
     const matchedProposal = Array.isArray(proposals) 
       ? proposals.find(p => p.task_id === task._id?.toString())

@@ -13,7 +13,12 @@ const ActiveProjectsPage = async () => {
   if (!freelancerEmail) {
     return <div className="p-6 text-center text-xs text-red-500">Unauthorized. Please log in.</div>;
   }
-  const data = await fetchMyProposals(freelancerEmail);
+
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+
+  const data = await fetchMyProposals(freelancerEmail, token);
   const activeProjects = data.filter(
   (proposal) =>
     proposal.status &&

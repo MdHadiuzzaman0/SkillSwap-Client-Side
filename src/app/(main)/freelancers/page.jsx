@@ -1,9 +1,14 @@
 import { getAllData } from "@/lib/data";
 import { FiDollarSign, FiBriefcase, FiCheckCircle, FiStar, FiUser } from "react-icons/fi";
 import Image from "next/image";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 const BrowseFreelancersPage = async () => {
-  const { users, proposals } = await getAllData();
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+  const { users, proposals } = await getAllData(token);
 
   // 🎯 ২. ফ্রিল্যান্সারদের ফিল্টার করা এবং ইন-প্রগ্রেস ও কমপ্লিটেড কাজের ডাটা আলাদা করা
   const freelancers = users

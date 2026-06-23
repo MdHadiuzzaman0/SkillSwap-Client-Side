@@ -10,8 +10,12 @@ export default async function ManageProposalsPage() {
     headers: await headers() 
 }); 
   const clientEmail = session?.user?.email || "";
+
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
   
-    const proposals = await getClientProposalsAction(clientEmail);
+    const proposals = await getClientProposalsAction({clientEmail, token});
     //console.log(clientEmail, proposals);
 
   return (

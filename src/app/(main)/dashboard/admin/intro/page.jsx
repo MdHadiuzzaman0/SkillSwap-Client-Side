@@ -2,14 +2,17 @@ import React from 'react';
 // চমৎকার কিছু আইকন ইম্পোর্ট করা হলো
 import { FiUsers, FiBriefcase, FiDollarSign, FiActivity } from 'react-icons/fi';
 // আপনার ডেটা ফেচিং ফাংশনগুলো
-import { getAllUsers, getAllPayments, getAllProposalsForAdmin, getAllTasks } from '@/lib/data';
+import { getAllData, getAllPayments } from '@/lib/data';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export default async function AdminStatisticsPage() {
-  const users = await getAllUsers();
-  const tasks = await getAllTasks();
-  const payments = await getAllPayments();
-  const proposals = await getAllProposalsForAdmin();
-  console.log(proposals.lenght)
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+  const { users, tasks, proposals } = await getAllData(token);
+  const payments = await getAllPayments(token);
+  // console.log(proposals.length)
 
   const totalUsersCount = Array.isArray(users) ? users.length : 0;
   const totalTasksCount = Array.isArray(tasks) ? tasks.length : 0;

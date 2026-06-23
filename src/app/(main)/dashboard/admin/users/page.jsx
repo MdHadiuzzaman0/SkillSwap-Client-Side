@@ -1,11 +1,11 @@
 'use client';
-
 import React, { useEffect, useState } from "react";
 import { Table } from "@heroui/react";
 import { getAllData } from "@/lib/data"; // আপনার ফেচ করার ফাংশন
 import { toggleUserBlockStatus } from "@/lib/action"; // ব্লক করার অ্যাকশন ফাংশন
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { authClient } from '@/lib/auth-client';
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState([]);
@@ -15,7 +15,9 @@ export default function AdminUsersPage() {
   // ডাটা লোড করা
   useEffect(() => {
     async function loadData() {
-      const data = await getAllData();
+      const { data: tokenData} = await authClient.token()
+      const token = tokenData?.token; 
+      const data = await getAllData(token);
       setUsers(data?.users || []);
       setLoading(false);
     }
@@ -24,8 +26,9 @@ export default function AdminUsersPage() {
 
   // ব্লক/আনব্লক হ্যান্ডলার
   const handleBlockToggle = async (userId, currentStatus) => {
-
-    const success = await toggleUserBlockStatus(userId, currentStatus);
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
+    const success = await toggleUserBlockStatus(userId, currentStatus, token);
     if (success) {
       toast.success("User status updated successfully!");
       setUsers((prevUsers) =>

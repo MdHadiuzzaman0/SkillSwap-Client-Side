@@ -13,8 +13,11 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     const session = await auth.api.getSession({
         headers: await headers()
     });
+    const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
     const email = session?.user?.email;
-    const userInfo = await getUserInfo(email);
+    const userInfo = await getUserInfo(email, token);
 
     // ২. searchParams await করা (Next.js 15+ রুল)
     const searchParams = await searchParamsPromise;
@@ -23,7 +26,7 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
     const search = searchParams?.search || "";
     const currentPage = parseInt(searchParams?.page) || 1; 
 
-    const { tasks, count } = await getFilteredTasks({ category, search, page: currentPage });
+    const { tasks, count } = await getFilteredTasks({ category, search, page: currentPage, token });
 
     const limit = 9;
     const totalPages = Math.ceil(total / limit); 

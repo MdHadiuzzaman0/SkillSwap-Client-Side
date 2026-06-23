@@ -2,7 +2,7 @@
 
 import { TextField, Label, Input, TextArea } from "@heroui/react";
 
-export default function CreateProfileOfFreelancer({ email }) {
+export default function CreateProfileOfFreelancer({ email, image }) {
   return (
     <div className="space-y-6 p-6 bg-white border border-gray-100 rounded-3xl shadow-sm animate-fadeIn">
       <h3 className="font-heading font-bold text-gray-900 text-lg border-b pb-3 mb-4">
@@ -34,7 +34,7 @@ export default function CreateProfileOfFreelancer({ email }) {
         </TextField>
 
         {/* Image */}
-        <TextField isRequired name="image">
+        <TextField isRequired name="image" defaultValue={image}>
           <Label>Image Link</Label>
           <Input placeholder='www.skillswap.jpg' />
         </TextField>

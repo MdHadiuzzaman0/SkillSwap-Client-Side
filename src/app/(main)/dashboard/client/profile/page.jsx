@@ -6,6 +6,7 @@ import { getUserInfo } from "@/lib/data";
 import { updateProfileData } from "@/lib/action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { authClient } from '@/lib/auth-client';
 
 const ClientProfilePage = () => {
     const router = useRouter();
@@ -32,7 +33,9 @@ const ClientProfilePage = () => {
 
         const loadProfile = async () => {
             setLoading(true);
-            const data = await getUserInfo(clientEmail);
+            const { data: tokenData } = await authClient.token()
+            const token = tokenData?.token;
+            const data = await getUserInfo(clientEmail, token);
             if (data) {
                 setFormData({
                     firstName: data.firstName || "",
@@ -61,8 +64,11 @@ const ClientProfilePage = () => {
         e.preventDefault();
         setUpdating(true);
 
+        const { data: tokenData } = await authClient.token()
+        const token = tokenData?.token;
+
         // ফ্রিল্যান্সার প্রোফাইলের মতোই সেম সার্ভার অ্যাকশনে ক্লায়েন্টের ডাটা পাস করা হয়েছে
-        const result = await updateProfileData(clientEmail, formData);
+        const result = await updateProfileData(clientEmail, formData, token);
         setUpdating(false);
 
         if (result?.success) {
@@ -166,7 +172,7 @@ const ClientProfilePage = () => {
                     <input
                         type="text"
                         name="role"
-                        value="client" 
+                        value="client"
                         disabled // 🎯 এটি সবসময় ডিজেবলড থাকবে, ইউজার এডিট করতে পারবে না
                         className="w-full p-2.5 border rounded-xl bg-gray-50/50 border-gray-100 text-gray-400 cursor-not-allowed font-medium"
                     />

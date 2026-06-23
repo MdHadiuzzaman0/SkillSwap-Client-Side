@@ -1,11 +1,11 @@
 import React from "react";
-import { getAllTasks, getClientProposalsAction } from "@/lib/data"; 
-import { auth } from "@/lib/auth"; 
+import { getAllTasks, getClientProposalsAction } from "@/lib/data";
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers"
 
 export default async function ClientDashboardPage() {
   const session = await auth.api.getSession({
-    headers: await headers() 
+    headers: await headers()
   });
   const clientEmail = session?.user?.email || "";
 
@@ -14,9 +14,13 @@ export default async function ClientDashboardPage() {
   let inProgressTasksCount = 0;
   let totalSpent = 0;
 
-  if (clientEmail) {
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+  //console.log(session?.session?.token, token);
 
-    const allTasks = await getAllTasks();
+  if (clientEmail) {
+    const allTasks = await getAllTasks(token);
     if (Array.isArray(allTasks)) {
       const clientTasks = allTasks.filter((task) => (task.clientEmail === clientEmail || task.client_email === clientEmail));
       totalTasksCount = clientTasks.length;
@@ -26,7 +30,7 @@ export default async function ClientDashboardPage() {
     }
 
     // ৩. ক্লায়েন্টের সব প্রপোজাল ফেচ করে 'in-progress' স্ট্যাটাস দিয়ে ফিল্টার করা
-    const proposals = await getClientProposalsAction(clientEmail);
+    const proposals = await getClientProposalsAction({ clientEmail, token });
     if (Array.isArray(proposals)) {
       // যে প্রপোজালগুলোর স্ট্যাটাস সরাসরি 'in-progress'
       const inProgressProposals = proposals.filter((proposal) => proposal.status === "in-progress");
@@ -42,10 +46,10 @@ export default async function ClientDashboardPage() {
   return (
     <div className="space-y-6 p-6 max-w-6xl mx-auto text-black">
       <h2 className="text-lg font-bold mb-4">Dashboard Main Statistics</h2>
-      
+
       {/* 📊 স্ট্যাটিস্টিকস কার্ড গ্রিড লেআউট */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
-        
+
         {/* কার্ড ১: Total Tasks */}
         <div className="p-5 border-b sm:border-b-0 sm:border-r border-gray-200 text-center sm:text-left">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Tasks</p>

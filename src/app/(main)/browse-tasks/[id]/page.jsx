@@ -24,8 +24,11 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
   const session = await auth.api.getSession({
     headers: await headers()
   });
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
   const currentUserEmail = session?.user?.email;
-  const taskData = await getTaskById(taskId);
+  const taskData = await getTaskById(taskId, token);
 
   if (!taskData) {
     return (

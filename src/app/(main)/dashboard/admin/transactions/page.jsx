@@ -1,12 +1,15 @@
 import React from 'react';
 // চমৎকার কিছু আইকন ইম্পোর্ট করা হলো
 import { FiDollarSign, FiCalendar, FiUser, FiArrowRight } from 'react-icons/fi';
-// আপনার ডেটা ফেচিং ফাংশন (যা অলরেডি payments কালেকশনের ডাটা আনে)
 import { getAllPayments } from '@/lib/data';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 export default async function AdminTransactionsPage() {
-  // ১. ডাটাবেজ থেকে সব পেমেন্ট রেকর্ডস তুলে আনা
-  const payments = await getAllPayments();
+  const { token } = await auth.api.getToken({
+    headers: await headers()
+  });
+  const payments = await getAllPayments(token);
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-black bg-gray-50 min-h-screen">

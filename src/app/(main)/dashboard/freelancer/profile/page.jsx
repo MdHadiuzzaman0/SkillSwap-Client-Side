@@ -7,6 +7,7 @@ import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
 import { getUserInfo } from "@/lib/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { authClient } from '@/lib/auth-client';
 
 const FreelancerProfilePage = () => {
   const router = useRouter()
@@ -32,7 +33,9 @@ const FreelancerProfilePage = () => {
 
     const loadProfile = async () => {
       setLoading(true);
-      const data = await getUserInfo(freelancerEmail);
+      const { data: tokenData} = await authClient.token()
+      const token = tokenData?.token; 
+      const data = await getUserInfo(freelancerEmail, token);
       if (data) {
         setFormData({
           firstName: data.firstName || "",
@@ -71,7 +74,9 @@ const FreelancerProfilePage = () => {
       skills: skillsArray,
     };
 
-    const result = await updateProfileData(freelancerEmail, payload);
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
+    const result = await updateProfileData(freelancerEmail, payload, token);
     setUpdating(false);
 
     if (result.success) {

@@ -1,7 +1,7 @@
 "use server";
 
 //get all, filter, search
-export async function getFilteredTasks({ category, search, page = 1 }) {
+export async function getFilteredTasks({ category, search, page = 1, token}) {
   try {
     let url = `http://localhost:8000/tasks?page=${page}&limit=9`; 
 
@@ -13,7 +13,12 @@ export async function getFilteredTasks({ category, search, page = 1 }) {
       url += `${separator}search=${encodeURIComponent(search)}`;
     }
 
-    const res = await fetch(url, { cache: "no-store" });
+    const res = await fetch(url, { 
+    cache: "no-store",
+    headers: {
+        authorization: `Bearer ${token}`
+      },
+    });
     const result = await res.json();
 
     return {
@@ -27,13 +32,13 @@ export async function getFilteredTasks({ category, search, page = 1 }) {
 }
 
 //insert create profile data
-export async function handleFormSubmit(profileData) {
+export async function handleFormSubmit(profileData, token) {
   try {
-    // Sending profileData straight to your Express backend user profile endpoint
     const response = await fetch("http://localhost:8000/user", {
       method: "POST",
       headers: { 
-        "Content-Type": "application/json" 
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
       },
       body: JSON.stringify(profileData),
     });
@@ -74,12 +79,15 @@ export const submitProposalAction = async (proposalPayload) => {
 };
 
 //update profile data
-export const updateProfileData = async (email, profilePayload) => {
+export const updateProfileData = async (email, profilePayload, token) => {
   try {
     const res = await fetch(`http://localhost:8000/users/${email}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        headers: {
+          authorization: `Bearer ${token}`
+        }
       },
       body: JSON.stringify(profilePayload),
     });
@@ -97,12 +105,13 @@ export const updateProfileData = async (email, profilePayload) => {
 };
 
 //update proposal task, task submit
-export const updateProposalTask = async (proposalId, payload) => {
+export const updateProposalTask = async (proposalId, payload, token) => {
   try {
     const res = await fetch(`http://localhost:8000/proposals-update/${proposalId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
       },
       body: JSON.stringify(payload),
     });
@@ -116,11 +125,14 @@ export const updateProposalTask = async (proposalId, payload) => {
 };
 
 //insert posted data info
-export const createTaskAction = async (taskPayload) => {
+export const createTaskAction = async ({taskPayload, token}) => {
   try {
     const res = await fetch("http://localhost:8000/post-task", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
+      },
       body: JSON.stringify(taskPayload),
     });
     
@@ -175,11 +187,14 @@ export const deleteTaskAction = async (taskId) => {
 };
 
 //update status for accept/ignore botton
-export const updateProposalStatusAction = async (proposalId, status) => {
+export const updateProposalStatusAction = async (proposalId, status, token) => {
   try {
     const res = await fetch(`http://localhost:8000/proposal-status/${proposalId}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
+       },
       body: JSON.stringify({ status }), 
     });
     return await res.json();
@@ -227,12 +242,13 @@ export async function syncFreelancerEarnings(email, totalEarnings) {
 }
 
 //isBlocked status update
-export async function toggleUserBlockStatus(userId, currentBlockStatus) {
+export async function toggleUserBlockStatus(userId, currentBlockStatus, token) {
   try {
     const res = await fetch(`http://localhost:8000/api/users/${userId}/block`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ isBlocked: !currentBlockStatus }), 
     });

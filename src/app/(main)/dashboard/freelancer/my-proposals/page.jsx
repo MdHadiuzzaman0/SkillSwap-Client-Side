@@ -14,7 +14,9 @@ const MyProposalsPage = () => {
     if (!freelancerEmail) return;
     const getData = async () => {
       setLoading(true);
-      const data = await fetchMyProposals(freelancerEmail);
+      const { data: tokenData} = await authClient.token()
+      const token = tokenData?.token; 
+      const data = await fetchMyProposals(freelancerEmail, token);
       const pendingProposals = data.filter(
         (proposal) => !proposal.status || proposal.status.toLowerCase() === "pending"
       );

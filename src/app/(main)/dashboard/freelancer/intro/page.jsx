@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSession } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { fetchMyEarnings, fetchMyProposals } from "@/lib/data"; // 🎯 আপনার তৈরি ডাটা ফেচিং ফাংশন
 import { FiBriefcase, FiClock, FiCheckCircle, FiDollarSign, FiArrowRight, FiActivity } from "react-icons/fi";
 import Link from "next/link";
 
 const FreelancerDashboardOverview = () => {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = authClient.useSession();
   const freelancerEmail = session?.user?.email;
 
   const [stats, setStats] = useState({
@@ -23,11 +23,13 @@ const FreelancerDashboardOverview = () => {
 
     const loadDashboardStats = async () => {
       setLoading(true);
+      const { data: tokenData} = await authClient.token()
+      const token = tokenData?.token; 
       try {
         // প্রপোজাল এবং আর্নিং ডাটা একসাথে লোড করা হচ্ছে
         const [proposals, earnings] = await Promise.all([
-          fetchMyProposals(freelancerEmail),
-          fetchMyEarnings(freelancerEmail),
+          fetchMyProposals(freelancerEmail, token),
+          fetchMyEarnings(freelancerEmail, token),
         ]);
 
         if (proposals && Array.isArray(proposals)) {

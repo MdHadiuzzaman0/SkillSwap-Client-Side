@@ -58,7 +58,7 @@ const TopFreelancersSection = async () => {
                       {freelancer.image ? (
                         <Image
                           src={freelancer.image} 
-                          alt={freelancer.name} 
+                          alt={freelancer.name || "Freelancer Profile"} 
                           width={64} height={64} className={`rounded-2xl object-cover border-2 ${rankStyles.border} p-0.5`}
                         />
                       ) : (

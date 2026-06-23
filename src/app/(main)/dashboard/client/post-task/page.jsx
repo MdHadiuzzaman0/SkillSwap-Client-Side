@@ -15,6 +15,7 @@ const PostTaskPage = () => {
     // ক্যাটাগরি অপশনস
     const categories = ['Web Development', 'UI/UX Design', 'Content Writing', 'Mobile Development', 'Graphic Design', 'Digital Marketing', 'Video Editing'];
 
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -31,9 +32,12 @@ const PostTaskPage = () => {
             clientImage: session?.user?.image || "https://cdn-icons-png.flaticon.com/512/2640/2640788.png",
             createdAt: new Date().toISOString(),
         };
-
+        
+        const { data: tokenData} = await authClient.token()
+        const token = tokenData?.token; 
+        
         try {
-            const result = await createTaskAction(taskPayload);
+            const result = await createTaskAction({taskPayload, token});
             if (result?.success) {
                 toast.success("Task posted successfully!");
                 e.target.reset();

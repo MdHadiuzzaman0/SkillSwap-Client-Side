@@ -20,7 +20,7 @@ const ConditionalPageShow = ({children}) => {
            {/* <WhyChooseUs />
            <CallToAction />
            <FAQ /> */}
-           <Footer />
+           {/* <Footer /> */}
         </>
     );
 };

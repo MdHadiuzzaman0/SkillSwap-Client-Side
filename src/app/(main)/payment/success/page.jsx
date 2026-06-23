@@ -36,9 +36,12 @@ export default async function Success({ searchParams }) {
     const clientEmail = session?.user?.email || ""
     
     let currentProposal = null
+    const { token } = await auth.api.getToken({
+    headers: await headers()
+    });
 
     if (clientEmail) {
-      const allProposals = await getClientProposalsAction(clientEmail)
+      const allProposals = await getClientProposalsAction({clientEmail, token})
       
       // ৫. তুলে আনা লিস্ট থেকে ইউআরএল-এর proposalId ম্যাচ করে নির্দিষ্ট প্রপোজাল অবজেক্টটি খুঁজে বের করা
       if (Array.isArray(allProposals)) {

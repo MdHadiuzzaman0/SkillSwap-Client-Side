@@ -4,15 +4,18 @@ import { Button } from "@heroui/react";
 import { FiXCircle } from "react-icons/fi";
 import { updateProposalStatusAction } from "@/lib/action";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function IgnoreButton({ proposalId, setProposals }) {
   const [isPending, setIsPending] = useState(false);
 
   const handleIgnore = async () => {
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
 
     try {
       setIsPending(true);
-      const result = await updateProposalStatusAction(proposalId, "rejected");
+      const result = await updateProposalStatusAction(proposalId, "rejected", token);
 
       if (result?.success) {
         toast.success("Proposal ignored successfully!");

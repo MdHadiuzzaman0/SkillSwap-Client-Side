@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Table, Button } from "@heroui/react";
-import { FiCheckCircle, FiXCircle, FiClock, FiDollarSign, FiUser, FiFileText } from "react-icons/fi";
+import { FiClock, FiDollarSign, FiUser, FiFileText } from "react-icons/fi";
 import IgnoreButton from "@/components//IgnoreButton";
 
 export default function ProposalTable({ initialProposals }) {

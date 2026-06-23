@@ -18,7 +18,9 @@ useEffect(() => {
 
   const loadEarningsData = async () => {
     setLoading(true);
-    const data = await fetchMyEarnings(freelancerEmail);
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
+    const data = await fetchMyEarnings(freelancerEmail, token);
     
     if (data && Array.isArray(data)) {
       setCompletedEarnings(data);

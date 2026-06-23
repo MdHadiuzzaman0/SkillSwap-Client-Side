@@ -20,7 +20,9 @@ export function SubmitTaskButton({ proposalId }) {
       deliverable_url: deliverableUrl,
     };
 
-    const result = await updateProposalTask(proposalId, payload);
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
+    const result = await updateProposalTask(proposalId, payload, token);
     setLoading(false);
 
     if (result.success) {

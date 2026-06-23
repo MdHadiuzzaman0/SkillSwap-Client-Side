@@ -16,9 +16,12 @@ export default async function MyTasksPage() {
     return <div className="p-4 text-red-500 font-medium">Please log in to view your tasks.</div>;
   }
 
-  const fetchedTasks = await getMyTasksAction(clientEmail);
-  const fetchedProposals = await getClientProposalsAction(clientEmail);
-  console.log(fetchedTasks.length, fetchedProposals.length);
+  const { token } = await auth.api.getToken({
+      headers: await headers()
+    })
+  const fetchedTasks = await getMyTasksAction({clientEmail, token});
+  const fetchedProposals = await getClientProposalsAction({clientEmail, token});
+  //console.log(fetchedTasks.length, fetchedProposals.length);
   const renderStatusBadge = (status) => {
     const styles = {
       open: "bg-green-100 text-green-700 border-green-200",

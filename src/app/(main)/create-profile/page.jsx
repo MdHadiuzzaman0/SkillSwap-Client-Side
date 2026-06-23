@@ -11,7 +11,8 @@ export default function CreateProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const [loading, setLoading] = useState(true);
   
-  const email = session?.user?.email;
+  const email = session?.user?.email || "";
+  const image = session?.user?.image || "";
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
@@ -19,13 +20,15 @@ export default function CreateProfilePage() {
 
   useEffect(() => {
     async function checkProfile() {
+      const { data: tokenData} = await authClient.token()
+      const token = tokenData?.token; 
       if (!isPending && email) {
       if (email.toLowerCase() === adminEmail.toLowerCase()) {
           window.location.href = "/dashboard/admin/intro"; 
           return;
         }
 
-        const userData = await getUserInfo(email); 
+        const userData = await getUserInfo(email, token); 
         if (userData) {
           const userRole = userData.role ? userData.role.toLowerCase() : "client";
           window.location.href = `/dashboard/${userRole}/intro`;
@@ -50,7 +53,9 @@ export default function CreateProfilePage() {
     profileData.isBlocked = false;
     profileData.email = email;
     profileData.createdAt = new Date(); 
-    const res = await handleFormSubmit(profileData);
+    const { data: tokenData} = await authClient.token()
+    const token = tokenData?.token; 
+    const res = await handleFormSubmit(profileData, token);
     if (res.success) {
       toast.success("Profile updated successfully! 🎉");
       window.location.href = `/dashboard/${targetRole}/intro`;
@@ -71,9 +76,9 @@ export default function CreateProfilePage() {
 
       <form onSubmit={handleProfileSubmit} className="space-y-6">
         {targetRole === "freelancer" ? (
-          <CreateProfileOfFreelancer email={email} />
+          <CreateProfileOfFreelancer email={email} image={image} />
         ) : (
-          <CreateProfileOfClient email={email} />
+          <CreateProfileOfClient email={email} image={image}/>
         )}
 
         <button 
