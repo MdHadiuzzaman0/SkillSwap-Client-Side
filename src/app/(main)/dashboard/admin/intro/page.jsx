@@ -1,6 +1,6 @@
 import React from 'react';
 // চমৎকার কিছু আইকন ইম্পোর্ট করা হলো
-import { FiUsers, FiBriefcase, FiDollarSign, FiActivity } from 'react-icons/fi';
+import { FiUsers, FiBriefcase, FiDollarSign, FiActivity, FiInfo } from 'react-icons/fi';
 // আপনার ডেটা ফেচিং ফাংশনগুলো
 import { getAllData, getAllPayments } from '@/lib/data';
 import { auth } from '@/lib/auth';
@@ -22,7 +22,7 @@ export default async function AdminStatisticsPage() {
     : 0;
 
   const activeTasksCount = Array.isArray(proposals)
-    ? proposals.filter(proposal => proposal.status !== "pending").length
+    ? proposals.filter(proposal => proposal.status === "in-progress").length
     : 0;
 
   // কার্ডের ডাটাগুলোকে লুপ ঘোরানোর সুবিধার্থে একটি অ্যারেতে সাজানো হলো
@@ -83,6 +83,17 @@ export default async function AdminStatisticsPage() {
           </div>
         ))}
       </div>
+
+      <div className="bg-sky-50 border-l-4 border-sky-500 p-4 rounded-r-xl text-sky-900 text-sm font-medium flex items-start gap-3 my-4 max-w-7xl mx-auto shadow-sm">
+      <FiInfo className="mt-0.5 flex-shrink-0 text-sky-600 text-lg animate-pulse" />
+      <div>
+        <span className="font-bold uppercase tracking-wider text-xs  text-sky-700 ">
+          Note: Active Tasks
+        </span>
+        <span className="font-body text-sky-800/90 leading-relaxed text-xs sm:text-sm"> mean they are currently <span className="font-bold bg-sky-100 px-1.5 py-0.5 rounded text-sky-900">In Progress</span>. These contracts are locked and being worked on by the assigned freelancer still now.
+        </span>
+      </div>
+    </div>
     </div>
   );
 }

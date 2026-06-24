@@ -28,15 +28,15 @@ const FreelancerDashboardOverview = () => {
       try {
         // প্রপোজাল এবং আর্নিং ডাটা একসাথে লোড করা হচ্ছে
         const [proposals, earnings] = await Promise.all([
-          fetchMyProposals(freelancerEmail, token),
-          fetchMyEarnings(freelancerEmail, token),
+          fetchMyProposals({freelancerEmail, token}),
+          fetchMyEarnings({email: freelancerEmail, token}),
         ]);
 
         if (proposals && Array.isArray(proposals)) {
           const total = proposals.length;
 
           const pending = proposals.filter((p) => p.status?.toLowerCase() === "pending").length;
-          const inProgress = proposals.filter((p) => p.status?.toLowerCase() === "in progress").length;
+          const inProgress = proposals.filter((p) => p.status?.toLowerCase() === "in-progress").length;
           const completed = proposals.filter((p) => p.status?.toLowerCase() === "completed").length;
 
           // 🎯 আর্নিং ক্যালকুলেশন (শুধুমাত্র কমপ্লিট হওয়া প্রজেক্টের বাজেট যোগ হবে)
@@ -103,9 +103,10 @@ const FreelancerDashboardOverview = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-4">
-      <div className="bg-navy text-cream p-6 rounded-2xl shadow-sm border border-brown/10">
+      <div className="bg-gray-400 text-cream p-6 rounded-2xl shadow-sm border border-brown/10">
         <h1 className="text-2xl font-bold font-[var(--font-heading)]">
-          Welcome back, {session?.user?.name || "Freelancer"}!
+          Welcome back!
+          {/* {session?.user?.name || "Freelancer"}! */}
         </h1>
         <p className="text-xs font-light text-cream/80 mt-1">
           You have <span className="font-semibold text-white">{stats.inProgressProposals} active jobs</span> in progress and <span className="font-semibold text-white">{stats.completedProposals} completed</span> milestones.

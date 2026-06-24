@@ -60,10 +60,10 @@ export default function CreateProfileOfFreelancer({ email, image }) {
         </TextField>
 
         {/* Hourly Rate */}
-        <TextField isRequired name="hourlyRate" type="number">
+        {/* <TextField isRequired name="hourlyRate" type="number">
           <Label>Hourly Rate ($) *</Label>
           <Input placeholder="e.g. 25" min="1" />
-        </TextField>
+        </TextField> */}
       </div>
 
       {/* Portfolio Link */}

@@ -41,7 +41,7 @@ export default async function Success({ searchParams }) {
     });
 
     if (clientEmail) {
-      const allProposals = await getClientProposalsAction({clientEmail, token})
+      const allProposals = await getClientProposalsAction({email: clientEmail, token})
       
       // ৫. তুলে আনা লিস্ট থেকে ইউআরএল-এর proposalId ম্যাচ করে নির্দিষ্ট প্রপোজাল অবজেক্টটি খুঁজে বের করা
       if (Array.isArray(allProposals)) {
@@ -120,7 +120,7 @@ export default async function Success({ searchParams }) {
           {/* ড্যাশবোর্ড ব্যাক লিংক বাটন */}
           <div className="pt-2">
             <Link 
-              href="/dashboard/client" 
+              href="/dashboard/client/proposals" 
               className="w-full bg-black hover:bg-zinc-900 text-white font-semibold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md group"
             >
               Go to Dashboard

@@ -5,7 +5,7 @@ import Image from 'next/image';
 // Helper function to calculate time ago dynamically
 const formatTimeAgo = (dateString) => {
   if (!dateString) return 'Just now';
-  
+
   const now = new Date();
   const past = new Date(dateString);
   const msPerMinute = 60 * 1000;
@@ -20,31 +20,31 @@ const formatTimeAgo = (dateString) => {
   if (elapsed < 0) return 'Just now';
 
   if (elapsed < msPerMinute) {
-     return Math.round(elapsed / 1000) + 's ago';   
+    return Math.round(elapsed / 1000) + 's ago';
   }
   else if (elapsed < msPerHour) {
-     return Math.round(elapsed / msPerMinute) + 'm ago';   
+    return Math.round(elapsed / msPerMinute) + 'm ago';
   }
-  else if (elapsed < msPerDay ) {
-     return Math.round(elapsed / msPerHour ) + 'h ago';   
+  else if (elapsed < msPerDay) {
+    return Math.round(elapsed / msPerHour) + 'h ago';
   }
   else if (elapsed < msPerMonth) {
-    return Math.round(elapsed / msPerDay) + 'd ago';   
+    return Math.round(elapsed / msPerDay) + 'd ago';
   }
   else if (elapsed < msPerYear) {
-    return Math.round(elapsed / msPerMonth) + 'mo ago';   
+    return Math.round(elapsed / msPerMonth) + 'mo ago';
   }
   else {
-    return Math.round(elapsed / msPerYear ) + 'y ago';   
+    return Math.round(elapsed / msPerYear) + 'y ago';
   }
 };
 
-const TaskCard = ({ task }) => {
+const TaskCard = ({ task, session }) => {
   const { _id, title, category, description, budget, deadline, status, clientEmail, clientName, clientImage, createdAt } = task;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-brown/20 p-6 flex flex-col justify-between h-full hover:shadow-md transition-all duration-300 max-w-xl mx-auto w-full font-[var(--font-body)]">
-      
+
       {/* Top Section: Category Badge & Status / Time Ago */}
       <div className="flex items-center justify-between mb-4">
         {/* Category & Dynamic Time-ago together */}
@@ -57,10 +57,9 @@ const TaskCard = ({ task }) => {
             {formatTimeAgo(createdAt)}
           </span>
         </div>
-        
-        <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${
-          status === 'open' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
-        }`}>
+
+        <span className={`px-2.5 py-0.5 text-xs font-medium rounded-full ${status === 'open' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+          }`}>
           {status}
         </span>
       </div>
@@ -99,8 +98,8 @@ const TaskCard = ({ task }) => {
           {/* Fixed Next.js Image Component Wrapper */}
           <div className="relative w-9 h-9 flex-shrink-0">
             <Image
-              src={clientImage || "https://i.pravatar.cc/150"} 
-              alt={clientName || "Client"}  
+              src={clientImage || "https://i.pravatar.cc/150"}
+              alt={clientName || "Client"}
               fill
               sizes="36px"
               className="rounded-full object-cover border border-tan"
@@ -110,13 +109,22 @@ const TaskCard = ({ task }) => {
             <span className="text-xs font-bold text-black truncate">{clientName || "Client"}</span>
           </div>
         </div>
-        
-        <Link 
-          href={`/browse-tasks/${_id}`}
-          className="px-4 py-2.5 bg-navy text-cream text-xs font-semibold rounded-xl hover:bg-brown transition-colors duration-200 text-center shadow-sm"
-        >
-          View Details
-        </Link>
+
+        {session ? (
+          <Link
+            href={`/browse-tasks/${_id}`}
+            className="px-4 py-2.5 bg-gray-300 text-black text-xs font-semibold rounded-xl hover:bg-brown transition-colors duration-200 text-center shadow-sm"
+          >
+            View Details
+          </Link>
+        ) : (
+          <Link
+            href="/login" 
+            className="px-4 py-2.5 bg-amber-300 text-white text-xs font-semibold rounded-xl hover:bg-amber-700 transition-colors duration-200 text-center shadow-sm flex items-center justify-center gap-1"
+          >
+            Login to View
+          </Link>
+        )}
       </div>
 
     </div>

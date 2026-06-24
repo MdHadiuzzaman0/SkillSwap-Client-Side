@@ -31,7 +31,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-cream text-black font-[var(--font-body)]">
       {/* 🛠️ বাম পাশের সাইডবার */}
-      <aside className="w-64 bg-white border-r border-brown/10 flex flex-col fixed h-screen z-10">
+      <aside className="w-64 bg-white border-r border-brown/10 flex flex-col fixed h-[500px] z-10">
         
         {/* সাইডবার হেডার */}
         <div className="p-6 border-b border-brown/10">

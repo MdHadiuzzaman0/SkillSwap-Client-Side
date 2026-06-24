@@ -30,13 +30,11 @@ export default async function ClientDashboardPage() {
     }
 
     // ৩. ক্লায়েন্টের সব প্রপোজাল ফেচ করে 'in-progress' স্ট্যাটাস দিয়ে ফিল্টার করা
-    const proposals = await getClientProposalsAction({ clientEmail, token });
+    const proposals = await getClientProposalsAction({ email: clientEmail, token });
     if (Array.isArray(proposals)) {
-      // যে প্রপোজালগুলোর স্ট্যাটাস সরাসরি 'in-progress'
       const inProgressProposals = proposals.filter((proposal) => proposal.status === "in-progress");
       inProgressTasksCount = inProgressProposals.length;
-
-      // ৪. ইন-প্রোগ্রেস প্রপোজালগুলোর বাজেট যোগ করে 'Total Spent' বের করা
+      
       totalSpent = inProgressProposals.reduce((sum, proposal) => {
         return sum + Number(proposal.proposed_budget || 0);
       }, 0);

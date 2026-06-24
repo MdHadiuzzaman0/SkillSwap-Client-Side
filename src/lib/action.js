@@ -1,7 +1,7 @@
 "use server";
 
 //get all, filter, search
-export async function getFilteredTasks({ category, search, page = 1, token}) {
+export async function getFilteredTasks({ category, search, page = 1 }) {
   try {
     let url = `http://localhost:8000/tasks?page=${page}&limit=9`; 
 
@@ -13,17 +13,12 @@ export async function getFilteredTasks({ category, search, page = 1, token}) {
       url += `${separator}search=${encodeURIComponent(search)}`;
     }
 
-    const res = await fetch(url, { 
-    cache: "no-store",
-    headers: {
-        authorization: `Bearer ${token}`
-      },
-    });
+    const res = await fetch(url, { cache: "no-store" });
     const result = await res.json();
 
     return {
         tasks: result.data || [],
-        count: result.count || 0
+        count: result.total || 0
     };
   } catch (error) {
     console.error("Error fetching tasks:", error);
@@ -85,9 +80,7 @@ export const updateProfileData = async (email, profilePayload, token) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        headers: {
-          authorization: `Bearer ${token}`
-        }
+          authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(profilePayload),
     });
@@ -111,8 +104,8 @@ export const updateProposalTask = async (proposalId, payload, token) => {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${token}`
-      },
+        authorization : `Bearer ${token}`,
+    },
       body: JSON.stringify(payload),
     });
     
@@ -224,14 +217,15 @@ export const changeSatusAfterPayment = async (infoField) => {
 };
 
 //update freelancer earnings
-export async function syncFreelancerEarnings(email, totalEarnings) {
+export async function syncFreelancerEarnings({email, totalEarnings, token}) {
   try {
     const res = await fetch("http://localhost:8000/update-earnings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ email, totalEarnings: Number(totalEarnings) }),
+      body: JSON.stringify({ email, totalEarnings }),
     });
     const result = await res.json();
     return result;
@@ -259,4 +253,4 @@ export async function toggleUserBlockStatus(userId, currentBlockStatus, token) {
     console.error("Error toggling block status:", error);
     return false;
   }
-}
+} 

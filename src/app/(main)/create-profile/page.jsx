@@ -1,34 +1,34 @@
 "use client";
-import { useEffect, useState } from "react"; 
-import CreateProfileOfClient from "@/components/CreateProfileOfClient"; 
-import CreateProfileOfFreelancer from "@/components/CreateProfileOfFreelancer"; 
-import { handleFormSubmit } from "@/lib/action"; 
-import { getUserInfo } from "@/lib/data"; 
+import { useEffect, useState } from "react";
+import CreateProfileOfClient from "@/components/CreateProfileOfClient";
+import CreateProfileOfFreelancer from "@/components/CreateProfileOfFreelancer";
+import { handleFormSubmit } from "@/lib/action";
+import { getUserInfo } from "@/lib/data";
 import { toast } from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
 export default function CreateProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const [loading, setLoading] = useState(true);
-  
+
   const email = session?.user?.email || "";
   const image = session?.user?.image || "";
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
-  const adminEmail="admin1@example.com";
+  const adminEmail = "admin1@example.com";
 
   useEffect(() => {
     async function checkProfile() {
-      const { data: tokenData} = await authClient.token()
-      const token = tokenData?.token; 
+      const { data: tokenData } = await authClient.token()
+      const token = tokenData?.token;
       if (!isPending && email) {
-      if (email.toLowerCase() === adminEmail.toLowerCase()) {
-          window.location.href = "/dashboard/admin/intro"; 
+        if (email.toLowerCase() === adminEmail.toLowerCase()) {
+          window.location.href = "/dashboard/admin/intro";
           return;
         }
 
-        const userData = await getUserInfo(email, token); 
+        const userData = await getUserInfo(email);
         if (userData) {
           const userRole = userData.role ? userData.role.toLowerCase() : "client";
           window.location.href = `/dashboard/${userRole}/intro`;
@@ -48,13 +48,13 @@ export default function CreateProfilePage() {
     if (profileData.role === "freelancer" && typeof profileData.skills === "string") {
       profileData.skills = profileData.skills.split(",").map(s => s.trim()).filter(Boolean);
       profileData.totalEarnings = 0;
-    } 
-    
+    }
+
     profileData.isBlocked = false;
     profileData.email = email;
-    profileData.createdAt = new Date(); 
-    const { data: tokenData} = await authClient.token()
-    const token = tokenData?.token; 
+    profileData.createdAt = new Date();
+    const { data: tokenData } = await authClient.token()
+    const token = tokenData?.token;
     const res = await handleFormSubmit(profileData, token);
     if (res.success) {
       toast.success("Profile updated successfully! 🎉");
@@ -78,14 +78,14 @@ export default function CreateProfilePage() {
         {targetRole === "freelancer" ? (
           <CreateProfileOfFreelancer email={email} image={image} />
         ) : (
-          <CreateProfileOfClient email={email} image={image}/>
+          <CreateProfileOfClient email={email} image={image} />
         )}
 
-        <button 
-          type="submit" 
-          className="w-full bg-workable-dark-green text-black py-2.5 rounded-xl font-bold font-heading uppercase tracking-wide hover:bg-workable-primary transition-all duration-300 shadow-md active:scale-[0.99] cursor-pointer"
+        <button
+          type="submit"
+          className="w-full bg-navy text-white py-2.5 rounded-xl font-bold font-heading uppercase tracking-wide hover:bg-opacity-90 active:scale-[0.99] transition-all duration-300 shadow-md cursor-pointer"
         >
-          Save 
+          Save Info
         </button>
       </form>
     </div>

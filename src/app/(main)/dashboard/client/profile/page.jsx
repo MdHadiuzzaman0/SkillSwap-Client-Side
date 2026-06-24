@@ -35,7 +35,7 @@ const ClientProfilePage = () => {
             setLoading(true);
             const { data: tokenData } = await authClient.token()
             const token = tokenData?.token;
-            const data = await getUserInfo(clientEmail, token);
+            const data = await getUserInfo(clientEmail);
             if (data) {
                 setFormData({
                     firstName: data.firstName || "",

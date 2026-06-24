@@ -39,7 +39,7 @@ const FilterDropdown = ({ categoryOptions }) => {
         <Dropdown>
             {/* 🔘 মেইন বাটন ট্রিগার */}
             <Dropdown.Trigger
-                className="bg-gray-100 border p-4 rounded-2xl text-sm font-semibold text-gray-700 cursor-pointer flex justify-between items-center w-full"
+                className="bg-gray-100 border border-gray-100 p-4 rounded-2xl text-sm font-semibold text-gray-700 cursor-pointer flex justify-between items-center w-full"
             >
                 <div className="flex justify-between items-center w-full">
                     <span>{buttonText}</span>

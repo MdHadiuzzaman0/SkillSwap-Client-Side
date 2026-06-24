@@ -1,12 +1,9 @@
 //get userInfo
-export async function getUserInfo(email, token) {
+export async function getUserInfo(email) {
   if (!email) return null;
   try {
     const response = await fetch(`http://localhost:8000/user/${email}`, {
-      method: "GET", cache: "no-store", next: { revalidate: 0 }, 
-      headers: {
-        authorization: `Bearer ${token}`
-      }
+      method: "GET", cache: "no-store", next: { revalidate: 0 }
     });
 
     if (!response.ok) return null;
@@ -19,11 +16,11 @@ export async function getUserInfo(email, token) {
 }
 
 //get all tasks
-export const getAllTasks = async (token) => {
-    const res = await fetch('http://localhost:8000/browse-tasks', {
-        headers: {
-            authorization: `Bearer ${token}`
-        },
+export const getAllTasks = async (token) => {  
+    const res = await fetch('http://localhost:8000/browse-tasks',{
+      headers : {
+        authorization : `Bearer ${token}`
+      }
     })
     return res.json()
 }
@@ -41,9 +38,7 @@ export const getTaskById = async (id, token) => {
 //get top freelancer
 export async function getTopFreelancers() {
   try {
-    const res = await fetch("http://localhost:8000/top-freelancers-home", {
-      next: { revalidate: 30 } 
-    });
+    const res = await fetch("http://localhost:8000/top-freelancers-home");
     const result = await res.json();
     return result.data || [];
   } catch (error) {
@@ -53,8 +48,27 @@ export async function getTopFreelancers() {
 }
 
 //freelancer
+//get freelancer profile info
+export const fetchProfileData = async (email, token) => {
+  try {
+    const res = await fetch(`http://localhost:8000/profile/${email}`, {
+      headers: { authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to load freelancer profile");
+    }
+
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error("Fetch error inside data.js:", error);
+    return {};
+  }
+};
+
 //get proposal data for specific freelancer
-export const fetchMyProposals = async (freelancerEmail, token) => {
+export const fetchMyProposals = async ({freelancerEmail, token}) => {
   try {
     const res = await fetch(`http://localhost:8000/proposals/${freelancerEmail}`, {
       headers: { authorization: `Bearer ${token}` }
@@ -73,7 +87,7 @@ export const fetchMyProposals = async (freelancerEmail, token) => {
 };
 
 //get completed task from proposalCollection
-export const fetchMyEarnings = async (email, token) => {
+export const fetchMyEarnings = async ({email, token}) => {
   try {
     const res = await fetch(`http://localhost:8000/earnings/${email}`, {
       cache: "no-store", 
@@ -127,6 +141,25 @@ export const getClientProposalsAction = async ({email, token}) => {
     console.error("Error fetching client proposals:", error);
     return [];
   }
+}
+
+//get paid task info from payment collection
+export const fetchMyPayments = async ({email, token}) => {
+  try {
+    const res = await fetch(`http://localhost:8000/payments/${email}`, {
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to load payment records");
+    }
+
+    const data = await res.json();
+    return data.data; // ব্যাকএন্ড থেকে আসা পেমেন্ট অ্যারে সরাসরি রিটার্ন করবে
+  } catch (error) {
+    console.error("Fetch error inside data.js (fetchMyPayments):", error);
+    return []; // কোনো এরর হলে খালি অ্যারে রিটার্ন করবে যাতে ম্যাপ করার সময় ক্র্যাশ না করে
+  }
 };
 
 //admin
@@ -173,13 +206,10 @@ export const getAllPayments = async (token) => {
 
 //finishing
 //grt all freelancer with proposals
-export async function getAllData(token) {
+export async function getAllData() {
   try {
     const res = await fetch("http://localhost:8000/api/allData", {
-      next:{revalidate: 20},
-      headers: {
-        authorization: `Bearer ${token}`
-      }
+      next:{revalidate: 20} 
     });
     
     const result = await res.json();
@@ -191,7 +221,7 @@ export async function getAllData(token) {
         tasks: result.tasks || [],
       };
     }
-    
+    console.log(tasks.length)
     return { users: [], proposals: [] };
   } catch (error) {
     console.error("Error in getFreelancerPageData:", error);

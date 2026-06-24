@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { getTaskById } from "@/lib/data"; 
-import { FiClock, FiDollarSign, FiCalendar, FiBookmark, FiSend, FiShield, FiArrowLeft,FiUser,FiMail,FiBriefcase } from "react-icons/fi";
-import {ProposalSubmitButton } from "@/components/ProposalSubmitButton";
+import { getTaskById } from "@/lib/data";
+import { FiClock, FiDollarSign, FiCalendar, FiBookmark, FiSend, FiShield, FiArrowLeft, FiUser, FiMail, FiBriefcase } from "react-icons/fi";
+import { ProposalSubmitButton } from "@/components/ProposalSubmitButton";
 
 // Helper function for dynamic time calculation
 const formatTimeAgo = (dateString) => {
@@ -47,14 +47,14 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
   return (
     <div className="bg-cream min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-[var(--font-body)]">
       <div className="max-w-5xl mx-auto">
-        
+
         {/* Back Button Link */}
         <Link href="/browse-tasks" className="inline-flex items-center gap-2 text-sm font-medium text-brown hover:text-navy mb-6 transition-colors group">
           <FiArrowLeft className="transition-transform group-hover:-translate-x-1" /> Back to Tasks
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Left Column: Core Task Work Description */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-3xl border border-brown/10 p-6 md:p-8 shadow-sm relative overflow-hidden group">
@@ -92,7 +92,7 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
 
           {/* Right Column: Financials & Action Modules */}
           <div className="space-y-6">
-            
+
             {/* Card Module 1: Contract Budget & Lock Mechanism */}
             <div className="bg-white rounded-3xl border border-brown/10 p-6 shadow-sm space-y-5 relative overflow-hidden">
               <div>
@@ -116,7 +116,10 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
 
               {/* Interactive Application Buttons */}
               <div className="pt-2 space-y-2">
-                <ProposalSubmitButton taskData={taskData} currentUserEmail={currentUserEmail}/>
+                {status !== "closed" && session?.user?.role === "freelancer" && (
+                  <ProposalSubmitButton taskData={taskData} currentUserEmail={currentUserEmail} />
+                )}
+
                 <button className="w-full py-3 bg-white text-navy border border-navy/20 font-semibold rounded-xl text-xs tracking-wide hover:bg-cream/30 active:scale-[0.98] transition-all cursor-pointer flex items-center justify-center gap-2">
                   <FiBookmark /> Bookmark Contract
                 </button>
@@ -128,13 +131,13 @@ const TaskDetailsPage = async ({ params: paramsPromise }) => {
               <h4 className="text-xs font-bold uppercase tracking-wider text-brown text-left border-b border-brown/5 pb-2 flex items-center gap-1.5">
                 <FiUser className="text-navy" /> Client Overview
               </h4>
-              
+
               <div className="flex flex-col items-center py-2">
                 <div className="relative w-16 h-16 mb-3">
-                  <Image 
-                    src={clientImage || "https://i.pravatar.cc/150"} 
-                    alt={clientName || "Client"} 
-                    fill 
+                  <Image
+                    src={clientImage || "https://i.pravatar.cc/150"}
+                    alt={clientName || "Client"}
+                    fill
                     sizes="64px"
                     className="rounded-full object-cover border-2 border-tan"
                   />

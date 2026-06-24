@@ -1,6 +1,6 @@
 import React from "react";
 import { FiBriefcase } from "react-icons/fi";
-import { getClientProposalsAction } from "@/lib/data"; 
+import { getClientProposalsAction, fetchMyPayments } from "@/lib/data"; 
 import ProposalTable from "@/components/ProposalTable";
 import { auth } from "@/lib/auth"; 
 import { headers } from "next/headers"
@@ -15,7 +15,9 @@ export default async function ManageProposalsPage() {
     headers: await headers()
   });
   
-    const proposals = await getClientProposalsAction({clientEmail, token});
+    const proposals = await getClientProposalsAction({email:clientEmail, token});
+    // Server Component-এ ব্যবহারের নিয়ম:
+    const payments = await fetchMyPayments({email:clientEmail, token});
     //console.log(clientEmail, proposals);
 
   return (
@@ -28,7 +30,7 @@ export default async function ManageProposalsPage() {
         <div>
           <h1 className="text-xl font-bold font-[var(--font-heading)] text-black">Manage Proposals</h1>
           <p className="text-xs text-brown font-light mt-0.5">
-            Review submissions from freelancers and hire the best fit for your tasks[cite: 1].
+            Review submissions from freelancers and hire the best fit for your tasks
           </p>
         </div>
       </div>
@@ -38,7 +40,7 @@ export default async function ManageProposalsPage() {
           <p className="text-gray-500 text-sm">No proposals received yet for your tasks.</p>
         </div>
       ) : (
-        <ProposalTable initialProposals={proposals} />
+        <ProposalTable initialProposals={proposals} payments={payments} session={session} />
       )}
     </div>
   );

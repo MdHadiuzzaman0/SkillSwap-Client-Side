@@ -4,7 +4,6 @@ import { fetchProfileData } from "@/lib/data";
 import { updateProfileData } from "@/lib/action";
 import { useSession } from "@/lib/auth-client";
 import { FiEdit2, FiX, FiCheck } from "react-icons/fi";
-import { getUserInfo } from "@/lib/data";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { authClient } from '@/lib/auth-client';
@@ -24,7 +23,7 @@ const FreelancerProfilePage = () => {
     image: "",
     skills: "",
     bio: "",
-    hourlyRate: "",
+    //hourlyRate: "",
   });
 
   // Load existing user info from database on mount
@@ -33,9 +32,9 @@ const FreelancerProfilePage = () => {
 
     const loadProfile = async () => {
       setLoading(true);
-      const { data: tokenData} = await authClient.token()
-      const token = tokenData?.token; 
-      const data = await getUserInfo(freelancerEmail, token);
+      const { data: tokenData } = await authClient.token()
+      const token = tokenData?.token;
+      const data = await fetchProfileData(freelancerEmail, token);
       if (data) {
         setFormData({
           firstName: data.firstName || "",
@@ -43,7 +42,7 @@ const FreelancerProfilePage = () => {
           image: data.image || "",
           skills: data.skills ? data.skills.join(", ") : "",
           bio: data.bio || "",
-          hourlyRate: data.hourlyRate || "",
+          //hourlyRate: data.hourlyRate || "",
         });
       }
       setLoading(false);
@@ -56,7 +55,8 @@ const FreelancerProfilePage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: name === "hourlyRate" ? Number(value) : value,
+      //[name]: name === "hourlyRate" ? Number(value) : value,
+      [name] : value,
     }));
   };
 
@@ -74,8 +74,8 @@ const FreelancerProfilePage = () => {
       skills: skillsArray,
     };
 
-    const { data: tokenData} = await authClient.token()
-    const token = tokenData?.token; 
+    const { data: tokenData } = await authClient.token()
+    const token = tokenData?.token;
     const result = await updateProfileData(freelancerEmail, payload, token);
     setUpdating(false);
 
@@ -191,7 +191,7 @@ const FreelancerProfilePage = () => {
         </div>
 
         {/* Hourly Rate Field */}
-        <div>
+        {/* <div>
           <label className="block font-semibold text-brown mb-1.5">Hourly Rate (USD / hr)</label>
           <input
             type="number"
@@ -203,7 +203,7 @@ const FreelancerProfilePage = () => {
               }`}
             required
           />
-        </div>
+        </div> */}
 
         {/* Biography Textarea */}
         <div>

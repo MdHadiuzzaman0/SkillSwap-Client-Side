@@ -1,32 +1,30 @@
 import { getAllData } from "@/lib/data";
-import { FiDollarSign, FiBriefcase, FiCheckCircle, FiStar, FiUser } from "react-icons/fi";
+import { FiDollarSign, FiBriefcase, FiCheckCircle, FiUser } from "react-icons/fi";
 import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 const BrowseFreelancersPage = async () => {
-  const { token } = await auth.api.getToken({
-    headers: await headers()
-  });
-  const { users, proposals } = await getAllData(token);
+  const { users, proposals } = await getAllData();
 
-  // 🎯 ২. ফ্রিল্যান্সারদের ফিল্টার করা এবং ইন-প্রগ্রেস ও কমপ্লিটেড কাজের ডাটা আলাদা করা
   const freelancers = users
     ?.filter((user) => user.role === "freelancer" && !user.isBlocked)
     ?.map((freelancer) => {
-      // এই ফ্রিল্যান্সারের সব প্রপোজাল আলাদা করে নেওয়া
       const myProposals = proposals?.filter(
         (proposal) => proposal.freelancer_email === freelancer.email
       ) || [];
 
-      // স্ট্যাটাস অনুযায়ী pconst { users, proposals } = await getAllData();আলাদা ফিল্টারিং ও কাউন্টিং
       const inProgressCount = myProposals.filter((p) => p.status === "in-progress").length;
       const completedCount = myProposals.filter((p) => p.status === "completed").length;
 
+      // 🎯 ডাটাবেজ থেকে firstName এবং lastName জোড়া লাগিয়ে ফুল নেম জেনারেট করা হলো
+      const fullName = `${freelancer.firstName || ""} ${freelancer.lastName || ""}`.trim();
+
       return {
         ...freelancer,
-        inProgressCount, // ইন-প্রগ্রেস কাজের সংখ্যা
-        completedCount,  // কমপ্লিটেড কাজের সংখ্যা
+        displayName: fullName || "Freelancer",
+        inProgressCount,
+        completedCount,
       };
     }) || [];
 
@@ -49,38 +47,48 @@ const BrowseFreelancersPage = async () => {
           {freelancers.map((freelancer) => (
             <div 
               key={freelancer._id} 
-              className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow"
+              className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow min-h-[340px]"
             >
               <div>
-                {/* প্রোফাইল হেডার (ছবি ও নাম) */}
-                <div className="flex items-start gap-4 mb-4">
+                {/* 🎯 প্রোফাইল হেডার (ছবি, নাম এবং অ্যাক্টিভ স্ট্যাটাস) */}
+                <div className="flex items-center gap-4 mb-4">
                   {freelancer.image ? (
-                    <Image
-                      src={freelancer.image} 
-                      alt={freelancer.name} width={56} height={56} className="rounded-xl object-cover border border-gray-100"
-                    />
+                    <div className="w-14 h-14 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 relative">
+                      <Image
+                        src={freelancer.image} 
+                        alt={freelancer.displayName} 
+                        width={56} 
+                        height={56} 
+                        className="w-14 h-14 object-cover"
+                      />
+                    </div>
                   ) : (
-                    <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                    <div className="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200 flex-shrink-0">
                       <FiUser className="text-xl" />
                     </div>
                   )}
-                  <div>
-                    <h2 className="font-bold text-gray-900 text-lg leading-tight">
-                      {freelancer.name}
+                  
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <h2 className="font-bold text-gray-900 text-base leading-tight truncate">
+                      {freelancer.displayName}
                     </h2>
-                    <p className="text-xs text-gray-400 font-medium mt-0.5 break-all">
-                      {freelancer.email}
-                    </p>
+                    {/* 🟢 Active ব্যাজ (যেহেতু ফিল্টারে !isBlocked দেওয়া আছে, তাই এরা সবাই একটিভ) */}
+                    <div>
+                      <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        Active
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 {/* বায়ো টেক্সট */}
-                <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                <p className="text-gray-600 text-sm line-clamp-2 mb-4 h-10">
                   {freelancer.bio || "No bio added yet."}
                 </p>
 
                 {/* স্কিলস লিস্ট / ট্যাগস */}
-                <div className="flex flex-wrap gap-1.5 mb-6">
+                <div className="flex flex-wrap gap-1.5 mb-6 overflow-hidden">
                   {freelancer.skills && freelancer.skills.length > 0 ? (
                     freelancer.skills.map((skill, idx) => (
                       <span 
@@ -96,10 +104,9 @@ const BrowseFreelancersPage = async () => {
                 </div>
               </div>
 
-              {/* কার্ড ফুটার - স্ট্যাটাস কাউন্টার আলাদাভাবে ডিসপ্লে */}
+              {/* কার্ড ফুটার - স্ট্যাটাস কাউন্টার ও আওয়ারলি রেট */}
               <div className="pt-4 border-t border-gray-100 flex flex-col gap-3 mt-auto">
                 
-                {/* আলাদা আলাদা প্রজেক্ট স্ট্যাটাস ট্র্যাক */}
                 <div className="flex items-center gap-4 text-xs font-semibold text-gray-600">
                   {/* ১. ইন-প্রগ্রেস কাউন্ট */}
                   <div className="flex items-center gap-1 bg-blue-50 text-blue-700 px-2 py-1 rounded-md">
@@ -115,18 +122,17 @@ const BrowseFreelancersPage = async () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-1">
-                  {/* রেটিং (পিডিএফের নিয়ম অনুযায়ী স্টার) */}
-                  <div className="flex items-center gap-1 text-amber-500 font-bold text-sm">
-                    <FiStar className="fill-current" />
-                    <span>4.5</span>
+                  {/* 💡 রেটিং আপাতত হাইড/বাদ রাখা হলো আপনার চাহিদা অনুযায়ী */}
+                  <div className="text-sm font-bold text-gray-400">
+                    {/* Rating Hidden */}
                   </div>
 
                   {/* আওয়ারলি রেট */}
                   <div className="text-right">
-                    <span className="text-gray-950 font-black text-base flex items-center justify-end">
+                    {/* <span className="text-gray-950 font-black text-base flex items-center justify-end">
                       <FiDollarSign className="text-sm -mr-0.5 text-gray-600" />
                       {freelancer.hourly_rate || 0}/hr
-                    </span>
+                    </span> */}
                   </div>
                 </div>
 

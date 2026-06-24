@@ -1,26 +1,27 @@
 import { getAllData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
-import Marquee from "react-fast-marquee"; 
-import { FiDollarSign, FiCalendar, FiUser } from "react-icons/fi"; 
+import Marquee from "react-fast-marquee";
+import { FiDollarSign, FiCalendar, FiUser } from "react-icons/fi";
 
 const LatestTasksMarqueeSection = async () => {
   const { tasks, users } = await getAllData();
 
-  // 🎯 ফিল্টারিং, সর্টিং এবং ক্লায়েন্টের ছবিসহ ডাটা ম্যাপ
   const featuredTasks = tasks
     ?.filter((task) => task.status === "open")
     ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    ?.slice(0, 10) 
+    ?.slice(0, 10)
     ?.map((task) => {
-      const clientInfo = users.find((u) => u.email === task.client_email);
+      const clientInfo = users.find((u) => u.email === task.clientEmail);
       return {
         ...task,
-        clientName: clientInfo ? clientInfo.name : "Client",
-        clientImage: clientInfo?.image || null, // 🎯 ক্লায়েন্টের ইমেজ নিয়ে আসা হলো
-        clientEmail: task.client_email,
+        clientName: clientInfo ? `${clientInfo.firstName || ""} ${clientInfo.lastName || ""}`.trim() : "Client",
+        clientImage: clientInfo?.image || task.clientImage || null, 
+        clientEmail: task.clientEmail,
       };
     }) || [];
+
+  //console.log(featuredTasks.length, tasks.length)
 
   if (featuredTasks.length === 0) return null;
 
@@ -36,8 +37,8 @@ const LatestTasksMarqueeSection = async () => {
             Fast micro-tasks posted by verified clients.
           </p>
         </div>
-        <Link 
-          href="/browse-tasks" 
+        <Link
+          href="/browse-tasks"
           className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1 transition-colors"
         >
           View All Tasks &rarr;
@@ -46,25 +47,25 @@ const LatestTasksMarqueeSection = async () => {
 
       {/* 🎪 Marquee স্লাইডার */}
       <div className="border-y border-gray-100 bg-white py-6">
-        <Marquee 
-          speed={40}            
-          pauseOnHover={true}   
-          gradient={true}       
-          gradientColor="white" 
-          gradientWidth={50}
+        <Marquee
+          speed={40}
+          pauseOnHover={true}
+          gradient={true}
+          gradientColor="white"
+          gradientWidth={70}
         >
           {featuredTasks.map((task) => (
-            <div 
-              key={task._id} 
+            <div
+              key={task._id}
               className="mx-3 w-[290px] bg-gray-50 border border-gray-100 rounded-xl p-4 shadow-sm hover:border-amber-200 transition-all duration-200 flex flex-col justify-between"
             >
               <div>
                 {/* 🎯 প্রোফাইল হেডার (ক্লায়েন্টের ছবি, নাম এবং ইমেইল) */}
                 <div className="flex items-center gap-2.5 mb-3 pb-3 border-b border-gray-200/50">
                   {task.clientImage ? (
-                    <Image 
-                      src={task.clientImage} 
-                      alt={task.clientName} width={32} height={32} className="rounded-full object-cover border border-gray-200 shrink-0"
+                    <Image
+                      src={task.clientImage}
+                      alt={task.clientName} width={32} height={32} className="w-8 h-8 rounded-full object-cover border border-gray-200 shrink-0"
                     />
                   ) : (
                     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 shrink-0 border border-gray-300">

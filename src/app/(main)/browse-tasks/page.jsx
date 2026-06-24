@@ -1,6 +1,5 @@
 import TaskCard from "@/components/TaskCard";
-import { getUserInfo } from "@/lib/data";
-import { authClient } from "@/lib/auth-client"; // BetterAuth ক্লায়েন্ট
+import { auth } from "@/lib/auth"; 
 import { headers } from "next/headers";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
@@ -9,27 +8,22 @@ import { FiInfo } from "react-icons/fi";
 import Link from "next/link";
 
 const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
-    // ১. ইউজার সেশন ডাটা
     const session = await auth.api.getSession({
         headers: await headers()
     });
-    const { token } = await auth.api.getToken({
-    headers: await headers()
-  });
     const email = session?.user?.email;
-    const userInfo = await getUserInfo(email, token);
 
-    // ২. searchParams await করা (Next.js 15+ রুল)
     const searchParams = await searchParamsPromise;
-
     const category = searchParams?.category || "";
     const search = searchParams?.search || "";
     const currentPage = parseInt(searchParams?.page) || 1; 
 
-    const { tasks, count } = await getFilteredTasks({ category, search, page: currentPage, token });
+    const { tasks, count } = await getFilteredTasks({ category, search, page: currentPage});
+
+    console.log(tasks.length, count)
 
     const limit = 9;
-    const totalPages = Math.ceil(total / limit); 
+    const totalPages = Math.ceil(count / limit); 
 
     const getPageLink = (pageNumber) => {
         const params = new URLSearchParams(searchParams);
@@ -67,8 +61,7 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
                 <div className="bg-amber-50 border-l-4 border-amber-500 p-3 rounded-r-xl text-amber-900 text-xs font-medium flex items-start gap-2 mb-6">
                     <FiInfo className="mt-0.5 flex-shrink-0 text-amber-600 text-sm" />
                     <div>
-                        <span className="font-bold">Note:</span> Search functionality strictly queries against the task <span className="font-bold underline">title</span>. <br/>
-                        The dropdown filters options using the specific task <span className="font-bold underline">category</span> field. 
+                        <span className="font-bold">Note:</span> Search functionality strictly queries against the task <span className="font-bold underline">title</span>. The dropdown filters options using the specific task <span className="font-bold underline">category</span> field. 
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -84,10 +77,8 @@ const BrowseTasksPage = async ({ searchParams: searchParamsPromise }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {tasks.map((task) => (
                             <TaskCard
-                                key={task._id || task.id}
-                                task={task}
-                                email={email}
-                                userInfo={userInfo}
+                                key={task._id || task.id} email={email}
+                                task={task} session={session}
                             />
                         ))}
                     </div>

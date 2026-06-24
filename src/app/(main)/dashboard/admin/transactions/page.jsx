@@ -1,6 +1,6 @@
 import React from 'react';
 // চমৎকার কিছু আইকন ইম্পোর্ট করা হলো
-import { FiDollarSign, FiCalendar, FiUser, FiArrowRight } from 'react-icons/fi';
+import { FiDollarSign, FiCalendar, FiUser, FiArrowRight, FiInfo } from 'react-icons/fi';
 import { getAllPayments } from '@/lib/data';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
@@ -13,13 +13,22 @@ export default async function AdminTransactionsPage() {
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-black bg-gray-50 min-h-screen">
-      
+
       {/* 📝 পেজ হেডার ও ইন্ট্রো */}
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-black font-[var(--font-heading)] text-navy tracking-tight">Transactions History</h2>
           <p className="text-xs text-gray-500 mt-1">Monitor and audit all successful client-to-freelancer escrow payments</p>
         </div>
+
+
+        <div className="bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-xl text-sky-950 text-xs sm:text-sm font-medium flex items-center gap-2 my-4 max-w-7xl mx-auto shadow-sm">
+          <FiInfo className="flex-shrink-0 text-sky-600 text-base animate-pulse" />
+          <div>
+            <span className="font-bold">Note:</span> All records are automatically arranged and displayed based on the latest creation date.
+          </div>
+        </div>
+
         <div className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1.5 shadow-sm">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Live Ledger Sync
@@ -29,7 +38,7 @@ export default async function AdminTransactionsPage() {
       {/* 📊 ট্রানজেকশন হিস্ট্রি টেবিল কন্টেইনার */}
       <div className="bg-white border border-gray-200/70 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
         <div className="overflow-x-auto">
-          
+
           {/* যদি ডাটাবেজে কোনো ট্রানজেকশন না থাকে (Empty State Handling) */}
           {!payments || payments.length === 0 ? (
             <div className="p-12 text-center space-y-3">
@@ -40,7 +49,7 @@ export default async function AdminTransactionsPage() {
               <p className="text-xs text-gray-400 max-w-xs mx-auto">Escrow payments will automatically populate here once clients process invoice checkouts through Stripe.</p>
             </div>
           ) : (
-            
+
             /* আসল ডেটা টেবিল */
             <table className="w-full text-left border-collapse">
               <thead>
@@ -55,17 +64,17 @@ export default async function AdminTransactionsPage() {
                   <th className="py-4 px-6 text-right">Status</th>
                 </tr>
               </thead>
-              
+
               <tbody className="divide-y divide-gray-100">
                 {payments.map((pay, idx) => {
                   // পেমেন্টের ডেট ফরম্যাটিং
-                  const paymentDate = pay.paid_at 
+                  const paymentDate = pay.paid_at
                     ? new Date(pay.paid_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                     : 'N/A';
 
                   return (
-                    <tr 
-                      key={pay._id || idx} 
+                    <tr
+                      key={pay._id || idx}
                       className="text-xs transition-colors duration-200 hover:bg-gray-50/50 group cursor-pointer"
                     >
                       {/* ১. Client Email */}

@@ -50,7 +50,7 @@ export default function HomePage() {
 
           {/* Button 2: Post a Job (CRITICAL LOGIC: Hidden if logged-in user is a Freelancer) */}
           {(user && (user.role === "client" || !user.role) && (
-            <Link href="/dashboard/client" className="w-full sm:w-auto">
+            <Link href="/dashboard/client/post-task" className="w-full sm:w-auto">
               <button className="w-full sm:w-auto px-8 py-4 font-semibold rounded-xl text-[var(--color-cream)] bg-[var(--color-navy)] hover:bg-[var(--color-tan)] hover:text-[var(--color-black)] border border-[var(--color-brown)]/40 shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0">
                 Post a Job
               </button>

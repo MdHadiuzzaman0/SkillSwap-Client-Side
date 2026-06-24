@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Input, Label, Modal, Surface, TextField } from "@heroui/react";
-import { updateProposalTask } from "@/lib/action"; // আপনার অ্যাকশন ফাইলের পাথ অনুযায়ী দেবেন
+import { updateProposalTask } from "@/lib/action"; 
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import {authClient} from "@/lib/auth-client"
 
 export function SubmitTaskButton({ proposalId }) {
   const [deliverableUrl, setDeliverableUrl] = useState("");
