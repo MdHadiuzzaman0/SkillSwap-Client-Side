@@ -28,8 +28,10 @@ const MyEarningsPage = () => {
           (sum, item) => sum + Number(item.proposed_budget || 0),
           0
         );
+        
         setTotalEarnings(total);
-        await syncFreelancerEarnings({email:freelancerEmail, token, totalEarnings:Number(total)});
+        console.log(total, totalEarnings)
+        await syncFreelancerEarnings({email:freelancerEmail, token, earnings:total});
       }
 
       setLoading(false);

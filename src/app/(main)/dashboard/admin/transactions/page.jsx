@@ -15,18 +15,18 @@ export default async function AdminTransactionsPage() {
     <div className="p-6 space-y-6 max-w-7xl mx-auto text-black bg-gray-50 min-h-screen">
 
       {/* 📝 পেজ হেডার ও ইন্ট্রো */}
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-black font-[var(--font-heading)] text-navy tracking-tight">Transactions History</h2>
-          <p className="text-xs text-gray-500 mt-1">Monitor and audit all successful client-to-freelancer escrow payments</p>
-        </div>
-
-
         <div className="bg-sky-50 border-l-4 border-sky-500 p-3 rounded-r-xl text-sky-950 text-xs sm:text-sm font-medium flex items-center gap-2 my-4 max-w-7xl mx-auto shadow-sm">
           <FiInfo className="flex-shrink-0 text-sky-600 text-base animate-pulse" />
           <div>
             <span className="font-bold">Note:</span> All records are automatically arranged and displayed based on the latest creation date.
           </div>
+        </div>
+        
+      <div className="mb-6 flex items-center justify-between">
+
+        <div>
+          <h2 className="text-xl font-black font-[var(--font-heading)] text-navy tracking-tight">Transactions History</h2>
+          <p className="text-xs text-gray-500 mt-1">Monitor and audit all successful client-to-freelancer escrow payments</p>
         </div>
 
         <div className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1.5 shadow-sm">

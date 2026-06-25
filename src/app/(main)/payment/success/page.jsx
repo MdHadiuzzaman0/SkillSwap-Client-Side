@@ -43,7 +43,6 @@ export default async function Success({ searchParams }) {
     if (clientEmail) {
       const allProposals = await getClientProposalsAction({email: clientEmail, token})
       
-      // ৫. তুলে আনা লিস্ট থেকে ইউআরএল-এর proposalId ম্যাচ করে নির্দিষ্ট প্রপোজাল অবজেক্টটি খুঁজে বের করা
       if (Array.isArray(allProposals)) {
         currentProposal = allProposals.find(
           (p) => (p._id?.toString() === proposalId || p._id?.$oid === proposalId)

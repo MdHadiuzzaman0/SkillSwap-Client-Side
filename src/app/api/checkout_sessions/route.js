@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
+import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
-
 import { stripe } from '../../../lib/stripe'
+import { fetchClientProposals } from '@/lib/data'
 
 export async function POST(req) {
   try {
@@ -10,11 +11,36 @@ export async function POST(req) {
 
     const { searchParams } = new URL(req.url)
     const proposalId = searchParams.get('proposalId')
+
+    const useSession = await auth.api.getSession({
+      headers: await headers()
+    });
+    const {token} = await auth.api.getToken({
+      headers: await headers()
+    });
+    const clientEmail = useSession?.user?.email;
+    const proposals = await fetchClientProposals({ clientEmail, token });
+    const proposal = proposals.find(p => p._id === proposalId);
+    const { job_title, proposed_budget, freelancer_email } = proposal
+
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
+      // line_items: [
+      //   {
+      //     price: 'price_1TknfbLH4fxqLYh3cT1Be50K',
+      //     quantity: 1,
+      //   },
+      // ],
       line_items: [
         {
-          price: 'price_1TknfbLH4fxqLYh3cT1Be50K',
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: job_title,                    
+              description: `Freelancer: ${freelancer_email}`,
+            },
+            unit_amount: Math.round(proposed_budget * 100),  // টাকা সেন্টে কনভার্ট (500 → 50000)
+          },
           quantity: 1,
         },
       ],

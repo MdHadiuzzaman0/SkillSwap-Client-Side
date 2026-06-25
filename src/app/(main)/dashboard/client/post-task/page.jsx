@@ -10,16 +10,41 @@ import { useRouter } from "next/navigation";
 const PostTaskPage = () => {
     const { data: session } = authClient.useSession();
     const [loading, setLoading] = useState(false);
-    const router = useRouter()
+    const [dbUser, setDbUser] = useState(null); // 🎯 ডাটাবেজ থেকে পাওয়া ইউজার স্টেট
+    const router = useRouter();
 
     // ক্যাটাগরি অপশনস
     const categories = ['Web Development', 'UI/UX Design', 'Content Writing', 'Mobile Development', 'Graphic Design', 'Digital Marketing', 'Video Editing'];
 
-    
+    // 🎯 ইউজারের ইমেইল দিয়ে ডাটাবেজ থেকে রিয়েল-টাইম ডাটা ফিল্টার করা
+    useEffect(() => {
+        async function fetchAndFilterUser() {
+            if (!session?.user?.email) return;
+            try {
+                const { data: tokenData } = await authClient.token();
+                const token = tokenData?.token;
+                
+                // সব ইউজার নিয়ে আসা
+                const response = await getAllData(token);
+                const allUsers = response?.users || [];
+                
+                // 🎯 কারেন্ট লগইন থাকা ইউজারের ইমেইল দিয়ে ফিল্টার করা
+                const matchedUser = allUsers.find(u => u.email === session.user.email);
+                if (matchedUser) {
+                    setDbUser(matchedUser);
+                }
+            } catch (error) {
+                console.error("Error fetching user from DB:", error);
+            }
+        }
+        fetchAndFilterUser();
+    }, [session?.user?.email]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         const formData = new FormData(e.target);
+        
         const taskPayload = {
             title: formData.get("title"),
             category: formData.get("category"),
@@ -27,21 +52,21 @@ const PostTaskPage = () => {
             budget: Number(formData.get("budget")),
             deadline: new Date(formData.get("deadline")).toISOString(),
             status: "open",
-            clientEmail: session?.user?.email || "n/a",
-            clientName: session?.user?.name || `${session?.user?.firstName || 'n/a'} ${session?.user?.lastName || 'n/a'}`.trim(),
-            clientImage: session?.user?.image || "https://cdn-icons-png.flaticon.com/512/2640/2640788.png",
+            client_email: session?.user?.email || "n/a",  
+            clientName: `${dbUser?.firstName || ""} ${dbUser?.lastName || ""}`.trim()|| session?.user?.name || "Anonymous", 
+            clientImage: dbUser?.image || "https://cdn-icons-png.flaticon.com/512/2640/2640788.png",
             createdAt: new Date().toISOString(),
         };
         
-        const { data: tokenData} = await authClient.token()
+        const { data: tokenData } = await authClient.token();
         const token = tokenData?.token; 
         
         try {
-            const result = await createTaskAction({taskPayload, token});
+            const result = await createTaskAction({ taskPayload, token });
             if (result?.success) {
                 toast.success("Task posted successfully!");
                 e.target.reset();
-                router.push('/dashboard/client/my-tasks')
+                router.push('/dashboard/client/my-tasks');
             } else {
                 toast.error(result?.message || "Failed to post task.");
             }

@@ -86,6 +86,25 @@ export const fetchMyProposals = async ({freelancerEmail, token}) => {
   }
 };
 
+//get proposal data for specific client
+export const fetchClientProposals = async ({ clientEmail, token }) => {
+  try {
+    const res = await fetch(`http://localhost:8000/proposals/${clientEmail}`, {
+      headers: { authorization: `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to load client proposals");
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Fetch error inside data.js (Client):", error);
+    return [];
+  }
+};
+
 //get completed task from proposalCollection
 export const fetchMyEarnings = async ({email, token}) => {
   try {
@@ -221,8 +240,8 @@ export async function getAllData() {
         tasks: result.tasks || [],
       };
     }
-    console.log(tasks.length)
-    return { users: [], proposals: [] };
+
+    return { users: [], proposals: [], tasks: [] };
   } catch (error) {
     console.error("Error in getFreelancerPageData:", error);
     return { users: [], proposals: [] };

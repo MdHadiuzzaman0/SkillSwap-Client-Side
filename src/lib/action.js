@@ -217,7 +217,7 @@ export const changeSatusAfterPayment = async (infoField) => {
 };
 
 //update freelancer earnings
-export async function syncFreelancerEarnings({email, totalEarnings, token}) {
+export async function syncFreelancerEarnings({email, token, earnings }) {
   try {
     const res = await fetch("http://localhost:8000/update-earnings", {
       method: "POST",
@@ -225,7 +225,7 @@ export async function syncFreelancerEarnings({email, totalEarnings, token}) {
         "Content-Type": "application/json",
         authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ email, totalEarnings }),
+      body: JSON.stringify({ email, earnings }),
     });
     const result = await res.json();
     return result;

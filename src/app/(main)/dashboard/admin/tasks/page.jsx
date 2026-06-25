@@ -13,13 +13,14 @@ export default async function AdminTasksPage() {
   const { tasks, proposals } = await getAllData(token);
   const combinedTasks = Array.isArray(tasks) ? tasks.map(task => {
     const matchedProposal = Array.isArray(proposals) 
-      ? proposals.find(p => p.task_id === task._id?.toString())
+      ? proposals.find(p => p.task_id === task._id?.toString() && p.status !== "rejected")
       : null;
 
-    let finalStatus = task.status || "open";
-    if (matchedProposal && (matchedProposal.status === "in-progress" || matchedProposal.status === "completed")) {
-      finalStatus = matchedProposal.status;
-    }
+    // let finalStatus = task.status || "open";
+    // if (matchedProposal && (matchedProposal.status === "in-progress" || matchedProposal.status === "completed")) {
+    //   finalStatus = matchedProposal.status;
+    // }
+    const finalStatus = matchedProposal ? matchedProposal.status : "open";
 
     return {
       ...task,
@@ -105,7 +106,7 @@ export default async function AdminTasksPage() {
                     {/* ৫. কম্বাইন করা লাইভ স্ট্যাটাস লেবেল */}
                     <td className="py-4 px-6">
                       <span className={getStatusBadge(task.displayStatus)}>
-                        <span className={`w-1 h-1 rounded-full ${task.displayStatus === 'completed' ? 'bg-emerald-500' : task.displayStatus === 'in- बैठे' ? 'bg-amber-500' : 'bg-blue-500'}`} />
+                        <span className={`w-1 h-1 rounded-full ${task.displayStatus === 'completed' ? 'bg-emerald-500' : task.displayStatus === 'in-progress' ? 'bg-amber-500' : 'bg-blue-500'}`} />
                         {task.displayStatus}
                       </span>
                     </td>
