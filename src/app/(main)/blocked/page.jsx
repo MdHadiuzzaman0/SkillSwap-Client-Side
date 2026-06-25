@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FiShieldAlert, FiMail, FiLogOut } from "react-icons/fi";
+import { FiShield, FiMail, FiLogOut } from "react-icons/fi";
 
 export default function BlockedPage() {
   return (
@@ -9,7 +9,7 @@ export default function BlockedPage() {
         
         {/* 🚨 সতর্কবার্তা আইকন */}
         <div className="mx-auto w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center border border-red-100 animate-pulse">
-          <FiShieldAlert size={32} />
+          <FiShield size={32} />
         </div>
 
         {/* টেক্সট মেসেজ */}

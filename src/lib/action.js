@@ -180,7 +180,7 @@ export const deleteTaskAction = async (taskId) => {
 };
 
 //update status for accept/ignore botton
-export const updateProposalStatusAction = async (proposalId, status, token) => {
+export const updateProposalStatusAction = async ({proposalId, status, token}) => {
   try {
     const res = await fetch(`http://localhost:8000/proposal-status/${proposalId}`, {
       method: "PATCH",
@@ -236,7 +236,7 @@ export async function syncFreelancerEarnings({email, totalEarnings, token}) {
 }
 
 //isBlocked status update
-export async function toggleUserBlockStatus(userId, currentBlockStatus, token) {
+export async function toggleUserBlockStatus({userId, currentStatus, token}) {
   try {
     const res = await fetch(`http://localhost:8000/api/users/${userId}/block`, {
       method: "PATCH",
@@ -244,7 +244,7 @@ export async function toggleUserBlockStatus(userId, currentBlockStatus, token) {
         "Content-Type": "application/json",
         authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ isBlocked: !currentBlockStatus }), 
+      body: JSON.stringify({ isBlocked: !currentStatus }), 
     });
     
     const result = await res.json();

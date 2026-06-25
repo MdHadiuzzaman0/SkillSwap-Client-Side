@@ -4,6 +4,7 @@ import { Table } from "@heroui/react";
 import { toggleUserBlockStatus } from "@/lib/action";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
 
 export default function AdminUsersClient({ initialUsers }) {
   const [users, setUsers] = useState(initialUsers);
@@ -12,7 +13,7 @@ export default function AdminUsersClient({ initialUsers }) {
   const handleBlockToggle = async (userId, currentStatus) => {
     const { data: tokenData } = await authClient.token();
     const token = tokenData?.token;
-    const success = await toggleUserBlockStatus(userId, currentStatus, token);
+    const success = await toggleUserBlockStatus({userId, currentStatus, token});
     if (success) {
       toast.success("Updated!");
       setUsers((prevUsers) =>
@@ -29,7 +30,7 @@ export default function AdminUsersClient({ initialUsers }) {
       <Table.ScrollContainer>
         <Table.Content aria-label="Users">
           <Table.Header>
-            <Table.Column>Name</Table.Column>
+            <Table.Column isRowHeader>Name</Table.Column>
             <Table.Column>Role</Table.Column>
             <Table.Column>Status</Table.Column>
             <Table.Column>Email</Table.Column>
@@ -38,7 +39,7 @@ export default function AdminUsersClient({ initialUsers }) {
           <Table.Body>
             {users.map((user) => (
               <Table.Row key={user._id}>
-                <Table.Cell>{user.name || "N/A"}</Table.Cell>
+                <Table.Cell>{user.firstName || "n/a"} {user.lastName || "n/a"}</Table.Cell>
                 <Table.Cell>{user.role || "user"}</Table.Cell>
                 <Table.Cell>
                   <span className={`text-xs font-bold px-2 py-1 rounded ${
