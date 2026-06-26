@@ -10,12 +10,13 @@ export default async function proxy(request) {
     const userEmail = session?.user?.email;
     const { pathname } = request.nextUrl;
     const { users } = await getAllData()
-    const currentUser = users?.find(u => u.email === session.user.email);
-    const role = session.user.role;
-
+    
     if (!session?.user) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
+    
+    const currentUser = users?.find(u => u.email === session?.user?.email);
+    const role = session?.user?.role;
 
     if (userEmail) {
         if (currentUser?.isBlocked === true && pathname !== "/blocked") {

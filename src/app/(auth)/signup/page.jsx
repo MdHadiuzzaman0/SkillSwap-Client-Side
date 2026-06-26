@@ -7,11 +7,44 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
 import { FaGoogle } from 'react-icons/fa';
-import { FiUser, FiMail, FiLock, FiImage, FiAlertCircle } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiImage, FiAlertCircle, FiCheckCircle, FiStar, FiUsers } from 'react-icons/fi';
 
 export default function SignupPage() {
     const router = useRouter();
     const [selectedRole, setSelectedRole] = useState("client");
+    
+    // 🎯 ইমেজ ফাইল ও আপলোডিং ট্র্যাকিংয়ের জন্য নতুন স্টেট
+    const [imageFile, setImageFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    // 🎯 ImgBB-তে ছবি আপলোড করার আইসোলেটেড ফাংশন
+    const uploadToImgBB = async (file) => {
+        if (!file) return "";
+        
+        const formData = new FormData();
+        formData.append("image", file);
+
+        // .env ফাইল থেকে আপনার প্রজেক্টের ImgBB API Key নেওয়া হচ্ছে
+        const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY; 
+        
+        try {
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                return data.data.url; // সাকসেস হলে লাইভ ডিরেক্ট লিঙ্ক ব্যাক করবে
+            } else {
+                console.error("ImgBB Error:", data);
+                return "";
+            }
+        } catch (error) {
+            console.error("Error uploading image to ImgBB:", error);
+            return "";
+        }
+    };
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -19,13 +52,32 @@ export default function SignupPage() {
         const rawData = Object.fromEntries(formData.entries());
 
         try {
+            setUploading(true); // আপলোড ও রেজিস্ট্রেশন লোডার স্টার্ট
+            let finalImageUrl = "https://i.pravatar.cc/150?img=default"; // ডিফল্ট অবতার
+
+            // 🎯 ইউজার যদি ডিভাইস থেকে কোনো ছবি সিলেক্ট করে থাকে
+            if (imageFile) {
+                toast.loading("Uploading avatar image...", { id: "uploading-toast" });
+                const uploadedUrl = await uploadToImgBB(imageFile);
+                
+                if (uploadedUrl) {
+                    finalImageUrl = uploadedUrl;
+                    toast.success("Image uploaded successfully!", { id: "uploading-toast" });
+                } else {
+                    toast.error("Image upload failed, using default avatar.", { id: "uploading-toast" });
+                }
+            }
+
+            // 🎯 authClient-এর মাধ্যমে ডাটাবেজে ইউজার ক্রিয়েট করা
             const { data, error } = await authClient.signUp.email({
                 email: rawData.email,
                 password: rawData.password,
                 name: rawData.name,
-                image: rawData.image || "https://i.pravatar.cc/150?img=default",
+                image: finalImageUrl, // এখানে লাইভ ImgBB লিঙ্ক অথবা ডিফল্ট লিঙ্কটি যাবে
                 role: selectedRole,
             });
+
+            setUploading(false); // কাজ শেষে লোডার স্টপ
 
             if (error) {
                 toast.error(error.message || "Registration failed. Please try again.");
@@ -35,20 +87,21 @@ export default function SignupPage() {
             }
         } catch (err) {
             console.error("Signup Error: ", err);
+            setUploading(false);
             toast.error("An unexpected error occurred.");
         }
     };
 
     const handleSignInWithGoogle = async () => {
-    try {
-        await authClient.signIn.social({
-            provider: "google",
-            callbackURL: "/create-profile", 
-        });
-    } catch (err) {
-        toast.error("Google sign-in failed.");
-    }
-};
+        try {
+            await authClient.signIn.social({
+                provider: "google",
+                callbackURL: "/create-profile", 
+            });
+        } catch (err) {
+            toast.error("Google sign-in failed.");
+        }
+    };
 
     return (
         <div className="min-h-[calc(100vh-68px)] w-full bg-white relative flex items-center justify-center p-4 sm:p-8 overflow-hidden text-[var(--color-black)] font-body">
@@ -59,27 +112,68 @@ export default function SignupPage() {
                 
                 {/* Left Info Panel */}
                 <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between bg-[var(--color-navy)] text-[var(--color-cream)] relative">
-                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-                    <div className="my-6 lg:my-0 space-y-6 text-left relative z-10">
-                        <span className="font-heading font-extrabold text-xl tracking-tight text-white block">
-                            Skill<span className="text-[var(--color-tan)]">Swap</span>
-                        </span>
+    {/* Top Brand & Header Section */}
+    <div className="my-6 lg:my-0 space-y-6 text-left relative z-10">
+        <span className="font-heading font-extrabold text-xl tracking-tight text-white block">
+            Skill<span className="text-[var(--color-tan)]">Swap</span>
+        </span>
 
-                        <div className="space-y-2">
-                            <h1 className="text-2xl lg:text-3xl font-heading font-bold tracking-tight text-white leading-tight">
-                                Join the Elite <br />Talent Hub.
-                            </h1>
-                            <p className="text-[var(--color-cream)]/70 text-xs leading-relaxed max-w-xs font-normal">
-                                Select your structural role during credential entry to start tracking milestones on specialized dashboards.
-                            </p>
-                        </div>
-                    </div>
+        <div className="space-y-2">
+            <h1 className="text-2xl lg:text-3xl font-heading font-bold tracking-tight text-white leading-tight">
+                Join the Elite <br />Talent Hub.
+            </h1>
+            <p className="text-[var(--color-cream)]/70 text-xs leading-relaxed max-w-xs font-normal">
+                Select your structural role during credential entry to start tracking milestones on specialized dashboards.
+            </p>
+        </div>
+    </div>
 
-                    <div className="hidden lg:block text-[10px] text-white/40 font-mono tracking-widest relative z-10">
-                        SKILLSWAP REGISTRATION
-                    </div>
+    {/* 🎯 নতুন যুক্ত হওয়া লাইভ স্ট্যাটস ও কী-ফিচার সেকশন (খালি জায়গা পূরণ করার জন্য) */}
+    <div className="relative z-10 my-6 lg:my-0 space-y-4 border-t border-white/10 pt-6 text-left">
+        <div className="grid grid-cols-2 gap-4">
+            {/* Stat 1: Rating */}
+            <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-white/10 rounded-lg text-[var(--color-tan)]">
+                    <FiStar className="w-4 h-4 fill-current" />
                 </div>
+                <div>
+                    <h4 className="text-white font-bold text-sm leading-none">4.9 / 5.0</h4>
+                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">User Rating</p>
+                </div>
+            </div>
+
+            {/* Stat 2: Active Users */}
+            <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-white/10 rounded-lg text-white">
+                    <FiUsers className="w-4 h-4" />
+                </div>
+                <div>
+                    <h4 className="text-white font-bold text-sm leading-none">10K+</h4>
+                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">Active Members</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Dynamic Key Feature List */}
+        <div className="space-y-2.5 pt-2">
+            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
+                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
+                <span>Secure Escrow & Milestones Tracking</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
+                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
+                <span>Verified Client & Professional Profiles</span>
+            </div>
+        </div>
+    </div>
+
+    {/* Footer Meta Text */}
+    <div className="hidden lg:block text-[10px] text-white/40 font-mono tracking-widest relative z-10">
+        SKILLSWAP REGISTRATION
+    </div>
+</div>
 
                 {/* Right Form Fields Panel */}
                 <div className="lg:col-span-7 p-8 lg:p-12 bg-white flex flex-col justify-center">
@@ -102,10 +196,10 @@ export default function SignupPage() {
                             </Button>
                             
                             {/* PDF/Assignment Rule Alert Note */}
-                            <div className="flex items-start gap-2 bg-[var(--color-cream)]/40 border border-[var(--color-tan)]/30 p-2.5 rounded-xl text-[11px] text-[var(--color-brown)] leading-normal">
-                                <FiAlertCircle className="text-[var(--color-navy)] text-sm shrink-0 mt-0.5" />
+                            <div className="flex items-center gap-2 bg-[var(--color-cream)]/40 border border-[var(--color-tan)]/30 p-2.5 rounded-xl text-[11px] text-[var(--color-brown)] leading-normal">
+                                <FiAlertCircle className="text-[var(--color-navy)] text-lg shrink-0 mt-0.5" />
                                 <p>
-                                    <span className="font-bold text-[var(--color-navy)]">Note:</span> By signing in with Google, you will be automatically registered as a <span className="font-bold">Client</span>. To join as a <span className="font-bold">Freelancer</span>, please fill out the form below.
+                                    <span className="font-bold text-[var(--color-navy)]">Note:</span> By signing in with Google, you will be automatically registered as a <span className="font-extrabold">Client</span>. <span className="text-center"> To join as a <span className="font-extrabold">Freelancer</span>, please fill out the form below.</span>
                                 </p>
                             </div>
                         </div>
@@ -169,16 +263,30 @@ export default function SignupPage() {
                                 <FieldError className="text-rose-500 text-[11px] mt-1 block" />
                             </TextField>
 
-                            <TextField name="image" type="url" className="w-full">
-                                <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">Avatar Image URL (Optional)</Label>
-                                <div className="w-full relative flex items-center">
-                                    <FiImage className="absolute left-4 text-[var(--color-brown)] w-4 h-4 pointer-events-none" />
-                                    <Input
-                                        placeholder="https://example.com/photo.jpg"
-                                        className="w-full bg-neutral-50 text-[var(--color-black)] placeholder-[var(--color-brown)]/50 text-sm border border-[var(--color-tan)]/40 focus:border-[var(--color-navy)] rounded-xl pl-11 pr-4 py-2.5 outline-none block"
-                                    />
+                            {/* 🎯 মডিফাইড লোকাল ফাইল ইনপুট সেকশন */}
+                            <div className="w-full space-y-1">
+                                <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">
+                                    Profile Avatar (Optional)
+                                </Label>
+                                <div className="w-full relative flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-neutral-50 border border-[var(--color-tan)]/40 rounded-xl p-3">
+                                    <div className="flex items-center gap-2 cursor-pointer">
+                                        <FiImage className="text-[var(--color-brown)] w-4 h-4" />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) => setImageFile(e.target.files[0])}
+                                            className="text-xs text-[var(--color-brown)] file:mr-4 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-[var(--color-navy)] file:text-white hover:file:opacity-90 cursor-pointer"
+                                        />
+                                    </div>
+                                    
+                                    {/* ফাইল সিলেক্ট হলে তার প্রিভিউ নাম দেখানোর ছোট ব্যাজ */}
+                                    {imageFile && (
+                                        <span className="text-[10px] bg-emerald-50 text-emerald-700 font-medium px-2 py-0.5 rounded-md border border-emerald-200 max-w-[180px] truncate">
+                                            📸 {imageFile.name}
+                                        </span>
+                                    )}
                                 </div>
-                            </TextField>
+                            </div>
 
                             <TextField isRequired minLength={6} name="password" type="password" className="w-full">
                                 <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">Secure Password</Label>
@@ -193,11 +301,13 @@ export default function SignupPage() {
                                 <FieldError className="text-rose-500 text-[11px] mt-1 block" />
                             </TextField>
 
+                            {/* 🎯 লোডিং স্টেটের ওপর ভিত্তি করে ডিজেবল ও টেক্সট ডায়নামিক করা বাটন */}
                             <Button
                                 type="submit"
-                                className="w-full bg-[var(--color-navy)] hover:bg-[var(--color-navy)]/90 text-white font-bold text-xs uppercase tracking-widest h-12 rounded-xl mt-2 cursor-pointer transition-colors"
+                                disabled={uploading}
+                                className={`w-full bg-[var(--color-navy)] hover:bg-[var(--color-navy)]/90 text-white font-bold text-xs uppercase tracking-widest h-12 rounded-xl mt-2 cursor-pointer transition-colors ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}
                             >
-                                <span>Register Account</span>
+                                <span>{uploading ? "Processing..." : "Register Account"}</span>
                             </Button>
                         </Form>
 

@@ -7,7 +7,7 @@ export default function IllegalAccessPage() {
     <div className="min-h-screen bg-black text-red-500 font-mono flex flex-col items-center justify-center p-4 selection:bg-red-500 selection:text-black">
 
       {/* 🔴 মেইন ওয়ার্নিং বক্স */}
-      <div className="w-full max-w-2xl bg-zinc-950 border-2 border-red-600 rounded-2xl p-6 sm:p-10 shadow-[0_0_50px_rgba(220,38,38,0.15)] relative overflow-hidden">
+      <div className="w-full max-w-2xl bg-zinc-950 border-2 border-red-600 rounded-2xl p-6 sm:p-10 shadow-[0_0_50px_rgba(220,38,38,0.15)] relative overflow-hidden text-center">
 
         {/* 🚨 নিয়ন রেড অ্যালার্ট ডট */}
         <div className="flex justify-center mb-6">
@@ -35,7 +35,7 @@ export default function IllegalAccessPage() {
           </p>
         </div>
 
-        <div className="mt-6 bg-zinc-900/40 border border-zinc-800 rounded-lg p-3 text-[11px] text-zinc-500 flex flex-col gap-1">
+        <div className="mt-6 bg-zinc-900/40 border border-zinc-800 rounded-lg p-3 text-[11px] text-zinc-500 flex flex-col gap-1 text-left">
           <span className="flex items-center gap-1.5 text-zinc-400"><FiTerminal /> system_log_report:</span>
           <span>&gt; ACCESS_VIOLATION: True</span>
           <span>&gt; ACTION: Logging user session details...</span>

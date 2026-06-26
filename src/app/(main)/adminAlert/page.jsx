@@ -5,7 +5,7 @@ import { FiLock, FiShield, FiHome } from "react-icons/fi";
 
 export default function AdminPrivacyRedirectPage() {
   const router = useRouter();
-  const [countdown, setCountdown] = useState(4); // ৪ সেকেন্ডের কাউন্টডাউন
+  const [countdown, setCountdown] = useState(15); // ৪ সেকেন্ডের কাউন্টডাউন
 
   useEffect(() => {
     // 🎯 প্রতি সেকেন্ডে কাউন্টডাউন কমবে
@@ -16,7 +16,7 @@ export default function AdminPrivacyRedirectPage() {
     // 🎯 ৪ সেকেন্ড পর অটোমেটিক হোম পেজে পাঠিয়ে দেবে
     const timeout = setTimeout(() => {
       router.push("/");
-    }, 5000);
+    }, 15000);
 
     return () => {
       clearInterval(interval);
@@ -46,16 +46,17 @@ export default function AdminPrivacyRedirectPage() {
             Hello, Respected Admin!
           </h2>
           <p className="text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
-            You are trying to access a user's private dashboard. As an Admin, we should kindly respect everyone's privacy policy.
+            You are trying to access a user's private dashboard. <br/>
+            As an Admin, we should kindly respect everyone's privacy.
           </p>
         </div>
 
         {/* ⏳ কাউন্টডাউন ও রিডাইরেক্ট নোটিশ */}
         <div className="bg-gray-50 rounded-xl p-4 border border-gray-100 text-xs text-gray-500 font-medium">
-          Redirecting you to the <span className="font-bold text-blue-600">Home Page</span> in{" "}
+          Redirecting you to the <span className="font-bold text-blue-600">Home Page</span> in
           <span className="inline-flex items-center justify-center w-5 h-5 bg-navy text-white font-bold rounded-md text-[11px] mx-1 animate-pulse">
             {countdown}
-          </span>{" "}
+          </span>
           seconds...
         </div>
 

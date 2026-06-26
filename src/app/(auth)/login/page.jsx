@@ -122,7 +122,7 @@ export default function LoginPage() {
                             <div className="flex items-start gap-2 bg-[var(--color-cream)]/40 border border-[var(--color-tan)]/30 p-2.5 rounded-xl text-[11px] text-[var(--color-brown)] leading-normal">
                                 <FiAlertCircle className="text-[var(--color-navy)] text-sm shrink-0 mt-0.5" />
                                 <p>
-                                    <span className="font-bold text-[var(--color-navy)]">Note:</span> By Google, you will be automatically <logged-in></logged-in> as a <span className="font-bold">Client</span>. 
+                                    <span className="font-bold text-[var(--color-navy)]">Note:</span> By signing in with Google, you will be automatically registered as a <span className="font-extrabold">Client</span>
                                 </p>
                             </div>
                         </div>
