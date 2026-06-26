@@ -100,7 +100,7 @@ export default async function MyTasksPage() {
 
                         <Table.Cell className="text-center">
                           <div className="flex items-center justify-center gap-2">
-                            {task.status.toLowerCase() === "open" ? (
+                            { !hasProposal ? (
                               <>
                                 <EditButton task={task} />
                                 <DeleteButton task={task} />

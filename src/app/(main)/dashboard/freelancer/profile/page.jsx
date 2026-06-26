@@ -56,7 +56,7 @@ const FreelancerProfilePage = () => {
     setFormData((prev) => ({
       ...prev,
       //[name]: name === "hourlyRate" ? Number(value) : value,
-      [name] : value,
+      [name]: value,
     }));
   };
 
@@ -163,15 +163,15 @@ const FreelancerProfilePage = () => {
 
         {/* Profile Photo Link Field */}
         <div>
-          <label className="block font-semibold text-brown mb-1.5">Profile Photo URL</label>
+          <label className="block font-semibold text-gray-600 mb-1.5">Profile / Company Logo URL</label>
           <input
             type="url"
             name="image"
             value={formData.image}
             onChange={handleChange}
             disabled
-            className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
-              }`}
+            placeholder="https://example.com/logo.png"
+            className="w-full p-2.5 border rounded-xl bg-gray-50/50 border-gray-100 text-gray-500 cursor-not-allowed"
           />
         </div>
 

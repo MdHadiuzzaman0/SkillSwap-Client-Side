@@ -161,8 +161,7 @@ const ClientProfilePage = () => {
                         onChange={handleChange}
                         disabled
                         placeholder="https://example.com/logo.png"
-                        className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-gray-300 focus:border-black outline-none" : "bg-gray-50/50 border-gray-100 text-gray-500 cursor-not-allowed"
-                            }`}
+                        className="w-full p-2.5 border rounded-xl bg-gray-50/50 border-gray-100 text-gray-500 cursor-not-allowed"
                     />
                 </div>
 

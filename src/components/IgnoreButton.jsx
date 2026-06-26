@@ -15,7 +15,7 @@ export default function IgnoreButton({ proposalId, setProposals }) {
 
     try {
       setIsPending(true);
-      const result = await updateProposalStatusAction(proposalId, "rejected", token);
+      const result = await updateProposalStatusAction({proposalId, status:"rejected", token});
 
       if (result?.success) {
         toast.success("Proposal ignored successfully!");

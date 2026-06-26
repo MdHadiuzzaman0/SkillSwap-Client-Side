@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiPlusCircle, FiDollarSign, FiCalendar, FiTag, FiFileText } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client"; 
 import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react"; 

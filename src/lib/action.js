@@ -182,7 +182,7 @@ export const deleteTaskAction = async (taskId) => {
   }
 };
 
-//update status for accept/ignore botton
+//update status for accept/ignore bouton
 export const updateProposalStatusAction = async ({proposalId, status, token}) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposal-status/${proposalId}`, {
