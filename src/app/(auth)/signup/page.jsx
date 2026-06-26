@@ -323,9 +323,9 @@ export default function SignupPage() {
                                     if (value.length < 6) {
                                         return "Password must be at least 6 characters long";
                                     }
-                                    if (!/[A-Z]/.test(value)) {
-                                        return "Password must contain at least one capital letter";
-                                    }
+                                    // if (!/[A-Z]/.test(value)) {
+                                    //     return "Password must contain at least one capital letter";
+                                    // }
                                     if (!/[a-z]/.test(value)) {
                                         return "Password must contain at least one lowercase letter";
                                     }
