@@ -12,6 +12,7 @@ export default async function ClientDashboardPage() {
   let totalTasksCount = 0;
   let openTasksCount = 0;
   let inProgressTasksCount = 0;
+  let completedTasksCount=0;
   let totalSpent = 0;
 
   const { token } = await auth.api.getToken({
@@ -32,12 +33,18 @@ export default async function ClientDashboardPage() {
     // ৩. ক্লায়েন্টের সব প্রপোজাল ফেচ করে 'in-progress' স্ট্যাটাস দিয়ে ফিল্টার করা
     const proposals = await getClientProposalsAction({ email: clientEmail, token });
     if (Array.isArray(proposals)) {
-      const inProgressProposals = proposals.filter((proposal) => proposal.status === "in-progress");
+      // 🎯 ১. রানিং টাস্ক কাউন্ট (শুধু ইন-প্রোগ্রেস)
+      const inProgressProposals = proposals.filter((p) => p.status === "in-progress");
       inProgressTasksCount = inProgressProposals.length;
-      
-      totalSpent = inProgressProposals.reduce((sum, proposal) => {
-        return sum + Number(proposal.proposed_budget || 0);
-      }, 0);
+
+      // 🎯 ২. কমপ্লিটেড টাস্ক কাউন্ট (ভবিষ্যতে ড্যাশবোর্ডে দেখানোর জন্য)
+      const completedProposals = proposals.filter((p) => p.status === "completed");
+      completedTasksCount = completedProposals.length;
+
+      // 🎯 ৩. টোটাল স্পেন্ট (রানিং + কমপ্লিটেড দুইটার টাকাই যোগ হবে, কখনো ০ হবে না)
+      totalSpent = proposals
+        .filter((p) => p.status === "in-progress" || p.status === "completed")
+        .reduce((sum, proposal) => sum + Number(proposal.proposed_budget || 0), 0);
     }
   }
 
@@ -62,8 +69,8 @@ export default async function ClientDashboardPage() {
 
         {/* কার্ড ৩: Tasks In Progress */}
         <div className="p-5 border-b sm:border-b-0 sm:border-r border-gray-200 text-center sm:text-left">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tasks In Progress</p>
-          <h3 className="text-2xl font-black mt-2 text-blue-600">{inProgressTasksCount}</h3>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Completed Tasks</p>
+          <h3 className="text-2xl font-black mt-2 text-blue-600">{completedTasksCount}</h3>
         </div>
 
         {/* কার্ড ৪: Total Spent (USD) */}

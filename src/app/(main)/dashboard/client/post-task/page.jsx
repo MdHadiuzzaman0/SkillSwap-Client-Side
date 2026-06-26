@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FiPlusCircle, FiDollarSign, FiCalendar, FiTag, FiFileText } from "react-icons/fi";
-import { authClient } from "@/lib/auth-client"; 
-import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react"; 
+import { authClient } from "@/lib/auth-client";
+import { Button, FieldError, Form, Input, Label, TextArea, TextField } from "@heroui/react";
 import toast from "react-hot-toast";
 import { createTaskAction } from "@/lib/action";
 import { useRouter } from "next/navigation";
@@ -23,11 +23,11 @@ const PostTaskPage = () => {
             try {
                 const { data: tokenData } = await authClient.token();
                 const token = tokenData?.token;
-                
+
                 // সব ইউজার নিয়ে আসা
                 const response = await getAllData(token);
                 const allUsers = response?.users || [];
-                
+
                 // 🎯 কারেন্ট লগইন থাকা ইউজারের ইমেইল দিয়ে ফিল্টার করা
                 const matchedUser = allUsers.find(u => u.email === session.user.email);
                 if (matchedUser) {
@@ -40,20 +40,20 @@ const PostTaskPage = () => {
         fetchAndFilterUser();
     }, [session?.user?.email]);
 
-   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // 🎯 সেশন না থাকলে সাবমিট আটকে দেবে
-    if (!session?.user?.email) {
-        toast.error("User session not found! Please reload the page.");
-        return;
-    }
-    
-    setLoading(true);
-    const formData = new FormData(e.target);
-    
-    // বাকি taskPayload কোড আগের মতোই থাকবে...
-        
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // 🎯 সেশন না থাকলে সাবমিট আটকে দেবে
+        if (!session?.user?.email) {
+            toast.error("User session not found! Please reload the page.");
+            return;
+        }
+
+        setLoading(true);
+        const formData = new FormData(e.target);
+
+        // বাকি taskPayload কোড আগের মতোই থাকবে...
+
         const taskPayload = {
             title: formData.get("title"),
             category: formData.get("category"),
@@ -61,15 +61,15 @@ const PostTaskPage = () => {
             budget: Number(formData.get("budget")),
             deadline: new Date(formData.get("deadline")).toISOString(),
             status: "open",
-            clientEmail: session?.user?.email || "n/a",  
-            clientName: `${dbUser?.firstName || ""} ${dbUser?.lastName || ""}`.trim()|| session?.user?.name || "Anonymous", 
+            clientEmail: session?.user?.email || "n/a",
+            clientName: `${dbUser?.firstName || ""} ${dbUser?.lastName || ""}`.trim() || session?.user?.name || "Anonymous",
             clientImage: dbUser?.image || "https://cdn-icons-png.flaticon.com/512/2640/2640788.png",
             createdAt: new Date().toISOString(),
         };
-        
+
         const { data: tokenData } = await authClient.token();
-        const token = tokenData?.token; 
-        
+        const token = tokenData?.token;
+
         try {
             const result = await createTaskAction({ taskPayload, token });
             if (result?.success) {
@@ -119,26 +119,26 @@ const PostTaskPage = () => {
 
                     {/* ২. Category Selector */}
                     {/* ২. Category Selector */}
-<div className="flex flex-col gap-1 w-full">
-  <Label className="text-xs font-bold text-brown uppercase tracking-wide">Category</Label>
-  <div className="relative flex items-center w-full border border-gray-300 rounded-xl mt-1 bg-white px-3 py-2.5 focus-within:border-navy">
-    <FiTag className="text-brown/60 mr-2" />
-    
-    {/* 🎯 এখানে defaultValue="" যোগ করা হয়েছে */}
-    <select 
-      name="category" 
-      required 
-      defaultValue="" 
-      className="w-full text-black bg-transparent focus:outline-none text-sm cursor-pointer"
-    >
-      {/* 🎯 এখান থেকে selected প্রপটি ফেলে দেওয়া হয়েছে */}
-      <option value="" disabled>Select a Category</option>
-      {categories.map((cat) => (
-        <option key={cat} value={cat}>{cat}</option>
-      ))}
-    </select>
-  </div>
-</div>
+                    <div className="flex flex-col gap-1 w-full">
+                        <Label className="text-xs font-bold text-brown uppercase tracking-wide">Category</Label>
+                        <div className="relative flex items-center w-full border border-gray-300 rounded-xl mt-1 bg-white px-3 py-2.5 focus-within:border-navy">
+                            <FiTag className="text-brown/60 mr-2" />
+
+                            {/* 🎯 এখানে defaultValue="" যোগ করা হয়েছে */}
+                            <select
+                                name="category"
+                                required
+                                defaultValue=""
+                                className="w-full text-black bg-transparent focus:outline-none text-sm cursor-pointer"
+                            >
+                                {/* 🎯 এখান থেকে selected প্রপটি ফেলে দেওয়া হয়েছে */}
+                                <option value="" disabled>Select a Category</option>
+                                {categories.map((cat) => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
                         {/* ৩. Budget (USD) */}
@@ -185,19 +185,19 @@ const PostTaskPage = () => {
                     {/* সাবমিট বাটন */}
                     <div className="flex justify-end pt-2 w-full">
                         {/* 🎯 isDisabled এ !session যোগ করা হয়েছে */}
-<Button
-    type="submit"
-    isDisabled={loading || !session?.user?.email} 
-    className="bg-navy text-cream font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
->
-    {loading || !session?.user?.email ? (
-        <div className="w-4 h-4 border-2 border-cream border-t-transparent rounded-full animate-spin"></div>
-    ) : (
-        <>
-            <FiPlusCircle /> Publish Task
-        </>
-    )}
-</Button>
+                        <Button
+                            type="submit"
+                            isDisabled={loading || !session?.user?.email}
+                            className="bg-navy text-cream font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+                        >
+                            {loading || !session?.user?.email ? (
+                                <div className="w-4 h-4 border-2 border-cream border-t-transparent rounded-full animate-spin"></div>
+                            ) : (
+                                <>
+                                    <FiPlusCircle /> Publish Task
+                                </>
+                            )}
+                        </Button>
                     </div>
 
                 </Form>
