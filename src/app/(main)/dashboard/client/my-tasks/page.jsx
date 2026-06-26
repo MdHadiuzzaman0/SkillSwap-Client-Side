@@ -59,64 +59,104 @@ export default async function MyTasksPage() {
               </Table.Header>
 
               <Table.Body>
-                {fetchedTasks.length === 0 ? (
-                  <Table.Row>
-                    <Table.Cell colSpan={5} className="text-center text-gray-400 py-8">
-                      No tasks posted yet.
-                    </Table.Cell>
-                  </Table.Row>
-                ) : (
-                  fetchedTasks.map((task) => {
-                    const hasProposal = fetchedProposals.some(
-                      (proposal) => proposal.task_id === task._id.toString()
-                    );
-                    const isEditDisabled = task.status.toLowerCase() !== "open";
-                    const isDeleteDisabled = task.status.toLowerCase() !== "open" || hasProposal;
+  {fetchedTasks.length === 0 ? (
+    <Table.Row>
+      <Table.Cell colSpan={5} className="text-center text-gray-400 py-8">
+        No tasks posted yet.
+      </Table.Cell>
+    </Table.Row>
+  ) : (
+    fetchedTasks.map((task) => {
+      // 🎯 ১. এই টাস্কের আন্ডারে আসা সব ফ্রিল্যান্সারদের প্রপোজাল ফিল্টার করে বের করা
+      const allProposalsForThisTask = fetchedProposals.filter(
+        (proposal) => proposal.task_id === task._id.toString()
+      );
 
-                    return (
-                      <Table.Row key={task._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+      const hasProposals = allProposalsForThisTask.length > 0;
 
-                        <Table.Cell className="font-medium text-sm max-w-xs truncate">
-                          {task.title}
-                        </Table.Cell>
+      // 🎯 ২. প্রপোজালগুলোর ভেতরের স্ট্যাটাস চেক করা (যেকোনো একটা ম্যাচ করলেই হবে)
+      const hasInProgressBar = allProposalsForThisTask.some(p => p.status.toLowerCase() === "in-progress");
+      const hasCompletedBar  = allProposalsForThisTask.some(p => p.status.toLowerCase() === "completed");
+      const hasPendingBar    = allProposalsForThisTask.some(p => p.status.toLowerCase() === "pending");
 
-                        <Table.Cell className="text-sm font-semibold text-navy">
-                          <span className="inline-flex items-center gap-0.5">
-                            <FiDollarSign className="w-3.5 h-3.5" />
-                            {task.budget}
-                          </span>
-                        </Table.Cell>
+      // 🎯 ৩. আপনার দেওয়া শর্ত অনুযায়ী সঠিক লাইফসাইকেল স্ট্যাটাস সেট করা
+      let currentStatus = "open"; // ডিফল্ট কোনো প্রপোজাল না থাকলে
 
-                        <Table.Cell className="text-xs text-gray-500">
-                          <span className="inline-flex items-center gap-1.5">
-                            <FiCalendar className="text-gray-400" />
-                            {new Date(task.deadline).toLocaleDateString()}
-                          </span>
-                        </Table.Cell>
+      if (hasProposals) {
+        if (hasCompletedBar) {
+          currentStatus = "completed";   // ১. সাবমিট করলে completed
+        } else if (hasInProgressBar) {
+          currentStatus = "in-progress"; // ২. পেমেন্ট করলে in-progress
+        } else if (hasPendingBar) {
+          currentStatus = "pending";     // ৩. প্রথমে প্রপোজাল দিলে pending
+        } else {
+          // যদি সব প্রপোজাল রিজেক্টেড হয় বা অন্য কিছু হয়, তবে টাস্কের নিজস্ব স্ট্যাটাস দেখাবে
+          currentStatus = task.status; 
+        }
+      }
 
-                        <Table.Cell>
-                          {renderStatusBadge(task.status)}
-                        </Table.Cell>
+      // 🎯 ৪. বাটন কন্ট্রোল (একদম ফ্রেশ open টাস্ক ছাড়া এডিট/ডিলিট করা যাবে না)
+      const isActionAllowed = currentStatus.toLowerCase() === "open";
 
-                        <Table.Cell className="text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            { !hasProposal ? (
-                              <>
-                                <EditButton task={task} />
-                                <DeleteButton task={task} />
-                              </>
-                            ) : (
-                              <span className="text-xs text-gray-400 italic">No actions available</span>
-                            )}
-                          </div>
+      return (
+        <Table.Row key={task._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
 
-                        </Table.Cell>
+          {/* টাস্ক টাইটেল ও কয়টা প্রপোজাল পড়েছে তার কাউন্ট */}
+          <Table.Cell className="font-medium text-sm max-w-xs truncate">
+            <div>
+              <p className="font-semibold text-gray-800">{task.title}</p>
+              {hasProposals && (
+                <span className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-md mt-1 inline-block font-normal">
+                  📩 {allProposalsForThisTask.length} Proposals received
+                </span>
+              )}
+            </div>
+          </Table.Cell>
 
-                      </Table.Row>
-                    );
-                  })
-                )}
-              </Table.Body>
+          {/* বাজেট */}
+          <Table.Cell className="text-sm font-semibold text-navy">
+            <span className="inline-flex items-center gap-0.5">
+              <FiDollarSign className="w-3.5 h-3.5" />
+              {task.budget}
+            </span>
+          </Table.Cell>
+
+          {/* ডেডলাইন */}
+          <Table.Cell className="text-xs text-gray-500">
+            <span className="inline-flex items-center gap-1.5">
+              <FiCalendar className="text-gray-400" />
+              {new Date(task.deadline).toLocaleDateString()}
+            </span>
+          </Table.Cell>
+
+          {/* ডাইনামিক স্ট্যাটাস ব্যাজ (pending / in-progress / completed / open) */}
+          <Table.Cell>
+            {renderStatusBadge(currentStatus)}
+          </Table.Cell>
+
+          {/* অ্যাকশন বাটন এর ডাইনামিক মেসেজ */}
+          <Table.Cell className="text-center">
+            <div className="flex items-center justify-center gap-2">
+              {isActionAllowed ? (
+                <>
+                  <EditButton task={task} />
+                  <DeleteButton task={task} />
+                </>
+              ) : (
+                <span className="text-xs text-gray-400 font-medium italic">
+                  {currentStatus === "pending" && "Proposals Submitted"}
+                  {currentStatus === "in-progress" && "Job is cooking"}
+                  {currentStatus === "completed" && "Task Finished 🏁"}
+                </span>
+              )}
+            </div>
+          </Table.Cell>
+
+        </Table.Row>
+      );
+    })
+  )}
+</Table.Body>   
 
             </Table.Content>
           </Table.ScrollContainer>
