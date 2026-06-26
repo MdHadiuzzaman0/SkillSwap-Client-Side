@@ -38,8 +38,6 @@ export async function handleFormSubmit(profileData, token) {
       body: JSON.stringify(profileData),
     });
 
-    console.log("Backend Response Status:", response.status);
-    console.log("Backend Response Data:", result);
     
     // Checking if the server responded with a successful status code
     if (!response.ok) {
@@ -47,6 +45,8 @@ export async function handleFormSubmit(profileData, token) {
     }
 
     const result = await response.json();
+    console.log("Backend Response Status:", response.status);
+    console.log("Backend Response Data:", result);
     return { success: true, result };
 
   } catch (error) {

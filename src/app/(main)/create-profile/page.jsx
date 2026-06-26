@@ -24,8 +24,6 @@ export default function CreateProfilePage() {
 
   useEffect(() => {
     async function checkProfile() {
-      const { data: tokenData } = await authClient.token()
-      const token = tokenData?.token;
       if (!isPending && email) {
         if (email.toLowerCase() === adminEmail.toLowerCase()) {
           window.location.href = "/dashboard/admin/intro";
@@ -108,8 +106,8 @@ export default function CreateProfilePage() {
       profileData.email = email;
       profileData.createdAt = new Date();
       
-      const { data: tokenData } = await authClient.token()
-      const token = tokenData?.token;
+      const tokenData = await authClient.token()
+      const token = tokenData?.data?.token;
       
       const res = await handleFormSubmit(profileData, token);
       setUploading(false); // সাবমিট শেষে লোডার স্টপ
