@@ -20,7 +20,7 @@ export default function CreateProfilePage() {
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
-  const adminEmail = "admin1@example.com";
+  const adminEmail = "admin1@taskhive.com ";
 
   useEffect(() => {
     async function checkProfile() {
@@ -45,19 +45,19 @@ export default function CreateProfilePage() {
   // 🎯 ImgBB-তে ছবি আপলোড করার কাস্টম ফাংশন
   const uploadToImgBB = async (file) => {
     if (!file) return "";
-    
+
     const formData = new FormData();
     formData.append("image", file);
 
-    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY; 
-    
+    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+
     try {
       const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
-      
+
       if (data.success) {
         return data.data.url;
       } else {
@@ -77,10 +77,10 @@ export default function CreateProfilePage() {
 
     try {
       setUploading(true); // আপলোড ও সাবমিট লোডার স্টার্ট
-      
+
       // 🎯 ছবি নির্ধারণের চমৎকার লজিক
       // প্রথমে চেক করবে সেশনে কোনো ইমেজ আছে কি না (যেমন গুগল সাইন-ইন), না থাকলে ডিফল্ট ইমেজ
-      let finalImageUrl = image || "https://i.pravatar.cc/150?img=default"; 
+      let finalImageUrl = image || "https://i.pravatar.cc/150?img=default";
 
       // কিন্তু ইউজার যদি নতুন করে ফোল্ডার থেকে ফাইল সিলেক্ট করে, তবে সেটা ImgBB-তে আপলোড হবে
       if (imageFile) {
@@ -105,10 +105,10 @@ export default function CreateProfilePage() {
       profileData.isBlocked = false;
       profileData.email = email;
       profileData.createdAt = new Date();
-      
+
       const tokenData = await authClient.token()
       const token = tokenData?.data?.token;
-      
+
       const res = await handleFormSubmit(profileData, token);
       setUploading(false); // সাবমিট শেষে লোডার স্টপ
 
@@ -138,18 +138,18 @@ export default function CreateProfilePage() {
       <form onSubmit={handleProfileSubmit} className="space-y-6">
         {/* 🎯 সাব-কম্পোনেন্টগুলোতে নতুন স্টেট ও প্রপস পাস করা হয়েছে */}
         {targetRole === "freelancer" ? (
-          <CreateProfileOfFreelancer 
-            email={email} 
-            image={image} 
-            imageFile={imageFile} 
-            setImageFile={setImageFile} 
+          <CreateProfileOfFreelancer
+            email={email}
+            image={image}
+            imageFile={imageFile}
+            setImageFile={setImageFile}
           />
         ) : (
-          <CreateProfileOfClient 
-            email={email} 
-            image={image} 
-            imageFile={imageFile} 
-            setImageFile={setImageFile} 
+          <CreateProfileOfClient
+            email={email}
+            image={image}
+            imageFile={imageFile}
+            setImageFile={setImageFile}
           />
         )}
 

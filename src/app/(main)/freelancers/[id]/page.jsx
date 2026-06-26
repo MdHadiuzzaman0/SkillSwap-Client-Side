@@ -10,7 +10,7 @@ export default async function FreelancerPublicProfile({ params }) {
 
   // ১. আইডি ম্যাচ করে নির্দিষ্ট ফ্রিল্যান্সার খোঁজা
   const freelancer = users?.find(
-    (user) => (user._id?.$oid || user._id) === id && user.role?.toLowerCase() === "freelancer"
+    (user) => user._id?.toString() === id && user.role?.toLowerCase() === "freelancer"
   );
 
   if (!freelancer || freelancer.isBlocked) {

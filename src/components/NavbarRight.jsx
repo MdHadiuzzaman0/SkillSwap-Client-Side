@@ -11,19 +11,19 @@ const NavbarRight = ({ session, userInfo }) => {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     //console.log(session, userInfo)
-    
+
     const sessionUser = session?.user;
     let displayName = "Guest";
     let displayImage = null;
     let displayRole = "";
 
-    const adminEmail="admin1@example.com";
+    const adminEmail = "admin1@taskhive.com ";
     const userEmail = sessionUser?.email ? sessionUser.email.toLowerCase() : "";
-    
+
     if (userInfo) {
         displayName = `${userInfo.firstName || ""} ${userInfo.lastName || ""}`.trim();
         displayImage = userInfo.image;
-        displayRole = userInfo.role.toLowerCase(); 
+        displayRole = userInfo.role.toLowerCase();
     } else {
         displayName = sessionUser?.name;
         displayImage = sessionUser?.image;

@@ -46,7 +46,7 @@ const BrowseFreelancersPage = async () => {
         {/* ফ্রিল্যান্সার গ্রিড */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {freelancers.map((freelancer) => {
-            const freelancerId = freelancer._id?.$oid || freelancer._id;
+            const freelancerId = freelancer._id?.toString() || freelancer._id;
 
             return (
               <div
