@@ -40,10 +40,19 @@ const PostTaskPage = () => {
         fetchAndFilterUser();
     }, [session?.user?.email]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        const formData = new FormData(e.target);
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // 🎯 সেশন না থাকলে সাবমিট আটকে দেবে
+    if (!session?.user?.email) {
+        toast.error("User session not found! Please reload the page.");
+        return;
+    }
+    
+    setLoading(true);
+    const formData = new FormData(e.target);
+    
+    // বাকি taskPayload কোড আগের মতোই থাকবে...
         
         const taskPayload = {
             title: formData.get("title"),
@@ -175,19 +184,20 @@ const PostTaskPage = () => {
 
                     {/* সাবমিট বাটন */}
                     <div className="flex justify-end pt-2 w-full">
-                        <Button
-                            type="submit"
-                            isDisabled={loading}
-                            className="bg-navy text-cream font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
-                        >
-                            {loading ? (
-                                <div className="w-4 h-4 border-2 border-cream border-t-transparent rounded-full animate-spin"></div>
-                            ) : (
-                                <>
-                                    <FiPlusCircle /> Publish Task
-                                </>
-                            )}
-                        </Button>
+                        {/* 🎯 isDisabled এ !session যোগ করা হয়েছে */}
+<Button
+    type="submit"
+    isDisabled={loading || !session?.user?.email} 
+    className="bg-navy text-cream font-semibold px-6 py-3 rounded-xl transition-all duration-200 hover:opacity-90 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
+>
+    {loading || !session?.user?.email ? (
+        <div className="w-4 h-4 border-2 border-cream border-t-transparent rounded-full animate-spin"></div>
+    ) : (
+        <>
+            <FiPlusCircle /> Publish Task
+        </>
+    )}
+</Button>
                     </div>
 
                 </Form>
