@@ -133,7 +133,19 @@ export default function LoginPage() {
                         </div>
 
                         <Form onSubmit={handleLogin} className="space-y-4 text-left">
-                            <TextField isRequired name="email" type="email" className="w-full">
+                            {/* 🔍 Email Field Validation */}
+                            <TextField 
+                                isRequired 
+                                name="email" 
+                                type="email" 
+                                className="w-full"
+                                validate={(value) => {
+                                    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+                                        return "Please enter a valid email address";
+                                    }
+                                    return null;
+                                }}
+                            >
                                 <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1.5 block">Email Address</Label>
                                 <div className="w-full relative flex items-center">
                                     <FiMail className="absolute left-4 text-[var(--color-brown)] w-4 h-4 pointer-events-none" />
@@ -146,7 +158,25 @@ export default function LoginPage() {
                                 <FieldError className="text-rose-500 text-[11px] mt-1 block" />
                             </TextField>
 
-                            <TextField isRequired name="password" type="password" className="w-full">
+                            {/* 🔍 Password Field Validation (PDF Section 06 Rules) */}
+                            <TextField 
+                                isRequired 
+                                name="password" 
+                                type="password" 
+                                className="w-full"
+                                validate={(value) => {
+                                    if (value.length < 6) {
+                                        return "Password must be at least 6 characters long";
+                                    }
+                                    if (!/[A-Z]/.test(value)) {
+                                        return "Password must contain at least one capital letter";
+                                    }
+                                    if (!/[a-z]/.test(value)) {
+                                        return "Password must contain at least one lowercase letter";
+                                    }
+                                    return null;
+                                }}
+                            >
                                 <div className="flex justify-between items-center mb-1.5">
                                     <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] block">Password</Label>
                                 </div>

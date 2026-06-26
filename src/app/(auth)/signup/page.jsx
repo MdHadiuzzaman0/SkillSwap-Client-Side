@@ -112,68 +112,68 @@ export default function SignupPage() {
                 
                 {/* Left Info Panel */}
                 <div className="lg:col-span-5 p-8 lg:p-12 flex flex-col justify-between bg-[var(--color-navy)] text-[var(--color-cream)] relative">
-    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(white_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
 
-    {/* Top Brand & Header Section */}
-    <div className="my-6 lg:my-0 space-y-6 text-left relative z-10">
-        <span className="font-heading font-extrabold text-xl tracking-tight text-white block">
-            Skill<span className="text-[var(--color-tan)]">Swap</span>
-        </span>
+                    {/* Top Brand & Header Section */}
+                    <div className="my-6 lg:my-0 space-y-6 text-left relative z-10">
+                        <span className="font-heading font-extrabold text-xl tracking-tight text-white block">
+                            Skill<span className="text-[var(--color-tan)]">Swap</span>
+                        </span>
 
-        <div className="space-y-2">
-            <h1 className="text-2xl lg:text-3xl font-heading font-bold tracking-tight text-white leading-tight">
-                Join the Elite <br />Talent Hub.
-            </h1>
-            <p className="text-[var(--color-cream)]/70 text-xs leading-relaxed max-w-xs font-normal">
-                Select your structural role during credential entry to start tracking milestones on specialized dashboards.
-            </p>
-        </div>
-    </div>
+                        <div className="space-y-2">
+                            <h1 className="text-2xl lg:text-3xl font-heading font-bold tracking-tight text-white leading-tight">
+                                Join the Elite <br />Talent Hub.
+                            </h1>
+                            <p className="text-[var(--color-cream)]/70 text-xs leading-relaxed max-w-xs font-normal">
+                                Select your structural role during credential entry to start tracking milestones on specialized dashboards.
+                            </p>
+                        </div>
+                    </div>
 
-    {/* 🎯 নতুন যুক্ত হওয়া লাইভ স্ট্যাটস ও কী-ফিচার সেকশন (খালি জায়গা পূরণ করার জন্য) */}
-    <div className="relative z-10 my-6 lg:my-0 space-y-4 border-t border-white/10 pt-6 text-left">
-        <div className="grid grid-cols-2 gap-4">
-            {/* Stat 1: Rating */}
-            <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-white/10 rounded-lg text-[var(--color-tan)]">
-                    <FiStar className="w-4 h-4 fill-current" />
+                    {/* 🎯 নতুন যুক্ত হওয়া লাইভ স্ট্যাটস ও কী-ফিচার সেকশন (খালি জায়গা পূরণ করার জন্য) */}
+                    <div className="relative z-10 my-6 lg:my-0 space-y-4 border-t border-white/10 pt-6 text-left">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Stat 1: Rating */}
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 bg-white/10 rounded-lg text-[var(--color-tan)]">
+                                    <FiStar className="w-4 h-4 fill-current" />
+                                </div>
+                                <div>
+                                    <h4 className="text-white font-bold text-sm leading-none">4.9 / 5.0</h4>
+                                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">User Rating</p>
+                                </div>
+                            </div>
+
+                            {/* Stat 2: Active Users */}
+                            <div className="flex items-center gap-2.5">
+                                <div className="p-2 bg-white/10 rounded-lg text-white">
+                                    <FiUsers className="w-4 h-4" />
+                                </div>
+                                <div>
+                                    <h4 className="text-white font-bold text-sm leading-none">10K+</h4>
+                                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">Active Members</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Dynamic Key Feature List */}
+                        <div className="space-y-2.5 pt-2">
+                            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
+                                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
+                                <span>Secure Escrow & Milestones Tracking</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
+                                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
+                                <span>Verified Client & Professional Profiles</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Footer Meta Text */}
+                    <div className="hidden lg:block text-[10px] text-white/40 font-mono tracking-widest relative z-10">
+                        SKILLSWAP REGISTRATION
+                    </div>
                 </div>
-                <div>
-                    <h4 className="text-white font-bold text-sm leading-none">4.9 / 5.0</h4>
-                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">User Rating</p>
-                </div>
-            </div>
-
-            {/* Stat 2: Active Users */}
-            <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-white/10 rounded-lg text-white">
-                    <FiUsers className="w-4 h-4" />
-                </div>
-                <div>
-                    <h4 className="text-white font-bold text-sm leading-none">10K+</h4>
-                    <p className="text-[var(--color-cream)]/50 text-[10px] mt-0.5 font-medium">Active Members</p>
-                </div>
-            </div>
-        </div>
-
-        {/* Dynamic Key Feature List */}
-        <div className="space-y-2.5 pt-2">
-            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
-                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
-                <span>Secure Escrow & Milestones Tracking</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-[var(--color-cream)]/90">
-                <FiCheckCircle className="text-[var(--color-tan)] w-3.5 h-3.5 shrink-0" />
-                <span>Verified Client & Professional Profiles</span>
-            </div>
-        </div>
-    </div>
-
-    {/* Footer Meta Text */}
-    <div className="hidden lg:block text-[10px] text-white/40 font-mono tracking-widest relative z-10">
-        SKILLSWAP REGISTRATION
-    </div>
-</div>
 
                 {/* Right Form Fields Panel */}
                 <div className="lg:col-span-7 p-8 lg:p-12 bg-white flex flex-col justify-center">
@@ -239,7 +239,19 @@ export default function SignupPage() {
                                 </div>
                             </div>
 
-                            <TextField isRequired name="name" type="text" className="w-full">
+                            {/* Full Name Validation */}
+                            <TextField 
+                                isRequired 
+                                name="name" 
+                                type="text" 
+                                className="w-full"
+                                // validate={(value) => {
+                                //     if (!value || value.trim().length < 2) {
+                                //         return "Please enter your full name (at least 2 characters)";
+                                //     }
+                                //     return null;
+                                // }}
+                            >
                                 <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">Full Name</Label>
                                 <div className="w-full relative flex items-center">
                                     <FiUser className="absolute left-4 text-[var(--color-brown)] w-4 h-4 pointer-events-none" />
@@ -248,9 +260,22 @@ export default function SignupPage() {
                                         className="w-full bg-neutral-50 text-[var(--color-black)] placeholder-[var(--color-brown)]/50 text-sm border border-[var(--color-tan)]/40 focus:border-[var(--color-navy)] rounded-xl pl-11 pr-4 py-2.5 outline-none block"
                                     />
                                 </div>
+                                <FieldError className="text-rose-500 text-[11px] mt-1 block" />
                             </TextField>
 
-                            <TextField isRequired name="email" type="email" className="w-full">
+                            {/* Email Validation */}
+                            <TextField 
+                                isRequired 
+                                name="email" 
+                                type="email" 
+                                className="w-full"
+                                validate={(value) => {
+                                    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+                                        return "Please enter a valid email address";
+                                    }
+                                    return null;
+                                }}
+                            >
                                 <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">Email Address</Label>
                                 <div className="w-full relative flex items-center">
                                     <FiMail className="absolute left-4 text-[var(--color-brown)] w-4 h-4 pointer-events-none" />
@@ -288,7 +313,25 @@ export default function SignupPage() {
                                 </div>
                             </div>
 
-                            <TextField isRequired minLength={6} name="password" type="password" className="w-full">
+                            {/* Password Validation with PDF Rules */}
+                            <TextField 
+                                isRequired 
+                                name="password" 
+                                type="password" 
+                                className="w-full"
+                                validate={(value) => {
+                                    if (value.length < 6) {
+                                        return "Password must be at least 6 characters long";
+                                    }
+                                    if (!/[A-Z]/.test(value)) {
+                                        return "Password must contain at least one capital letter";
+                                    }
+                                    if (!/[a-z]/.test(value)) {
+                                        return "Password must contain at least one lowercase letter";
+                                    }
+                                    return null;
+                                }}
+                            >
                                 <Label className="text-[11px] font-bold tracking-wider text-[var(--color-brown)] mb-1 block">Secure Password</Label>
                                 <div className="w-full relative flex items-center">
                                     <FiLock className="absolute left-4 text-[var(--color-brown)] w-4 h-4 pointer-events-none" />

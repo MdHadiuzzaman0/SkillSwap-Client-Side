@@ -31,7 +31,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/browse-freelancers" className="hover:text-[var(--color-tan)] transition-colors">
+                <Link href="/freelancers" className="hover:text-[var(--color-tan)] transition-colors">
                   Explore Freelancers
                 </Link>
               </li>
@@ -50,17 +50,17 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-[#EAE0D5]/80">
               <li>
-                <Link href="/dashboard/client" className="hover:text-[var(--color-tan)] transition-colors">
+                <Link href="/" className="hover:text-[var(--color-tan)] transition-colors">
                   Client Workspace
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/freelancer" className="hover:text-[var(--color-tan)] transition-colors">
+                <Link href="/" className="hover:text-[var(--color-tan)] transition-colors">
                   Freelancer Hub
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard/admin" className="hover:text-[var(--color-tan)] transition-colors">
+                <Link href="/" className="hover:text-[var(--color-tan)] transition-colors">
                   Admin Terminal
                 </Link>
               </li>
