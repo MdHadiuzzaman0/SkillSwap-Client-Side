@@ -169,7 +169,7 @@ const FreelancerProfilePage = () => {
             name="image"
             value={formData.image}
             onChange={handleChange}
-            disabled={!isEditing}
+            disabled
             className={`w-full p-2.5 border rounded-xl transition-all duration-200 ${isEditing ? "bg-white border-brown/30 focus:border-black outline-none" : "bg-gray-50/50 border-brown/5 text-gray-500 cursor-not-allowed"
               }`}
           />
