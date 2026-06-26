@@ -38,7 +38,7 @@ export const getTaskById = async (id, token) => {
 //get top freelancer
 export async function getTopFreelancers() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/top-freelancers-home`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/top-freelancers-home`, {cache: "no-store"});
     const result = await res.json();
     return result.data || [];
   } catch (error) {
