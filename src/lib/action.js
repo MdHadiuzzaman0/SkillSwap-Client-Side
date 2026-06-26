@@ -3,7 +3,7 @@
 //get all, filter, search
 export async function getFilteredTasks({ category, search, page = 1 }) {
   try {
-    let url = `http://localhost:8000/tasks?page=${page}&limit=9`; 
+    let url = `${process.env.NEXT_PUBLIC_SERVER_URL}/tasks?page=${page}&limit=9`;
 
     if (category) {
       url += `&category=${encodeURIComponent(category)}`;
@@ -29,7 +29,7 @@ export async function getFilteredTasks({ category, search, page = 1 }) {
 //insert create profile data
 export async function handleFormSubmit(profileData, token) {
   try {
-    const response = await fetch("http://localhost:8000/user", {
+    const response = await fetch( `${process.env.NEXT_PUBLIC_SERVER_URL}/user`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export async function handleFormSubmit(profileData, token) {
 //insert proposal data
 export const submitProposalAction = async (proposalPayload) => {
   try {
-    const res = await fetch("http://localhost:8000/proposals", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposals`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(proposalPayload),
@@ -76,7 +76,7 @@ export const submitProposalAction = async (proposalPayload) => {
 //update profile data
 export const updateProfileData = async (email, profilePayload, token) => {
   try {
-    const res = await fetch(`http://localhost:8000/users/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/${email}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export const updateProfileData = async (email, profilePayload, token) => {
 //update proposal task, task submit
 export const updateProposalTask = async (proposalId, payload, token) => {
   try {
-    const res = await fetch(`http://localhost:8000/proposals-update/${proposalId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposals-update/${proposalId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export const updateProposalTask = async (proposalId, payload, token) => {
 //insert posted data info
 export const createTaskAction = async ({taskPayload, token}) => {
   try {
-    const res = await fetch("http://localhost:8000/post-task", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/post-task`, {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ export const createTaskAction = async ({taskPayload, token}) => {
 //update posted task data
 export const updateTaskAction = async (taskId, updatedData) => {
   try {
-    const res = await fetch(`http://localhost:8000/task-update/${taskId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/task-update/${taskId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -164,7 +164,7 @@ export const updateTaskAction = async (taskId, updatedData) => {
 //delete posted data
 export const deleteTaskAction = async (taskId) => {
   try {
-    const response = await fetch(`http://localhost:8000/tasks/${taskId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tasks/${taskId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ export const deleteTaskAction = async (taskId) => {
 //update status for accept/ignore botton
 export const updateProposalStatusAction = async ({proposalId, status, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/proposal-status/${proposalId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposal-status/${proposalId}`, {
       method: "PATCH",
       headers: { 
         "Content-Type": "application/json",
@@ -200,7 +200,7 @@ export const updateProposalStatusAction = async ({proposalId, status, token}) =>
 //update status after payment
 export const changeSatusAfterPayment = async (infoField) => {
   try {
-    const res = await fetch("http://localhost:8000/api/payments/confirm", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments/confirm`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -219,7 +219,7 @@ export const changeSatusAfterPayment = async (infoField) => {
 //update freelancer earnings
 export async function syncFreelancerEarnings({email, token, earnings }) {
   try {
-    const res = await fetch("http://localhost:8000/update-earnings", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/update-earnings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -238,7 +238,7 @@ export async function syncFreelancerEarnings({email, token, earnings }) {
 //isBlocked status update
 export async function toggleUserBlockStatus({userId, currentStatus, token}) {
   try {
-    const res = await fetch(`http://localhost:8000/api/users/${userId}/block`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/${userId}/block`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

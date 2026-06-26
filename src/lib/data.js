@@ -2,7 +2,7 @@
 export async function getUserInfo(email) {
   if (!email) return null;
   try {
-    const response = await fetch(`http://localhost:8000/user/${email}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/user/${email}`, {
       method: "GET", cache: "no-store", next: { revalidate: 0 }
     });
 
@@ -17,7 +17,7 @@ export async function getUserInfo(email) {
 
 //get all tasks
 export const getAllTasks = async (token) => {  
-    const res = await fetch('http://localhost:8000/browse-tasks',{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/browse-tasks`,{
       headers : {
         authorization : `Bearer ${token}`
       }
@@ -27,7 +27,7 @@ export const getAllTasks = async (token) => {
 
 //get task by id
 export const getTaskById = async (id, token) => {
-    const res = await fetch(`http://localhost:8000/browse-tasks/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/browse-tasks/${id}`, {
       headers: {
         authorization: `Bearer ${token}`
       }
@@ -38,7 +38,7 @@ export const getTaskById = async (id, token) => {
 //get top freelancer
 export async function getTopFreelancers() {
   try {
-    const res = await fetch("http://localhost:8000/top-freelancers-home");
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/top-freelancers-home`);
     const result = await res.json();
     return result.data || [];
   } catch (error) {
@@ -51,7 +51,7 @@ export async function getTopFreelancers() {
 //get freelancer profile info
 export const fetchProfileData = async (email, token) => {
   try {
-    const res = await fetch(`http://localhost:8000/profile/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/profile/${email}`, {
       headers: { authorization: `Bearer ${token}` }
     });
 
@@ -70,7 +70,7 @@ export const fetchProfileData = async (email, token) => {
 //get proposal data for specific freelancer
 export const fetchMyProposals = async ({freelancerEmail, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/proposals/${freelancerEmail}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposals/${freelancerEmail}`, {
       headers: { authorization: `Bearer ${token}` }
     });
 
@@ -89,7 +89,7 @@ export const fetchMyProposals = async ({freelancerEmail, token}) => {
 //get proposal data for specific client
 export const fetchClientProposals = async ({ clientEmail, token }) => {
   try {
-    const res = await fetch(`http://localhost:8000/proposals/${clientEmail}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/proposals/${clientEmail}`, {
       headers: { authorization: `Bearer ${token}` }
     });
 
@@ -108,7 +108,7 @@ export const fetchClientProposals = async ({ clientEmail, token }) => {
 //get completed task from proposalCollection
 export const fetchMyEarnings = async ({email, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/earnings/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/earnings/${email}`, {
       cache: "no-store", 
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export const fetchMyEarnings = async ({email, token}) => {
 //get data of posted task - post task
 export const getMyTasksAction = async ({email, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/my-tasks/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/my-tasks/${email}`, {
       cache: "no-store",
       headers: {
         authorization: `Bearer ${token}`
@@ -148,7 +148,7 @@ export const getMyTasksAction = async ({email, token}) => {
 //get proposed data through client email - post task
 export const getClientProposalsAction = async ({email, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/client-proposals/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/client-proposals/${email}`, {
       cache: "no-store",
       headers: {
         authorization: `Bearer ${token}`
@@ -165,7 +165,7 @@ export const getClientProposalsAction = async ({email, token}) => {
 //get paid task info from payment collection
 export const fetchMyPayments = async ({email, token}) => {
   try {
-    const res = await fetch(`http://localhost:8000/payments/${email}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/payments/${email}`, {
       headers: { authorization: `Bearer ${token}` },
     });
 
@@ -185,7 +185,7 @@ export const fetchMyPayments = async ({email, token}) => {
 // get all  user data
 // export const getAllUsers = async () => {
 //   try {
-//     const res = await fetch("http://localhost:8000/admin/all-users", { cache: "no-store" });
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/all-users`, { cache: "no-store" });
 //     const data = await res.json();
 //     return data.success ? data.users : [];
 //   } catch (error) {
@@ -197,7 +197,7 @@ export const fetchMyPayments = async ({email, token}) => {
 // get all payment data
 export const getAllPayments = async (token) => {
   try {
-    const res = await fetch("http://localhost:8000/admin/payments", { 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/payments`, {
     cache: "no-store",
     headers: {
       authorization: `Bearer ${token}`
@@ -214,7 +214,7 @@ export const getAllPayments = async (token) => {
 // get all proposal data - in-progress
 // export const getAllProposalsForAdmin = async () => {
 //   try {
-//     const res = await fetch("http://localhost:8000/admin/all-proposals", { cache: "no-store" });
+//     const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/admin/all-proposals`, { cache: "no-store" });
 //     const data = await res.json();
 //     return data.success ? data.proposals : [];
 //   } catch (error) {
@@ -227,7 +227,7 @@ export const getAllPayments = async (token) => {
 //grt all freelancer with proposals
 export async function getAllData() {
   try {
-    const res = await fetch("http://localhost:8000/api/allData", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/allData`, {
       next:{revalidate: 20} 
     });
     

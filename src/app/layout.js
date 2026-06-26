@@ -4,8 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ConditionalPageShow from "@/components/ConditionalPageShow";
-
-// 🎯 ১. নিচে ব্যবহার করা কম্পোনেন্টগুলো উপরে ইম্পোর্ট করে নিলাম (আপনার সঠিক পাথ অনুযায়ী চেঞ্জ করে নিতে পারেন)
 import TopFreelancer from "@/components/TopFreelancer"; 
 import LatestTask from "@/components/LatestTask";
 
