@@ -52,7 +52,7 @@ const PostTaskPage = () => {
             budget: Number(formData.get("budget")),
             deadline: new Date(formData.get("deadline")).toISOString(),
             status: "open",
-            client_email: session?.user?.email || "n/a",  
+            clientEmail: session?.user?.email || "n/a",  
             clientName: `${dbUser?.firstName || ""} ${dbUser?.lastName || ""}`.trim()|| session?.user?.name || "Anonymous", 
             clientImage: dbUser?.image || "https://cdn-icons-png.flaticon.com/512/2640/2640788.png",
             createdAt: new Date().toISOString(),
