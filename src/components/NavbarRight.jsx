@@ -17,7 +17,7 @@ const NavbarRight = ({ session, userInfo }) => {
     let displayImage = null;
     let displayRole = "";
 
-    const adminEmail = "admin1@taskhive.com ";
+    const adminEmail = "admin1@taskhive.com";
     const userEmail = sessionUser?.email ? sessionUser.email.toLowerCase() : "";
 
     if (userInfo) {

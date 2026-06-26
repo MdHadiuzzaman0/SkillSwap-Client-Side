@@ -20,7 +20,7 @@ export default function CreateProfilePage() {
   const initialRole = session?.user?.role || "";
   const targetRole = initialRole === "freelancer" ? "freelancer" : "client";
 
-  const adminEmail = "admin1@taskhive.com ";
+  const adminEmail = "admin1@taskhive.com";
 
   useEffect(() => {
     async function checkProfile() {
