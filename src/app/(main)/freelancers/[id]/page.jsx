@@ -32,7 +32,7 @@ export default async function FreelancerPublicProfile({ params }) {
         
         <div className="mb-8">
           <Link 
-            href="/browse-freelancers" 
+            href="/freelancers" 
             className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-slate-900 transition-colors"
           >
             ← Back to All Freelancers
