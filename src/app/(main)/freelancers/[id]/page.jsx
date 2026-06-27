@@ -5,7 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function FreelancerPublicProfile({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const { users, proposals } = await getAllData();
 
   // ১. আইডি ম্যাচ করে নির্দিষ্ট ফ্রিল্যান্সার খোঁজা
